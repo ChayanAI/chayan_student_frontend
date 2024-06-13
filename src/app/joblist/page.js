@@ -14,7 +14,7 @@ const JobListing = () => {
     useEffect(() => {
         const fetchJobs = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/jobs');
+                const response = await axios.get('http://localhost:5000/studentjob/jobs');
                 console.log(response.data)
                 setJobs(response.data);
             } catch (error) {
@@ -27,7 +27,7 @@ const JobListing = () => {
 
     const fetchJobDetails = async (jobId) => {
         try {
-            const response = await axios.get(`http://localhost:5000/jobs/${jobId}`);
+            const response = await axios.get(`http://localhost:5000/studentjob/jobs/${jobId}`);
             setSelectedJob(response.data);
         } catch (error) {
             console.error('Error fetching job details:', error);
