@@ -11,6 +11,20 @@ import { ToggleButton, ButtonRow } from './ToggleButton';
 import { CircleCheckBig, CirclePlus } from 'lucide-react';
 
 const MultiStepForm = () => {
+  const [profileData, setProfileData] = useState({
+    first_name: null,
+    last_name: null,
+    date_of_birth: null,
+    city: null,
+    gender: null,
+    phone_number: null,
+    email: null,
+    college_name: null,
+    degree: null,
+    
+
+
+  })
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -74,16 +88,16 @@ const MultiStepForm = () => {
                         {/* <Select name={'Gender'} col={'4'} options={['Male', 'Female', 'Attack-Helicopter', 'Non-binary', 'Genderqueer', 'Genderfluid', 'Agender', 'Bigender', 'Androgynous', 'Two-Spirit', 'Gender Nonconforming', 'Pangender', 'Gender Variant', 'Intersex', 'Third Gender', 'Neutrois', 'Demiboy', 'Demigirl', 'Transgender', 'Trans Man', 'Trans Woman', 'Cisgender', 'Femme', 'Butch', 'Hijra', 'Kathoey', 'Faafafine', 'Muxe', 'X-gender', 'Polygender', 'Gender Apathetic', 'Androgyne', 'Aliagender', 'Cis Man', 'Cis Woman', 'Femme Person', 'Butch Person', 'Maverique', 'Novigender', 'Trigender', 'Two Spirit', 'Bakla', 'Mahuwahine', 'Mahukane', 'Xenogender']} /> */}
                         <ButtonRow label={'Gender'} col={4} buttonNames={['Male', 'Female', 'Others']} />
                         <Text name={'Phone Number'} type={'tel'} col={'3'} />
-                        <div className="col-span-1">
-                            {/* Here, use state to switch between the three responses below dhruv. I'm leaving button by default*/}
+                        {/*<div className="col-span-1">*/}
+                        {/*    /!* Here, use state to switch between the three responses below dhruv. I'm leaving button by default*!/*/}
 
-                            {/* <button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button> */}
+                        {/*    /!* <button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button> *!/*/}
 
-                            <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">otp</label>
-                            <OtpInput numDigits={6} />
+                        {/*    <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">otp</label>*/}
+                        {/*    <OtpInput numDigits={6} />*/}
 
-                            {/* <div className='flex mt-10 text-blue-700 gap-1'><CircleCheckBig />Verified</div> */}
-                        </div>
+                        {/*    /!* <div className='flex mt-10 text-blue-700 gap-1'><CircleCheckBig />Verified</div> *!/*/}
+                        {/*</div>*/}
                         
                         {/* <div className='col-span-3'>
                           <label htmlFor="phone-number" className="block text-sm font-medium leading-6 text-gray-900">
@@ -119,7 +133,7 @@ const MultiStepForm = () => {
                         <div className="col-span-1">
                             {/* Here, use state to switch between the three responses below dhruv. I'm leaving button by default*/}
 
-                            <button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button>
+                            {/*<button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button>*/}
 
                             {/* <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">otp</label>
                             <OtpInput numDigits={6} /> */}
