@@ -89,16 +89,6 @@ const JobListing = () => {
                     )}
                 </div>
                 <div className="mb-4">
-                    {/* <p className="text-gray-600"><strong>Location:</strong> {job.location}</p>
-                    <p className="text-gray-600"><strong>Salary:</strong> {job.salary}</p>
-                    <p className="text-gray-600"><strong>Mandatory Criteria:</strong> {job.mandatoryCriteria}</p>
-                    <p className="text-gray-600"><strong>Key Responsibilities:</strong></p>
-                    <ul className="list-disc pl-5">
-                        {job.keyResponsibilities && job.keyResponsibilities.map((responsibility, index) => (
-                            <li key={index}>{responsibility}</li>
-                        ))}
-                    </ul> */}
-
                     <p className="text-gray-600"><strong>Apply By:</strong> {new Date(job.applyBy).toLocaleDateString()}</p>
                     <p className="text-gray-600"><strong>Employability Score:</strong> {job.employabilityScore}</p>
                 </div>
