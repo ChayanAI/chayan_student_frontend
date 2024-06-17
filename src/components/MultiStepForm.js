@@ -60,97 +60,96 @@ const MultiStepForm = () => {
             <ProgressBar currentStep={currentStep} onStepClick={handleStepClick} />
           </div>
           <div className="w-3/4 p-8">
-            <form onSubmit={handleSubmit}>
+          
+            {/* Personal Information */}
+            {currentStep === 0 && (
+              <form onSubmit={handleNext}>
+                  <div className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b">
+                      {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
+                      <Text name={'First Name'} col={'3'} isRequired={true} />
+                      <Text name={'Last Name'} col={'3'} />
+                      <Text name={'Date of birth'} type={'date'} col={'3'} isRequired={true} />
+                      <Text name={'Hometown'} col={'3'} />
+                      {/* <Select name={'Gender'} col={'4'} options={['Male', 'Female', 'Attack-Helicopter', 'Non-binary', 'Genderqueer', 'Genderfluid', 'Agender', 'Bigender', 'Androgynous', 'Two-Spirit', 'Gender Nonconforming', 'Pangender', 'Gender Variant', 'Intersex', 'Third Gender', 'Neutrois', 'Demiboy', 'Demigirl', 'Transgender', 'Trans Man', 'Trans Woman', 'Cisgender', 'Femme', 'Butch', 'Hijra', 'Kathoey', 'Faafafine', 'Muxe', 'X-gender', 'Polygender', 'Gender Apathetic', 'Androgyne', 'Aliagender', 'Cis Man', 'Cis Woman', 'Femme Person', 'Butch Person', 'Maverique', 'Novigender', 'Trigender', 'Two Spirit', 'Bakla', 'Mahuwahine', 'Mahukane', 'Xenogender']} /> */}
+                      <ButtonRow label={'Gender'} col={4} buttonNames={['Male', 'Female', 'Others']} />
+                      <Text name={'Phone Number'} type={'tel'} col={'3'} isRequired={true} />
+                      <div className="col-span-1">
+                          {/* Here, use state to switch between the three responses below dhruv. I'm leaving button by default*/}
 
-              {/* Personal Information */}
-              {currentStep === 0 && (
-                <div>
-                    <div className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b">
-                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
-                        <Text name={'First Name'} col={'3'} />
-                        <Text name={'Last Name'} col={'3'} />
-                        <Text name={'Date of birth'} type={'date'} col={'3'} />
-                        <Text name={'Hometown'} col={'3'} />
-                        {/* <Select name={'Gender'} col={'4'} options={['Male', 'Female', 'Attack-Helicopter', 'Non-binary', 'Genderqueer', 'Genderfluid', 'Agender', 'Bigender', 'Androgynous', 'Two-Spirit', 'Gender Nonconforming', 'Pangender', 'Gender Variant', 'Intersex', 'Third Gender', 'Neutrois', 'Demiboy', 'Demigirl', 'Transgender', 'Trans Man', 'Trans Woman', 'Cisgender', 'Femme', 'Butch', 'Hijra', 'Kathoey', 'Faafafine', 'Muxe', 'X-gender', 'Polygender', 'Gender Apathetic', 'Androgyne', 'Aliagender', 'Cis Man', 'Cis Woman', 'Femme Person', 'Butch Person', 'Maverique', 'Novigender', 'Trigender', 'Two Spirit', 'Bakla', 'Mahuwahine', 'Mahukane', 'Xenogender']} /> */}
-                        <ButtonRow label={'Gender'} col={4} buttonNames={['Male', 'Female', 'Others']} />
-                        <Text name={'Phone Number'} type={'tel'} col={'3'} />
-                        <div className="col-span-1">
-                            {/* Here, use state to switch between the three responses below dhruv. I'm leaving button by default*/}
+                          {/* <button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button> */}
 
-                            {/* <button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button> */}
+                          {/* <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">otp</label>
+                          <OtpInput numDigits={6} /> */}
 
-                            <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">otp</label>
-                            <OtpInput numDigits={6} />
-
-                            {/* <div className='flex mt-10 text-blue-700 gap-1'><CircleCheckBig />Verified</div> */}
-                        </div>
-                        
-                        {/* <div className='col-span-3'>
-                          <label htmlFor="phone-number" className="block text-sm font-medium leading-6 text-gray-900">
-                            Phone Number
-                          </label>
-                          <div className="relative mt-2 rounded-md shadow-sm">
-                            <div className="absolute inset-y-0 left-0 flex items-center">
-                              <label htmlFor="country" className="sr-only">
-                                Country
-                              </label>
-                              <select
-                                id="country"
-                                name="country"
-                                autoComplete="country"
-                                className="h-full rounded-md border-0 bg-transparent py-0 pl-3 pr-7 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                              >
-                                <option>+91</option>
-                                <option>+1</option>
-                                <option>+69</option>
-                              </select>
-                            </div>
-                            <input
-                              type="text"
-                              name="phone-number"
-                              id="phone-number"
-                              className="block w-full rounded-md border-0 py-1.5 pl-16 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                              placeholder="98765 43210"
-                            />
+                          <div className='flex mt-10 text-blue-700 gap-1'><CircleCheckBig />Verified</div>
+                      </div>
+                      
+                      {/* <div className='col-span-3'>
+                        <label htmlFor="phone-number" className="block text-sm font-medium leading-6 text-gray-900">
+                          Phone Number
+                        </label>
+                        <div className="relative mt-2 rounded-md shadow-sm">
+                          <div className="absolute inset-y-0 left-0 flex items-center">
+                            <label htmlFor="country" className="sr-only">
+                              Country
+                            </label>
+                            <select
+                              id="country"
+                              name="country"
+                              autoComplete="country"
+                              className="h-full rounded-md border-0 bg-transparent py-0 pl-3 pr-7 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                            >
+                              <option>+91</option>
+                              <option>+1</option>
+                              <option>+69</option>
+                            </select>
                           </div>
-                        </div> */}
-
-                        <Text name={'Email'} type={'email'} col={'3'} />
-                        <div className="col-span-1">
-                            {/* Here, use state to switch between the three responses below dhruv. I'm leaving button by default*/}
-
-                            <button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button>
-
-                            {/* <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">otp</label>
-                            <OtpInput numDigits={6} /> */}
-
-                            {/* <div className='flex mt-10 text-blue-700 gap-1'><CircleCheckBig />Verified</div> */}
+                          <input
+                            type="text"
+                            name="phone-number"
+                            id="phone-number"
+                            className="block w-full rounded-md border-0 py-1.5 pl-16 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            placeholder="98765 43210"
+                          />
                         </div>
-                    </div>
-                    <div className="w-full flex justify-between">
-                        <div></div>
-                        <button type="button" onClick={handleNext} className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
-                            Next
-                        </button>
-                    </div>
-                </div>
-              )}
-              {/* Academics */}
-              {currentStep === 1 && (
-                <div>
+                      </div> */}
+
+                      <Text name={'Email'} type={'email'} col={'3'} isRequired={true} isRequired={true} />
+                      <div className="col-span-1">
+                          {/* Here, use state to switch between the three responses below dhruv. I'm leaving button by default*/}
+
+                          {/* <button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button> */}
+
+                          {/* <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">otp</label>
+                          <OtpInput numDigits={6} /> */}
+
+                          <div className='flex mt-10 text-blue-700 gap-1'><CircleCheckBig />Verified</div>
+                      </div>
+                  </div>
+                  <div className="w-full flex justify-between">
+                      <div></div>
+                      <button type="submit" className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
+                          Next
+                      </button>
+                  </div>
+              </form>
+            )}
+            {/* Academics */}
+            {currentStep === 1 && (
+                <form onSubmit={handleNext}>
                     <div className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b">
                         {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
-                        <Text name={'College Name'} col={' col-span-full'} />
-                        <Select name={'Degree'} col={'2'} options={['B.Tech', 'B.Comm', 'B.Sc']} />
-                        <Text name={'Branch / Discipline'} col={'2'} />
+                        <Text name={'College Name'} col={' col-span-full'} isRequired={true} />
+                        <Select name={'Degree'} col={'2'} options={['B.Tech', 'B.Comm', 'B.Sc']} isRequired={true} />
+                        <Text name={'Branch / Discipline'} col={'2'} isRequired={true} />
                         <Text name={'Minor Branch'} col={'2'} />
 
                         {/* MM YYYY ONLY */}
-                        <Text name={'Start Date'} type={'date'} col={'3'} /> 
-                        <Text name={'End Date'} type={'date'} col={'3'} />
+                        <Text name={'Start Date'} type={'date'} col={'3'} isRequired={true} /> 
+                        <Text name={'End Date'} type={'date'} col={'3'} isRequired={true} />
 
                         <ButtonRow label={'Length of the course'} col={' col-span-full'} buttonNames={['2 Years', '3 Years', '4 Years', '5 Years']} />
-                        <Text name={'CGPA / Percentage'} col={'2'} />
+                        <Text name={'CGPA / Percentage'} col={'2'} isRequired={true} />
                         <div className={`sm:col-span-4`}>
                           <label className="block text-sm font-medium leading-6 text-gray-900 tracking-tight">
                             SGPA / Sem. Percentages
@@ -168,18 +167,18 @@ const MultiStepForm = () => {
                               </div>
                           </div>
                         </div>
-                        <Select name={'12th Board'} col={3} options={['CBSE', 'ISC', 'State Board']} />
-                        <Text name={'12th Percentage'} col={3} />
+                        <Select name={'12th Board'} col={3} options={['CBSE', 'ISC', 'State Board']} isRequired={true} />
+                        <Text name={'12th Percentage'} col={3} isRequired={true} />
                     </div>
                     <div className="w-full flex justify-between px-2">
                         <button type="button" onClick={handleBack} className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back</button>
-                        <button type="button" onClick={handleNext} className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next</button>
+                        <button type="submit" className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next</button>
                     </div>
-                </div>
-              )}
-              {/* Professional Goals */}
-              {currentStep === 2 && (
-                <div>
+                </form>
+            )}
+            {/* Professional Goals */}
+            {currentStep === 2 && (
+                <form onSubmit={handleNext}>
                     <div className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 border-b">
                         {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
                         <ButtonRow label={'Career Objectives'} col={' col-span-full'} buttonsPerRow={4} buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8']} />
@@ -188,13 +187,13 @@ const MultiStepForm = () => {
                     </div>
                     <div className="w-full flex justify-between px-2">
                         <button type="button" onClick={handleBack} className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back</button>
-                        <button type="button" onClick={handleNext} className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next</button>
+                        <button type="submit" className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next</button>
                     </div>
-                </div>
-              )}
-              {/* Skill Verification */}
-              {currentStep === 3 && (
-                <div>
+                </form>
+            )}
+            {/* Skill Verification */}
+            {currentStep === 3 && (
+                <form onSubmit={handleNext}>
                     <div className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b">
                         {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
                         <label className="block text-sm font-medium leading-6 text-gray-900 tracking-tight col-span-full">Certify Your Claimed Skills</label>
@@ -270,13 +269,13 @@ const MultiStepForm = () => {
                     </div>
                     <div className="w-full flex justify-between px-2">
                         <button type="button" onClick={handleBack} className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back</button>
-                        <button type="button" onClick={handleNext} className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next</button>
+                        <button type="submit" className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next</button>
                     </div>
-                </div>
-              )}
-              {/* Internships */}
-              {currentStep === 4 && (
-                <div>
+                </form>
+            )}
+            {/* Internships */}
+            {currentStep === 4 && (
+                <form onSubmit={handleNext}>
                     <div className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
                       {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
                       <div className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
@@ -299,13 +298,13 @@ const MultiStepForm = () => {
                     </div>
                     <div className="w-full flex justify-between px-2">
                         <button type="button" onClick={handleBack} className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back</button>
-                        <button type="button" onClick={handleNext} className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next</button>
+                        <button type="submit" className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next</button>
                     </div>
-                </div>
-              )}
-              {/* Volunteer Experiences */}
-              {currentStep === 5 && (
-                <div>
+                </form>
+            )}
+            {/* Volunteer Experiences */}
+            {currentStep === 5 && (
+                <form onSubmit={handleNext}>
                     <div className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
                       {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
                       <div className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
@@ -328,13 +327,13 @@ const MultiStepForm = () => {
                     </div>
                     <div className="w-full flex justify-between px-2">
                         <button type="button" onClick={handleBack} className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back</button>
-                        <button type="button" onClick={handleNext} className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next</button>
+                        <button type="submit" className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next</button>
                     </div>
-                </div>
-              )}
-              {/* Projects */}
-              {currentStep === 6 && (
-                <div>
+                </form>
+            )}
+            {/* Projects */}
+            {currentStep === 6 && (
+                <form onSubmit={handleNext}>
                     <div className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
                       {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
                       <div className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
@@ -357,17 +356,17 @@ const MultiStepForm = () => {
                     </div>
                     <div className="w-full flex justify-between px-2">
                         <button type="button" onClick={handleBack} className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back</button>
-                        <button type="button" onClick={handleNext} className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next</button>
+                        <button type="submit" className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next</button>
                     </div>
-                </div>
-              )}
-              {/* Extra-Curricular Activities */}
-              {currentStep === 7 && (
-                <div>
+                </form>
+            )}
+            {/* Extra-Curricular Activities */}
+            {currentStep === 7 && (
+                <form onSubmit={handleSubmit}>
                     <div className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
                       {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
                       <div className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
-                        <Text name={'Activity Name'} col={' col-span-full'} />
+                        <Text name={'Activity Name'} col={' col-span-full'} isRequired={true} />
                         <Text name={'Role / Position'} col={4} />
                         <Text name={'Location'} col={2} />
                         {/* USE MM YYYY ONLY */}
@@ -388,9 +387,8 @@ const MultiStepForm = () => {
                         <button type="button" onClick={handleBack} className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back</button>
                         <button type="submit" className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Submit</button>
                     </div>
-                </div>
-              )}
-            </form>
+                </form>
+            )}
           </div>
         </div>
     </div>
