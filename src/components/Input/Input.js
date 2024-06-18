@@ -30,7 +30,20 @@ const Input = ({list, index, value, disp, setValue, setstate, name, col, type = 
         {variant === 'input' && (
           isRequired ? 
           <input
+              value={value}
             id={stringify(name)}
+            onChange={(e)=>{
+                (list)?(setValue((prev)=>({...prev, [list]: [...prev[list].slice(0,index), {...prev[list][index], [disp]: e.target.value}, ...prev[list].slice(index+1)]}))):(((!disp)?(setstate(e.target.value)):(setValue((prev)=>{
+
+                // console.log(disp)
+                return({...prev, [disp]: e.target.value})
+
+              }))))
+
+
+              // console.log("chala")
+            }
+          }
             name={stringify(name)}
             type={type}
             autoComplete={stringify(name)}
@@ -62,7 +75,20 @@ const Input = ({list, index, value, disp, setValue, setstate, name, col, type = 
         {variant === 'select' && (
           isRequired ? 
           <select
+              value={value}
             id={stringify(name)}
+            onChange={(e)=>{
+                (list)?(setValue((prev)=>({...prev, [list]: [...prev[list].slice(0,index), {...prev[list][index], [disp]: e.target.value}, ...prev[list].slice(index+1)]}))):(((!disp)?(setstate(e.target.value)):(setValue((prev)=>{
+
+                // console.log(disp)
+                return({...prev, [disp]: e.target.value})
+
+              }))))
+
+
+              // console.log("chala")
+            }
+          }
             name={stringify(name)}
             autoComplete={stringify(name)}
             required
@@ -103,6 +129,19 @@ const Input = ({list, index, value, disp, setValue, setstate, name, col, type = 
         {variant === 'textarea' && (
           isRequired ?
           <textarea
+              value={value}
+              onChange={(e)=>{
+                (list)?(setValue((prev)=>({...prev, [list]: [...prev[list].slice(0,index), {...prev[list][index], [disp]: e.target.value}, ...prev[list].slice(index+1)]}))):(((!disp)?(setstate(e.target.value)):(setValue((prev)=>{
+
+                // console.log(disp)
+                return({...prev, [disp]: e.target.value})
+
+              }))))
+
+
+              // console.log("chala")
+            }
+          }
             id={stringify(name)}
             name={stringify(name)}
             rows={rows}
