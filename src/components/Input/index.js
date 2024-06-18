@@ -1,15 +1,17 @@
 import Input from './Input';
 
-const Text = ({ name, col, type, isRequired }) => {
-  return <Input name={name} col={col} type={type} variant="input" isRequired={isRequired} />;
+
+const Text = ({value,disp, setValue, setState, name, col, type ,step, list, index, isRequired}) => {
+  return <Input value={value} disp={disp} setValue={setValue} list={list} isRequired={isRequired} index={index} setstate={setState} step={step} name={name} col={col} type={type} variant="input" />;
 };
 
-const Select = ({ name, col, options, isRequired }) => {
-  return <Input name={name} col={col} options={options} variant="select" isRequired={isRequired} />;
+const Select = ({value, setValue, disp, setState, name, col, options, list ,index, isRequired}) => {
+  return <Input value={value} setValue={setValue} setstate={setState} isRequired={isRequired} list={list} index={index} disp={disp} name={name} col={col} options={options} variant="select" />;
 };
 
-const Block = ({ name, col, rows, isRequired }) => {
-  return <Input name={name} col={` col-span-full ${col}`} rows={rows} variant="textarea" isRequired={isRequired} />;
+const Block = ({value,disp, setValue, setState, name, col, rows, list , index, isRequired}) => {
+  return <Input value={value} disp={disp} setValue={setValue} list={list} isRequired={isRequired} index={index} setstate={setState} name={name} col={` col-span-full ${col}`} rows={rows} variant="textarea" />;
+
 };
 
 export { Text, Select, Block };

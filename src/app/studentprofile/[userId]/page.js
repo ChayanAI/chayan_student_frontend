@@ -1,4 +1,4 @@
-import MultiStepForm from "../../components/MultiStepForm";
+import MultiStepForm from "../../../components/MultiStepForm";
 
 const StudentProfile = () => {
   return <MultiStepForm />;
