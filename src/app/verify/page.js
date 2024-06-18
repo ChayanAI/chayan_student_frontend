@@ -70,7 +70,7 @@ const VerifyPage = () => {
         setEmailError('');
 
         try {
-            const response = await axios.post('http://localhost:5000/send-email-otp', { email });
+            const response = await axios.post('http://localhost:5000/studentauth/send-email-otp', { email });
             setShowEmailPopup(true);
             setEmailCooldown(120);
         } catch (error) {
@@ -89,7 +89,7 @@ const VerifyPage = () => {
         setPhoneError('');
 
         try {
-            const response = await axios.post('http://localhost:5000/send-phone-otp', { phone });
+            const response = await axios.post('http://localhost:5000/studentauth/send-phone-otp', { phone });
             setShowPhonePopup(true);
             setPhoneCooldown(120);
         } catch (error) {
@@ -102,7 +102,7 @@ const VerifyPage = () => {
         const enteredOTP = Array.from(document.querySelectorAll('.email-otp-input')).map(input => input.value).join('');
 
         try {
-            const response = await axios.post('http://localhost:5000/verify-email-otp', { otp: enteredOTP });
+            const response = await axios.post('http://localhost:5000/studentauth/verify-email-otp', { otp: enteredOTP });
             setEmailVerified(true);
             setShowEmailPopup(false);
         } catch (error) {
@@ -117,7 +117,7 @@ const VerifyPage = () => {
         const enteredOTP = Array.from(document.querySelectorAll('.phone-otp-input')).map(input => input.value).join('');
 
         try {
-            const response = await axios.post('http://localhost:5000/verify-phone-otp', { otp: enteredOTP });
+            const response = await axios.post('http://localhost:5000/studentauth/verify-phone-otp', { otp: enteredOTP });
 
             setPhoneVerified(true);
             setShowPhonePopup(false);

@@ -31,9 +31,11 @@ const Dashboard = () => {
         // Fetch profile data
         const fetchProfile = async () => {
             try {
+
                 const response = await axios.get('http://localhost:5000/profile');
                 console.log(response.data);
                 setProfile(response.data);
+
             } catch (error) {
                 console.error('Error fetching profile:', error);
             }

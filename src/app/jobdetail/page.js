@@ -13,7 +13,7 @@ const JobDetail = () => {
     useEffect(() => {
         const fetchJobDetail = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/jobs/${id}`);
+                const response = await axios.get(`http://localhost:5000/studentjob/jobs/${id}`);
                 setJob(response.data);
                 setLoading(false);
             } catch (error) {

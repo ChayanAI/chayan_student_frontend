@@ -8,7 +8,7 @@ import InputLayout from '../components/InputLayout';
 export default function RootLayout({ children }) {
   const pathname = usePathname();
 
-  const isAuthPage = pathname === '/login';
+  const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/studentprofile');
   const isInputPage = pathname === '/inputform';
   const isVerifyPage = pathname === '/verify';
   const isInputPage1 = pathname === '/';
