@@ -10,10 +10,19 @@ export default function dashboardLayout({ children , params,}) {
   useEffect(() => {
     (async () => {
       const {user, error} = await check()
-      if(user){
+      if(user&&user.is_verified&&user.has_profile){
         router.push('/dashboard')
         return
       }
+      else if(user&&(!user.is_verified)){
+        router.push(`/verify/${user.id}`)
+        return
+      }
+      else if(user&&(!user.has_profile)){
+        router.push(`/studentprofile/${user.id}`)
+        return
+      }
+
       setSuccess(true)
     })()
   }, [router])

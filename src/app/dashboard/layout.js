@@ -14,6 +14,14 @@ export default function dashboardLayout({ children , params,}) {
         router.push('/login')
         return
       }
+      if((!user.is_verified)){
+        router.push(`/verify/${user.id}`)
+        return
+      }
+      if((!user.has_profile)){
+        router.push(`/studentprofile/${user.id}`)
+        return
+      }
       setSuccess(true)
     })()
   }, [router])
@@ -22,6 +30,7 @@ export default function dashboardLayout({ children , params,}) {
     try {
       const {data} = await axios.get('http://localhost:5000/auth/verify')
       // console.log(data)
+
       return{
         user: data,
         error: null
