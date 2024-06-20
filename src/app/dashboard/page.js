@@ -10,6 +10,7 @@ import MockInterviewsView from './MockInterviewsView';
 
 
 const Dashboard = () => {
+    const [userData, setUserdata] = useState(null)
     const [profile, setProfile] = useState(null);
     const [progress, setProgress] = useState(80); // Example progress, you can fetch actual completion progress
     const [profileSections, setProfileSections] = useState([
@@ -26,23 +27,25 @@ const Dashboard = () => {
         { title: 'Any Other Distinction', filled: true },
     ]);
     const [selectedSection, setSelectedSection] = useState('exploreOpportunities');
-
+    const [loader, setLoader] = useState(false)
     useEffect(() => {
-        // Fetch profile data
-        const fetchProfile = async () => {
-            try {
+        (async()=>{
+            await axios.get('http://localhost:5000/auth/verify').then(async(res)=>{
+                setUserdata(res.data)
+                await axios.post('http://localhost:5000/user/getprofilebyId', {user_id: res.data.id}).then((res)=>{
+                    setProfile(res.data)
+                    console.log(res.data)
+                })
+            })
+            setLoader(true)
+        })()
 
-                const response = await axios.get('http://localhost:5000/profile');
-                console.log(response.data);
-                setProfile(response.data);
 
-            } catch (error) {
-                console.error('Error fetching profile:', error);
-            }
-        };
-        fetchProfile();
     }, []);
-
+if(!loader){
+    return (<></>)
+}
+else{
     return (
         <div className="w-full min-h-screen p-6 bg-gray-100 flex flex-col">
             {/* Header */}
@@ -191,6 +194,8 @@ const Dashboard = () => {
             </div>
         </div>
     );
+}
+
 };
 
 export default Dashboard;
