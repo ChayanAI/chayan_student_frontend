@@ -14,6 +14,10 @@ export default function dashboardLayout({ children , params,}) {
         router.push('/login')
         return
       }
+      if(user.has_profile){
+        router.push('/dashboard')
+        return
+      }
       setSuccess(true)
     })()
   }, [router])
