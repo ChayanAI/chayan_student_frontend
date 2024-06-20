@@ -56,12 +56,12 @@ const Dashboard = () => {
                 {/* Left container */}
                 <div className="w-1/5 pr-8">
                     {/* Profile Card */}
-                    <div className="mb-4 p-6 w-64 bg-white rounded-lg shadow-md flex flex-col items-center absolute border-2 border-blue-600" style={{ zIndex: 10, top: '11rem' }}>
+                    <div className="mb-4 p-6 w- bg-white rounded-lg shadow-md flex flex-col items-center absolute border-2 border-blue-600" style={{ zIndex: 1, top: '22%' }}>
                         <img
                             src="/media/images/300-1.jpg" // Replace with actual image source
                             alt="Profile"
                             className="h-28 w-28 rounded-full mb-4 shadow-lg absolute"
-                            style={{ zIndex: 10, top: '-3rem', left: '1.5rem' }}
+                            style={{ zIndex: 1, top: '-15%', left: '9%' }}
                         />
                         <div className="w-full mt-12 mb-4 text-left">
                             <h2 className="text-xl  font-semibold">Amit Malakar</h2>
@@ -79,7 +79,7 @@ const Dashboard = () => {
                     </div>
 
                     {/* Profile Completion Section */}
-                    <div className=" p-6 pt-4 w-64 bg-white rounded-lg shadow-md mb-4 mt-56 border-2 border-blue-600">
+                    <div className=" p-6 pt-4 w-60 bg-white rounded-lg shadow-md mb-4 mt-56 border-2 border-blue-600">
                         <h2 className="text-xl font-semibold mb-2">My CHAYAN Profile</h2>
                         <div className="mb-4">
                             <p className="mb-2">Profile Completion: {progress}%</p>
@@ -124,7 +124,7 @@ const Dashboard = () => {
                                 onClick={() => setSelectedSection('exploreOpportunities')}
                                 style={{
                                     marginBottom: '2rem',
-                                    backgroundImage: selectedSection === 'exploreOpportunities' ? 'radial-gradient(circle, #2563EB, #00008B)' : 'radial-gradient(circle, #E5E7EB, #A9A9A9)'
+                                    backgroundImage: selectedSection === 'exploreOpportunities' ? 'radial-gradient(closest-side, #2563EB, #00008B)' : 'radial-gradient(closest-side, #E5E7EB, #A9A9A9)'
                                 }}
                             >
                                 <h2 className={`text-3xl text-center font-semibold ${selectedSection === 'exploreOpportunities' ? 'text-white' : 'text-black opacity-50'}`}>
@@ -140,7 +140,7 @@ const Dashboard = () => {
                                 onClick={() => setSelectedSection('learningGap')}
                                 style={{
                                     marginBottom: '2rem',
-                                    backgroundImage: selectedSection === 'learningGap' ? 'radial-gradient(circle, #2563EB, #00008B)' : 'radial-gradient(circle, #E5E7EB, #A9A9A9)'
+                                    backgroundImage: selectedSection === 'learningGap' ? 'radial-gradient(closest-side, #2563EB, #00008B)' : 'radial-gradient(closest-side, #E5E7EB, #A9A9A9)'
                                 }}
                             >
                                 <h2 className={`text-3xl text-center font-semibold ${selectedSection === 'learningGap' ? 'text-white' : 'text-black opacity-50'}`}>
@@ -153,7 +153,7 @@ const Dashboard = () => {
                                 onClick={() => setSelectedSection('buildResume')}
                                 style={{
                                     marginBottom: '2rem',
-                                    backgroundImage: selectedSection === 'buildResume' ? 'radial-gradient(circle, #2563EB, #00008B)' : 'radial-gradient(circle, #E5E7EB, #A9A9A9)'
+                                    backgroundImage: selectedSection === 'buildResume' ? 'radial-gradient(closest-side, #2563EB, #00008B)' : 'radial-gradient(closest-side, #E5E7EB, #A9A9A9)'
                                 }}
                             >
                                 <h2 className={`text-3xl text-center font-semibold ${selectedSection === 'buildResume' ? 'text-white' : 'text-black opacity-50'}`}>
@@ -169,7 +169,7 @@ const Dashboard = () => {
                                 onClick={() => setSelectedSection('mockInterviews')}
                                 style={{
                                     marginBottom: '2rem',
-                                    backgroundImage: selectedSection === 'mockInterviews' ? 'radial-gradient(circle, #2563EB, #00008B)' : 'radial-gradient(circle, #E5E7EB, #A9A9A9)'
+                                    backgroundImage: selectedSection === 'mockInterviews' ? 'radial-gradient(closest-side, #2563EB, #00008B)' : 'radial-gradient(closest-side, #E5E7EB, #A9A9A9)'
                                 }}
                             >
                                 <h2 className={`text-3xl text-center font-semibold ${selectedSection === 'mockInterviews' ? 'text-white' : 'text-black opacity-50'}`}>

@@ -22,12 +22,14 @@ const OpportunitiesView = () => {
                 console.error('Error fetching jobs:', error);
             }
         };
+        console.log("hi", skillRatings.mustHave.length)
         fetchJobs();
     }, []);
 
     const handleJobClick = (job) => {
         setSelectedJob(job);
         fetchSkillsFromJob(job);
+        console.log("hi", skillRatings.mustHave.length)
     };
 
     const handleLike = (jobId) => {
@@ -46,6 +48,7 @@ const OpportunitiesView = () => {
                     [jobId]: (prevLikes[jobId] || 0) + 1,
                 }));
             }
+            console.log("hi", skillRatings.mustHave.length)
             return newSet;
         });
     };
@@ -61,10 +64,23 @@ const OpportunitiesView = () => {
     };
 
     const fetchSkillsFromJob = (job) => {
-        const mustHaveSkills = job.skills_required !== 'None' ? job.skills_required.split(',').map(skill => ({ skill, rating: 0 })) : [];
-        const goodToHaveSkills = job.skills_preferred !== 'None' ? job.skills_preferred.split(',').map(skill => ({ skill, rating: 0 })) : [];
+        console.log("lo", job.skills_required);
+
+        // Handle mustHaveSkills
+        let mustHaveSkills = [];
+        if (job.skills_required && job.skills_required !== 'None') {
+            mustHaveSkills = job.skills_required.split(',').map(skill => ({ skill, rating: 0 }));
+        }
+
+        // Handle goodToHaveSkills
+        let goodToHaveSkills = [];
+        if (job.skills_preferred && job.skills_preferred !== 'None') {
+            goodToHaveSkills = job.skills_preferred.split(',').map(skill => ({ skill, rating: 0 }));
+        }
+
         setSkillRatings({ mustHave: mustHaveSkills, goodToHave: goodToHaveSkills });
     };
+
 
     const handleRatingChange = (type, index, rating) => {
         const updatedRatings = { ...skillRatings };
@@ -73,7 +89,7 @@ const OpportunitiesView = () => {
     };
 
     return (
-        <div className="p-4 bg-white rounded-lg shadow-md flex transition-transform duration-300 overflow-y-auto border-2 border-blue-500" style={{ minHeight: '40rem', height: '43rem' }}>
+        <div className="p-4 bg-white rounded-lg shadow-md flex transition-transform duration-300 overflow-y-auto border-2 border-blue-500" style={{ minHeight: '40rem', height: '42.8rem' }}>
             {/* Left Column: Job Cards */}
             <div className="w-1/5 pr-4 overflow-y-auto" style={{ height: '100%', width: '27%' }}>
                 {jobs.map((job, index) => (
@@ -107,11 +123,9 @@ const OpportunitiesView = () => {
                                 <span className={`text-sm ${appliedJobs.has(job.id) ? 'text-blue-500' : 'text-gray-600'}`}>{applications} {appliedJobs.has(job.id) ? 'Students Applied' : 'Students Applied'}</span>
                             </div>
                         </div>
-
                     </div>
                 ))}
             </div>
-
 
             {/* Right Column: Job Details and Claim Candidacy */}
             <div className="w-4/5 pl-2 flex " style={{ height: '100%' }}>
@@ -133,7 +147,7 @@ const OpportunitiesView = () => {
                                 <p className="text-gray-800">MNC - {selectedJob.is_mnc ? 'Yes' : 'No'}</p>
                             </div>
                             <div className="flex mb-2 pb-2 space-x-32 border-b border-dotted border-gray-300">
-                                <p className="text-gray-800"> {selectedJob.head_officd} Head office - </p>
+                                <p className="text-gray-800"> {selectedJob.head_office} Head office - </p>
                             </div>
 
                             {/* Job Role Information */}
@@ -190,66 +204,87 @@ const OpportunitiesView = () => {
                             <h2 className="text-xl pt-2 text-center font-semibold mb-4">Claim Your Candidacy</h2>
 
                             {/* Must Have Skills */}
-                            <h3 className="text-lg pl-2 font-semibold mb-2">Must Have Skills</h3>
-                            <table className="min-w-full divide-y divide-gray-200 mb-6">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-3 py-3 text-left text-xs font-medium  tracking-wider"></th>
-                                        <th className="px-3 py-3 text-left text-sm font-medium text-gray-900 tracking-wider">Self Rating *</th>
-                                        <th className="px-3 py-3 text-left text-sm font-medium text-gray-900 tracking-wider">Assessment</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {skillRatings.mustHave.map((skill, index) => (
-                                        <tr key={index}>
-                                            <td className="px-3 py-3 whitespace-normal text-sm font-medium text-gray-900 w-32 break-words">{skill.skill}</td>
-                                            <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
-                                                <div className="flex">
-                                                    {[...Array(5)].map((_, i) => (
-                                                        <FaStar
-                                                            key={i}
-                                                            className={`cursor-pointer text-xl ${i < skill.rating ? 'text-yellow-400' : 'text-gray-300'}`}
-                                                            onClick={() => handleRatingChange('mustHave', index, i + 1)}
-                                                        />
-                                                    ))}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-2 whitespace-nowrap text-sm text-red-500">Pending</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                            {skillRatings.mustHave.length > 0 ? (
+                                <>
+                                    <h3 className="text-lg pl-2 font-semibold mb-2">Must Have Skills</h3>
+                                    <table className="min-w-full divide-y divide-gray-200 mb-6">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th className="px-3 py-3 text-left text-xs font-medium  tracking-wider"></th>
+                                                <th className="px-3 py-3 text-left text-sm font-medium text-gray-900 tracking-wider">Self Rating <span className="text-red-500 text-xl">*</span></th>
+                                                <th className="px-3 py-3 text-left text-sm font-medium text-gray-900 tracking-wider">Assessment</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-white divide-y divide-gray-200">
+                                            {skillRatings.mustHave.map((skill, index) => (
+                                                <tr key={index}>
+                                                    <td className="px-3 py-3 whitespace-normal text-sm font-medium text-gray-900 w-32 break-words">{skill.skill}</td>
+                                                    <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
+                                                        <div className="flex">
+                                                            {[...Array(5)].map((_, i) => (
+                                                                <FaStar
+                                                                    key={i}
+                                                                    className={`cursor-pointer text-xl ${i < skill.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                                                                    onClick={() => handleRatingChange('mustHave', index, i + 1)}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-2 whitespace-nowrap text-sm text-red-500">Pending</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </>
+                            ) : (
+
+                                <div className="text-center text-gray-600 py-4">
+                                    <h3 className="text-lg pl-2 font-semibold mb-2">Must Have Skills</h3>
+
+                                    No Must Have Skills required for this job.
+                                </div>
+                            )}
 
                             {/* Good to Have Skills */}
-                            <h3 className="text-lg pl-2 font-semibold mb-2">Good to Have Skills</h3>
-                            <table className="min-w-full divide-y divide-gray-200 mb-6">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-3 py-3 text-left text-xs font-medium text-gray-900  tracking-wider"></th>
-                                        <th className="px-3 py-3 text-left text-sm font-medium text-gray-900  tracking-wider">Self Rating *</th>
-                                        <th className="px-3 py-3 text-left text-sm font-medium text-gray-900  tracking-wider">Assessment</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {skillRatings.goodToHave.map((skill, index) => (
-                                        <tr key={index}>
-                                            <td className="px-3 py-3 whitespace-normal text-sm font-medium text-gray-900 w-32 break-words">{skill.skill}</td>
-                                            <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
-                                                <div className="flex">
-                                                    {[...Array(5)].map((_, i) => (
-                                                        <FaStar
-                                                            key={i}
-                                                            className={`cursor-pointer text-xl ${i < skill.rating ? 'text-red-500' : 'text-gray-300'}`}
-                                                            onClick={() => handleRatingChange('goodToHave', index, i + 1)}
-                                                        />
-                                                    ))}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-2 whitespace-nowrap text-sm text-red-500">Pending</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                            {skillRatings.goodToHave.length > 0 ? (
+                                <>
+                                    <h3 className="text-lg pl-2 font-semibold mb-2">Good to Have Skills</h3>
+                                    <table className="min-w-full divide-y divide-gray-200 mb-6">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th className="px-3 py-3 text-left text-xs font-medium text-gray-900  tracking-wider"></th>
+                                                <th className="px-3 py-3 text-left text-sm font-medium text-gray-900  tracking-wider">Self Rating <span className="text-red-500 text-xl">*</span></th>
+                                                <th className="px-3 py-3 text-left text-sm font-medium text-gray-900  tracking-wider">Assessment</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-white divide-y divide-gray-200">
+                                            {skillRatings.goodToHave.map((skill, index) => (
+                                                <tr key={index}>
+                                                    <td className="px-3 py-3 whitespace-normal text-sm font-medium text-gray-900 w-32 break-words">{skill.skill}</td>
+                                                    <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
+                                                        <div className="flex">
+                                                            {[...Array(5)].map((_, i) => (
+                                                                <FaStar
+                                                                    key={i}
+                                                                    className={`cursor-pointer text-xl ${i < skill.rating ? 'text-red-500' : 'text-gray-300'}`}
+                                                                    onClick={() => handleRatingChange('goodToHave', index, i + 1)}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-2 whitespace-nowrap text-sm text-red-500">Pending</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </>
+                            ) : (
+                                <div className="text-center text-gray-600 py-4">
+                                    <h3 className="text-lg pl-2 font-semibold mb-2">Good to Have Skills</h3>
+
+                                    No Good to Have Skills required for this job.
+                                </div>
+                            )}
 
                             {/* Apply Button */}
                             <div className="flex justify-center mt-4 mb-4" style={{ marginTop: '-4px' }}>
@@ -262,7 +297,7 @@ const OpportunitiesView = () => {
                 )}
             </div>
 
-        </div>
+        </div >
     )
 }
 
