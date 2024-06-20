@@ -6,9 +6,9 @@ const LearningPathView = () => {
 
     // Sample data for career options and skills
     const careerOptions = [
-        { id: 1, name: 'Software Engineer' },
-        { id: 2, name: 'Data Analyst' },
-        { id: 3, name: 'Product Manager' },
+        { id: 1, name: 'Web Developer', employabilityScore: 85 },
+        { id: 2, name: 'DevOps Engineer', employabilityScore: 78 },
+        { id: 3, name: 'AI Engineer', employabilityScore: 90 },
     ];
 
     const skillsData = {
@@ -43,7 +43,7 @@ const LearningPathView = () => {
     };
 
     return (
-        <div className="p-6 bg-white rounded-lg shadow-md">
+        <div className="p-6 bg-white rounded-lg shadow-md" style={{ height: '52rem', width: '100%' }}>
             {/* Header with two view options */}
             <div className="flex justify-between mb-4">
                 <div
@@ -64,23 +64,25 @@ const LearningPathView = () => {
                 <div className="flex">
                     {/* Left section - Career options */}
                     <div className="w-1/5 pr-4">
-                        <h3 className="font-semibold mb-4">Career Options</h3>
+                        <h3 className="font-semibold mb-20"></h3>
                         {careerOptions.map(option => (
                             <div
                                 key={option.id}
-                                className={`border rounded p-2 mb-2 cursor-pointer ${selectedCareer === option.id ? 'bg-yellow-200' : ''}`}
+                                className={`border rounded p-2 mb-8 cursor-pointer ${selectedCareer === option.id ? 'bg-yellow-400' : ''}`}
                                 onClick={() => handleCareerSelect(option.id)}
                             >
-                                {option.name}
+                                <div className="text-center">{option.name}</div>
+                                <div className="text-small text-center text-gray-500">Employability Score: {option.employabilityScore}%</div>
                             </div>
                         ))}
                     </div>
 
+
                     {/* Right section - Skills mapped to selected career */}
                     <div className="w-4/5 pl-4">
-                        <h3 className="font-semibold mb-4">Skills Mapped to Selected Career</h3>
+                        <h3 className="font-semibold mb-4"></h3>
                         {selectedCareer && skillsData[selectedCareer] ? (
-                            <div className="overflow-x-auto">
+                            <div className="overflow-x-auto mt-8">
                                 <table className="min-w-full bg-white">
                                     <thead>
                                         <tr>
@@ -105,10 +107,12 @@ const LearningPathView = () => {
                                                         </span>
                                                     ))}
                                                 </td>
-                                                <td className="px-4 py-2 border">{skill.assessment}</td>
+                                                <td className={`px-4 py-2 border ${skill.assessment.includes('Pending') ? 'text-red-500' : skill.assessment.includes('Average') ? 'text-green-500' : 'text-yellow-500'}`}>
+                                                    {skill.assessment}
+                                                </td>
                                                 <td className="px-4 py-2 border">
                                                     {skill.learningPath.map((course, idx) => (
-                                                        <div key={idx}>{course}</div>
+                                                        <div key={idx} className="text-blue-500">{course}</div>
                                                     ))}
                                                 </td>
                                             </tr>
@@ -131,10 +135,10 @@ const LearningPathView = () => {
                         {careerOptions.map(option => (
                             <div
                                 key={option.id}
-                                className={`border rounded p-2 mb-2 cursor-pointer ${selectedCareer === option.id ? 'bg-yellow-200' : ''}`}
+                                className={`border rounded p-2 mb-2 cursor-pointer ${selectedCareer === option.id ? 'bg-yellow-400' : ''}`}
                                 onClick={() => handleCareerSelect(option.id)}
                             >
-                                {option.name}
+                                <div>{option.name}</div>
                             </div>
                         ))}
                     </div>
@@ -168,10 +172,12 @@ const LearningPathView = () => {
                                                         </span>
                                                     ))}
                                                 </td>
-                                                <td className="px-4 py-2 border">{skill.assessment}</td>
+                                                <td className={`px-4 py-2 border ${skill.assessment.includes('Pending') ? 'text-red-500' : skill.assessment.includes('Average') ? 'text-green-500' : 'text-yellow-500'}`}>
+                                                    {skill.assessment}
+                                                </td>
                                                 <td className="px-4 py-2 border">
                                                     {skill.learningPath.map((course, idx) => (
-                                                        <div key={idx}>{course}</div>
+                                                        <div key={idx} className="text-blue-500">{course}</div>
                                                     ))}
                                                 </td>
                                             </tr>
