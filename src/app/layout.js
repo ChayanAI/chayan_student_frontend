@@ -10,7 +10,7 @@ export default function RootLayout({ children }) {
 
   const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/studentprofile');
   const isInputPage = pathname === '/inputform';
-  const isVerifyPage = pathname === '/verify';
+  const isVerifyPage = pathname.startsWith('/verify');
   const isInputPage1 = pathname === '/';
 
   if (isAuthPage) {

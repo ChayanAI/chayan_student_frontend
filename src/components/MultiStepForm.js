@@ -9,8 +9,11 @@ import SkillRating from './SkillRating';
 import StarRating from './StarRating';
 import {ToggleButton, ButtonRow} from './ToggleButton';
 import {CircleCheckBig, CirclePlus} from 'lucide-react';
+import axios from "axios";
+import {useParams} from "next/navigation";
 
-const MultiStepForm = () => {
+const MultiStepForm = ({userId}) => {
+    const params = useParams()
 
 
     const [profileData, setProfileData] = useState({
@@ -88,7 +91,14 @@ const MultiStepForm = () => {
     const [loader, setLoader] = useState(true)
     const [currentStep, setCurrentStep] = useState(0);
     useEffect(() => {
-        // console.log("meow")
+        try {
+            axios.post('http://localhost:5000/get/findbyId', {userId: userId}).then((res) => {
+
+                setProfileData((prev) => ({...prev, email: res.data.email, phone_number: res.data.phone_number}))
+            })
+        } catch (err) {
+            alert(err.response.data)
+        }
 
 
         setLoader(false)
@@ -129,7 +139,33 @@ const MultiStepForm = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // Handle form submission
+        console.log(profileData)
+        try {
+            await axios.post('http://localhost:5000/studentprofile/submit-form', {
+                user_id: params.userId,
+                first_name: profileData.first_name,
+                last_name: profileData.last_name,
+                date_of_birth: profileData.date_of_birth,
+                gender: profileData.gender,
+                hometown: profileData.city,
+                degree: profileData.degree,
+                course_length: profileData.course_length,
+                course_started: profileData.course_started,
+                expected_graduation: profileData.expected_graduation,
+                branch: profileData.branch,
+                minor_branch: profileData.minor_branch,
+                cgpa: profileData.cgpa,
+                sgpa:profileData.sgpa,
+                class_12_board: profileData.class_12_board,
+                class_12_percentage: profileData.class_12_percentage,
+                internships: profileData.internships,
+                projects: profileData.projects,
+                volunteers: profileData.volunteers,
+                extra_curriculars: profileData.extra_curriculars
+            }).then((res)=>console.log(res))
+        } catch (err) {
+            alert(err)
+        }
         router.push('/dashboard');
     };
     if (loader) {
@@ -145,45 +181,46 @@ const MultiStepForm = () => {
                     <div className="w-3/4 p-8">
 
 
-                            {/* Personal Information */}
-                            {currentStep === 0 && (
-                                <form onSubmit={handleNext}>
-                                    <div>
-                                        <div
-                                            className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b">
-                                            {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
-                                            <Text name={'First Name'} value={profileData.first_name} isRequired={true}
-                                                  disp='first_name'
-                                                  setValue={setProfileData} col={'3'}/>
-                                            <Text name={'Last Name'} value={profileData.last_name} disp='last_name'
-                                                  setValue={setProfileData} col={'3'}/>
-                                            <Text name={'Date of birth'} value={profileData.date_of_birth}
-                                                  isRequired={true}
-                                                  disp='date_of_birth'
-                                                  setValue={setProfileData} type={'date'} col={'3'}/>
-                                            <Text name={'Hometown'} value={profileData.city} disp='city'
-                                                  setValue={setProfileData} col={'3'}/>
-                                            {/* <Select name={'Gender'} col={'4'} options={['Male', 'Female', 'Attack-Helicopter', 'Non-binary', 'Genderqueer', 'Genderfluid', 'Agender', 'Bigender', 'Androgynous', 'Two-Spirit', 'Gender Nonconforming', 'Pangender', 'Gender Variant', 'Intersex', 'Third Gender', 'Neutrois', 'Demiboy', 'Demigirl', 'Transgender', 'Trans Man', 'Trans Woman', 'Cisgender', 'Femme', 'Butch', 'Hijra', 'Kathoey', 'Faafafine', 'Muxe', 'X-gender', 'Polygender', 'Gender Apathetic', 'Androgyne', 'Aliagender', 'Cis Man', 'Cis Woman', 'Femme Person', 'Butch Person', 'Maverique', 'Novigender', 'Trigender', 'Two Spirit', 'Bakla', 'Mahuwahine', 'Mahukane', 'Xenogender']} /> */}
-                                            <ButtonRow label={'Gender'} value={profileData.gender} disp='gender'
-                                                       setValue={setProfileData} col={4}
-                                                       buttonNames={['Male', 'Female', 'Others']}/>
-                                            <Text name={'Phone Number'} isRequired={true}
-                                                  value={profileData.phone_number}
-                                                  disp='phone_number'
-                                                  setValue={setProfileData} type='number' col={'3'}/>
-                                            <div className="col-span-1">
-                                                {/*    /!* Here, use state to switch between the three responses below dhruv. I'm leaving button by default*!/*/}
+                        {/* Personal Information */}
+                        {currentStep === 0 && (
+                            <form onSubmit={handleNext}>
+                                <div>
+                                    <div
+                                        className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b">
+                                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
+                                        <Text name={'First Name'} value={profileData.first_name} isRequired={true}
+                                              disp='first_name'
+                                              setValue={setProfileData} col={'3'}/>
+                                        <Text name={'Last Name'} value={profileData.last_name} disp='last_name'
+                                              setValue={setProfileData} col={'3'}/>
+                                        <Text name={'Date of birth'} value={profileData.date_of_birth}
+                                              isRequired={true}
+                                              disp='date_of_birth'
+                                              setValue={setProfileData} type={'date'} col={'3'}/>
+                                        <Text name={'Hometown'} value={profileData.city} disp='city'
+                                              setValue={setProfileData} col={'3'}/>
+                                        {/* <Select name={'Gender'} col={'4'} options={['Male', 'Female', 'Attack-Helicopter', 'Non-binary', 'Genderqueer', 'Genderfluid', 'Agender', 'Bigender', 'Androgynous', 'Two-Spirit', 'Gender Nonconforming', 'Pangender', 'Gender Variant', 'Intersex', 'Third Gender', 'Neutrois', 'Demiboy', 'Demigirl', 'Transgender', 'Trans Man', 'Trans Woman', 'Cisgender', 'Femme', 'Butch', 'Hijra', 'Kathoey', 'Faafafine', 'Muxe', 'X-gender', 'Polygender', 'Gender Apathetic', 'Androgyne', 'Aliagender', 'Cis Man', 'Cis Woman', 'Femme Person', 'Butch Person', 'Maverique', 'Novigender', 'Trigender', 'Two Spirit', 'Bakla', 'Mahuwahine', 'Mahukane', 'Xenogender']} /> */}
+                                        <ButtonRow label={'Gender'} value={profileData.gender} disp='gender'
+                                                   setValue={setProfileData} col={4}
+                                                   buttonNames={['Male', 'Female', 'Others']}/>
+                                        <Text name={'Phone Number'} isRequired={true}
+                                              value={profileData.phone_number}
+                                              disp='phone_number'
+                                              disabled={true}
+                                              setValue={setProfileData} type='number' col={'3'}/>
+                                        <div className="col-span-1">
+                                            {/*    /!* Here, use state to switch between the three responses below dhruv. I'm leaving button by default*!/*/}
 
-                                                {/*    /!* <button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button> *!/*/}
+                                            {/*    /!* <button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button> *!/*/}
 
-                                                {/*    <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">otp</label>*/}
-                                                {/*    <OtpInput numDigits={6} />*/}
+                                            {/*    <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">otp</label>*/}
+                                            {/*    <OtpInput numDigits={6} />*/}
 
-                                                <div className='flex mt-10 text-blue-700 gap-1'><CircleCheckBig/>Verified
-                                                </div>
+                                            <div className='flex mt-10 text-blue-700 gap-1'><CircleCheckBig/>Verified
                                             </div>
+                                        </div>
 
-                                            {/* <div className='col-span-3'>
+                                        {/* <div className='col-span-3'>
                           <label htmlFor="phone-number" className="block text-sm font-medium leading-6 text-gray-900">
                             Phone Number
                           </label>
@@ -223,189 +260,189 @@ const MultiStepForm = () => {
                       </div> */}
 
 
-                                            <Text name={'Email'} isRequired={true}
-                                                  value={profileData.email}
-                                                  disp='email'
-                                                  setValue={setProfileData} type='email' col={'3'}/>
-                                            <div className="col-span-1">
-                                                {/* Here, use state to switch between the three responses below dhruv. I'm leaving button by default*/}
+                                        <Text name={'Email'} isRequired={true}
+                                              value={profileData.email}
+                                              disp='email'
+                                              setValue={setProfileData} disabled={true} type='email' col={'3'}/>
+                                        <div className="col-span-1">
+                                            {/* Here, use state to switch between the three responses below dhruv. I'm leaving button by default*/}
 
-                                                {/* <button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button> */}
+                                            {/* <button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button> */}
 
-                                                {/* <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">otp</label>
+                                            {/* <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">otp</label>
                           <OtpInput numDigits={6} /> */}
 
-                                                <div className='flex mt-10 text-blue-700 gap-1'><CircleCheckBig/>Verified
-                                                </div>
+                                            <div className='flex mt-10 text-blue-700 gap-1'><CircleCheckBig/>Verified
                                             </div>
                                         </div>
-                                        <div className="w-full flex justify-between">
-                                            <div></div>
-                                            <button type='submit'
-                                                    className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
-                                                Next
-                                            </button>
-                                        </div>
                                     </div>
-                                </form>
-                            )}
-
-                            {/* Academics */}
-                            {/*{currentStep === 1 && (*/}
-                            {/*    <form onSubmit={handleNext}>*/}
-                            {/*        <div*/}
-                            {/*            className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b">*/}
-                            {/*            /!* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> *!/*/}
-                            {/*            <Text name={'College Name'} col={' col-span-full'} isRequired={true}/>*/}
-                            {/*            <Select name={'Degree'} col={'2'} options={['B.Tech', 'B.Comm', 'B.Sc']}*/}
-                            {/*                    isRequired={true}/>*/}
-                            {/*            <Text name={'Branch / Discipline'} col={'2'} isRequired={true}/>*/}
-                            {/*            <Text name={'Minor Branch'} col={'2'}/>*/}
-
-                            {/*            /!* MM YYYY ONLY *!/*/}
-                            {/*            <Text name={'Start Date'} type={'date'} col={'3'} isRequired={true}/>*/}
-                            {/*            <Text name={'End Date'} type={'date'} col={'3'} isRequired={true}/>*/}
-
-                            {/*            <ButtonRow label={'Length of the course'} col={' col-span-full'}*/}
-                            {/*                       buttonNames={['2 Years', '3 Years', '4 Years', '5 Years']}/>*/}
-                            {/*            <Text name={'CGPA / Percentage'} col={'2'} isRequired={true}/>*/}
-                            {/*            <div className={`sm:col-span-4`}>*/}
-                            {/*                <label*/}
-                            {/*                    className="block text-sm font-medium leading-6 text-gray-900 tracking-tight">*/}
-                            {/*                    SGPA / Sem. Percentages*/}
-                            {/*                </label>*/}
-                            {/*                <div className="mt-2">*/}
-                            {/*                    <div className="grid grid-cols-2 gap-x-6 gap-y-6 md:grid-cols-4">*/}
-                            {/*                        <div className="col-span-1"><input id='sgpa1' placeholder='Sem-1'*/}
-                            {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
-                            {/*                        </div>*/}
-                            {/*                        <div className="col-span-1"><input id='sgpa2' placeholder='Sem-2'*/}
-                            {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
-                            {/*                        </div>*/}
-                            {/*                        <div className="col-span-1"><input id='sgpa3' placeholder='Sem-3'*/}
-                            {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
-                            {/*                        </div>*/}
-                            {/*                        <div className="col-span-1"><input id='sgpa4' placeholder='Sem-4'*/}
-                            {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
-                            {/*                        </div>*/}
-                            {/*                        <div className="col-span-1"><input id='sgpa5' placeholder='Sem-5'*/}
-                            {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
-                            {/*                        </div>*/}
-                            {/*                        <div className="col-span-1"><input id='sgpa6' placeholder='Sem-6'*/}
-                            {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
-                            {/*                        </div>*/}
-                            {/*                        <div className="col-span-1"><input id='sgpa7' placeholder='Sem-7'*/}
-                            {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
-                            {/*                        </div>*/}
-                            {/*                        <div className="col-span-1"><input id='sgpa8' placeholder='Sem-8'*/}
-                            {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
-                            {/*                        </div>*/}
-                            {/*                    </div>*/}
-                            {/*                </div>*/}
-                            {/*            </div>*/}
-                            {/*            <Select name={'12th Board'} col={3} options={['CBSE', 'ISC', 'State Board']}*/}
-                            {/*                    isRequired={true}/>*/}
-                            {/*            <Text name={'12th Percentage'} col={3} isRequired={true}/>*/}
-                            {/*        </div>*/}
-                            {/*        <div className="w-full flex justify-between px-2">*/}
-                            {/*            <button type="button" onClick={handleBack}*/}
-                            {/*                    className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back*/}
-                            {/*            </button>*/}
-                            {/*            <button type="submit"*/}
-                            {/*                    className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next*/}
-                            {/*            </button>*/}
-                            {/*        </div>*/}
-                            {/*    </form>*/}
-                            {/*)}*/}
-                            {/* Professional Goals */}
-                            {currentStep === 2 && (
-                                <form onSubmit={handleNext}>
-                                    <div
-                                        className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 border-b">
-                                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
-                                        <ButtonRow label={'Career Objectives'} col={' col-span-full'} buttonsPerRow={4}
-                                                   buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8']}/>
-                                        {/* Yaha par atleast ek jab select karo tab niche ke options dikhane hain dhruv. */}
-                                        <SkillRating label='Rate Yourself in each skill for your desired objective:'/>
-                                    </div>
-                                    <div className="w-full flex justify-between px-2">
-                                        <button type="button" onClick={handleBack}
-                                                className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                        </button>
-                                        <button type="submit"
-                                                className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
+                                    <div className="w-full flex justify-between">
+                                        <div></div>
+                                        <button type='submit'
+                                                className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
+                                            Next
                                         </button>
                                     </div>
-                                </form>
-                            )}
-                            {/* Skill Verification */}
-                            {currentStep === 3 && (
-                                <form onSubmit={handleNext}>
+                                </div>
+                            </form>
+                        )}
+
+                        {/* Academics */}
+                        {/*{currentStep === 1 && (*/}
+                        {/*    <form onSubmit={handleNext}>*/}
+                        {/*        <div*/}
+                        {/*            className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b">*/}
+                        {/*            /!* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> *!/*/}
+                        {/*            <Text name={'College Name'} col={' col-span-full'} isRequired={true}/>*/}
+                        {/*            <Select name={'Degree'} col={'2'} options={['B.Tech', 'B.Comm', 'B.Sc']}*/}
+                        {/*                    isRequired={true}/>*/}
+                        {/*            <Text name={'Branch / Discipline'} col={'2'} isRequired={true}/>*/}
+                        {/*            <Text name={'Minor Branch'} col={'2'}/>*/}
+
+                        {/*            /!* MM YYYY ONLY *!/*/}
+                        {/*            <Text name={'Start Date'} type={'date'} col={'3'} isRequired={true}/>*/}
+                        {/*            <Text name={'End Date'} type={'date'} col={'3'} isRequired={true}/>*/}
+
+                        {/*            <ButtonRow label={'Length of the course'} col={' col-span-full'}*/}
+                        {/*                       buttonNames={['2 Years', '3 Years', '4 Years', '5 Years']}/>*/}
+                        {/*            <Text name={'CGPA / Percentage'} col={'2'} isRequired={true}/>*/}
+                        {/*            <div className={`sm:col-span-4`}>*/}
+                        {/*                <label*/}
+                        {/*                    className="block text-sm font-medium leading-6 text-gray-900 tracking-tight">*/}
+                        {/*                    SGPA / Sem. Percentages*/}
+                        {/*                </label>*/}
+                        {/*                <div className="mt-2">*/}
+                        {/*                    <div className="grid grid-cols-2 gap-x-6 gap-y-6 md:grid-cols-4">*/}
+                        {/*                        <div className="col-span-1"><input id='sgpa1' placeholder='Sem-1'*/}
+                        {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
+                        {/*                        </div>*/}
+                        {/*                        <div className="col-span-1"><input id='sgpa2' placeholder='Sem-2'*/}
+                        {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
+                        {/*                        </div>*/}
+                        {/*                        <div className="col-span-1"><input id='sgpa3' placeholder='Sem-3'*/}
+                        {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
+                        {/*                        </div>*/}
+                        {/*                        <div className="col-span-1"><input id='sgpa4' placeholder='Sem-4'*/}
+                        {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
+                        {/*                        </div>*/}
+                        {/*                        <div className="col-span-1"><input id='sgpa5' placeholder='Sem-5'*/}
+                        {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
+                        {/*                        </div>*/}
+                        {/*                        <div className="col-span-1"><input id='sgpa6' placeholder='Sem-6'*/}
+                        {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
+                        {/*                        </div>*/}
+                        {/*                        <div className="col-span-1"><input id='sgpa7' placeholder='Sem-7'*/}
+                        {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
+                        {/*                        </div>*/}
+                        {/*                        <div className="col-span-1"><input id='sgpa8' placeholder='Sem-8'*/}
+                        {/*                                                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>*/}
+                        {/*                        </div>*/}
+                        {/*                    </div>*/}
+                        {/*                </div>*/}
+                        {/*            </div>*/}
+                        {/*            <Select name={'12th Board'} col={3} options={['CBSE', 'ISC', 'State Board']}*/}
+                        {/*                    isRequired={true}/>*/}
+                        {/*            <Text name={'12th Percentage'} col={3} isRequired={true}/>*/}
+                        {/*        </div>*/}
+                        {/*        <div className="w-full flex justify-between px-2">*/}
+                        {/*            <button type="button" onClick={handleBack}*/}
+                        {/*                    className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back*/}
+                        {/*            </button>*/}
+                        {/*            <button type="submit"*/}
+                        {/*                    className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next*/}
+                        {/*            </button>*/}
+                        {/*        </div>*/}
+                        {/*    </form>*/}
+                        {/*)}*/}
+                        {/* Professional Goals */}
+                        {currentStep === 2 && (
+                            <form onSubmit={handleNext}>
+                                <div
+                                    className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 border-b">
+                                    {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
+                                    <ButtonRow label={'Career Objectives'} col={' col-span-full'} buttonsPerRow={4}
+                                               buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8']}/>
+                                    {/* Yaha par atleast ek jab select karo tab niche ke options dikhane hain dhruv. */}
+                                    <SkillRating label='Rate Yourself in each skill for your desired objective:'/>
+                                </div>
+                                <div className="w-full flex justify-between px-2">
+                                    <button type="button" onClick={handleBack}
+                                            className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
+                                    </button>
+                                    <button type="submit"
+                                            className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
+                                    </button>
+                                </div>
+                            </form>
+                        )}
+                        {/* Skill Verification */}
+                        {currentStep === 3 && (
+                            <form onSubmit={handleNext}>
+                                <div
+                                    className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b">
+                                    {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
+                                    <label
+                                        className="block text-sm font-medium leading-6 text-gray-900 tracking-tight col-span-full">Certify
+                                        Your Claimed Skills</label>
                                     <div
-                                        className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b">
-                                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
-                                        <label
-                                            className="block text-sm font-medium leading-6 text-gray-900 tracking-tight col-span-full">Certify
-                                            Your Claimed Skills</label>
-                                        <div
-                                            className="sm:col-span-1 bg-slate-500 h-fit rounded-md py-2 text-white text-center">Option
-                                            1
-                                        </div>
-                                        <form
-                                            className="col-span-2 lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            <div className="flex gap-6 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill
-                                                        1</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center">
-                                                    <button type='button'
-                                                            className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Certify Yourself
-                                                    </button>
-                                                </div>
+                                        className="sm:col-span-1 bg-slate-500 h-fit rounded-md py-2 text-white text-center">Option
+                                        1
+                                    </div>
+                                    <form
+                                        className="col-span-2 lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div className="flex gap-6 px-auto mx-auto col-span-1">
+                                            <div
+                                                className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
+                                                <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill
+                                                    1</p>
+                                                <StarRating onRatingChange={handleRatingChange}/>
                                             </div>
-                                            <div className="flex gap-6 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill
-                                                        2</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
+                                            <div className="text-center">
+                                                <button type='button'
+                                                        className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
+                                                    Certify Yourself
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-6 px-auto mx-auto col-span-1">
+                                            <div
+                                                className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
+                                                <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill
+                                                    2</p>
+                                                <StarRating onRatingChange={handleRatingChange}/>
 
-                                                    <Text name={'Email'} value={profileData.email} isRequired={true}
-                                                          disp='email'
-                                                          setValue={setProfileData} type={'email'} col={'3'}/>
-                                                    <div className="col-span-1">
-                                                        {/* Here, use state to switch between the three responses below dhruv. I'm leaving button by default*/}
+                                                <Text name={'Email'} value={profileData.email} isRequired={true}
+                                                      disp='email'
+                                                      setValue={setProfileData} type={'email'} col={'3'}/>
+                                                <div className="col-span-1">
+                                                    {/* Here, use state to switch between the three responses below dhruv. I'm leaving button by default*/}
 
-                                                        {/*<button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button>*/}
+                                                    {/*<button type="button" className="w-full px-4 py-1 mt-9 text-white bg-slate-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Verify</button>*/}
 
-                                                        {/* <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">otp</label>
+                                                    {/* <label className="block text-sm font-medium leading-6 text-gray-900 mb-2">otp</label>
                             <OtpInput numDigits={6} /> */}
 
-                                                        <div className='flex mt-10 text-blue-700 gap-1'>
-                                                            <CircleCheckBig/>Verified
-                                                        </div>
+                                                    <div className='flex mt-10 text-blue-700 gap-1'>
+                                                        <CircleCheckBig/>Verified
                                                     </div>
                                                 </div>
-                                                <div className="w-full flex justify-between">
-                                                    <div></div>
-                                                    <button type="button" onClick={handleNext}
-                                                            className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
-                                                        Next
-                                                    </button>
-                                                </div>
-
                                             </div>
-                                        </form>
-                                    </div>
-                                </form>
-                            )}
-                            {/* Academics */}
-                            {currentStep === 1 && (
-                                <form onSubmit={handleNext}>
+                                            <div className="w-full flex justify-between">
+                                                <div></div>
+                                                <button type="button" onClick={handleNext}
+                                                        className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
+                                                    Next
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </form>
+                        )}
+                        {/* Academics */}
+                        {currentStep === 1 && (
+                            <form onSubmit={handleNext}>
                                 <div>
                                     <div
                                         className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b">
@@ -558,145 +595,145 @@ const MultiStepForm = () => {
                                         </button>
                                     </div>
                                 </div>
-                                </form>
-                            )}
-                            {/* Professional Goals */}
-                            {/*{currentStep === 2 && (*/}
-                            {/*    <div>*/}
-                            {/*        <div*/}
-                            {/*            className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 border-b">*/}
-                            {/*            /!* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> *!/*/}
-                            {/*            <ButtonRow label={'Career Objectives'} col={' col-span-full'}*/}
-                            {/*                       buttonsPerRow={4}*/}
-                            {/*                       buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8']}/>*/}
-                            {/*            /!* Yaha par atleast ek jab select karo tab niche ke options dikhane hain dhruv. *!/*/}
-                            {/*            <SkillRating*/}
-                            {/*                label='Rate Yourself in each skill for your desired objective:'/>*/}
-                            {/*        </div>*/}
-                            {/*        <div className="w-full flex justify-between px-2">*/}
-                            {/*            <button type="button" onClick={handleBack}*/}
-                            {/*                    className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back*/}
-                            {/*            </button>*/}
-                            {/*            <button type="button" onClick={handleNext}*/}
-                            {/*                    className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next*/}
-                            {/*            </button>*/}
-                            {/*        </div>*/}
-                            {/*    </div>*/}
-                            {/*)}*/}
-                            {/* Skill Verification */}
-                            {/*{currentStep === 3 && (*/}
-                            {/*    <div>*/}
-                            {/*        <div*/}
-                            {/*            className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b">*/}
-                            {/*            /!* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> *!/*/}
-                            {/*            <label*/}
-                            {/*                className="block text-sm font-medium leading-6 text-gray-900 tracking-tight col-span-full">Certify*/}
-                            {/*                Your Claimed Skills</label>*/}
-                            {/*            <div*/}
-                            {/*                className="sm:col-span-1 bg-slate-500 h-fit rounded-md py-2 text-white text-center">Option*/}
-                            {/*                1*/}
-                            {/*            </div>*/}
-                            {/*            <div*/}
-                            {/*                className="col-span-2 lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">*/}
-                            {/*                <div className="flex gap-6 px-auto mx-auto col-span-1">*/}
-                            {/*                    <div*/}
-                            {/*                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">*/}
-                            {/*                        <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill*/}
-                            {/*                            1</p>*/}
-                            {/*                        <StarRating onRatingChange={handleRatingChange}/>*/}
-                            {/*                    </div>*/}
-                            {/*                    <div className="text-center">*/}
-                            {/*                        <button type='button'*/}
-                            {/*                                className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">*/}
-                            {/*                            Certify Yourself*/}
-                            {/*                        </button>*/}
-                            {/*                    </div>*/}
-                            {/*                </div>*/}
-                            {/*                <div className="flex gap-6 px-auto mx-auto col-span-1">*/}
-                            {/*                    <div*/}
-                            {/*                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">*/}
-                            {/*                        <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill*/}
-                            {/*                            2</p>*/}
-                            {/*                        <StarRating onRatingChange={handleRatingChange}/>*/}
-                            {/*                    </div>*/}
-                            {/*                    <div className="text-center">*/}
-                            {/*                        <button type='button'*/}
-                            {/*                                className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">*/}
-                            {/*                            Certify Yourself*/}
-                            {/*                        </button>*/}
-                            {/*                    </div>*/}
-                            {/*                </div>*/}
-                            {/*                <div className="flex gap-6 px-auto mx-auto col-span-1">*/}
-                            {/*                    <div*/}
-                            {/*                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">*/}
-                            {/*                        <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill*/}
-                            {/*                            3</p>*/}
-                            {/*                        <StarRating onRatingChange={handleRatingChange}/>*/}
-                            {/*                    </div>*/}
-                            {/*                    <div className="text-center">*/}
-                            {/*                        <button type='button'*/}
-                            {/*                                className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">*/}
-                            {/*                            Certify Yourself*/}
-                            {/*                        </button>*/}
-                            {/*                    </div>*/}
-                            {/*                </div>*/}
-                            {/*                <div className="flex gap-6 px-auto mx-auto col-span-1">*/}
-                            {/*                    <div*/}
-                            {/*                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">*/}
-                            {/*                        <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill*/}
-                            {/*                            4</p>*/}
-                            {/*                        <StarRating onRatingChange={handleRatingChange}/>*/}
-                            {/*                    </div>*/}
-                            {/*                    <div className="text-center">*/}
-                            {/*                        <button type='button'*/}
-                            {/*                                className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">*/}
-                            {/*                            Certify Yourself*/}
-                            {/*                        </button>*/}
-                            {/*                    </div>*/}
-                            {/*                </div>*/}
-                            {/*                <div className="flex gap-6 px-auto mx-auto col-span-1">*/}
-                            {/*                    <div*/}
-                            {/*                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">*/}
-                            {/*                        <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill*/}
-                            {/*                            5</p>*/}
-                            {/*                        <StarRating onRatingChange={handleRatingChange}/>*/}
-                            {/*                    </div>*/}
-                            {/*                    <div className="text-center">*/}
-                            {/*                        <button type='button'*/}
-                            {/*                                className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">*/}
-                            {/*                            Certify Yourself*/}
-                            {/*                        </button>*/}
-                            {/*                    </div>*/}
-                            {/*                </div>*/}
-                            {/*                <div className="flex gap-6 px-auto mx-auto col-span-1">*/}
-                            {/*                    <div*/}
-                            {/*                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">*/}
-                            {/*                        <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill*/}
-                            {/*                            6</p>*/}
-                            {/*                        <StarRating onRatingChange={handleRatingChange}/>*/}
-                            {/*                    </div>*/}
-                            {/*                    <div className="text-center">*/}
-                            {/*                        <button type='button'*/}
-                            {/*                                className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">*/}
-                            {/*                            Certify Yourself*/}
-                            {/*                        </button>*/}
-                            {/*                    </div>*/}
-                            {/*                </div>*/}
-                            {/*            </div>*/}
-                            {/*        </div>*/}
-                            {/*        <div className="w-full flex justify-between px-2">*/}
-                            {/*            <button type="button" onClick={handleBack}*/}
-                            {/*                    className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back*/}
-                            {/*            </button>*/}
-                            {/*            <button type="button" onClick={handleNext}*/}
-                            {/*                    className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next*/}
-                            {/*            </button>*/}
-                            {/*        </div>*/}
-                            {/*    </div>*/}
-                            {/*)}*/}
-                            {/* Internships */}
-                            {currentStep === 4 && (
-                                <form onSubmit={handleNext}>
+                            </form>
+                        )}
+                        {/* Professional Goals */}
+                        {/*{currentStep === 2 && (*/}
+                        {/*    <div>*/}
+                        {/*        <div*/}
+                        {/*            className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 border-b">*/}
+                        {/*            /!* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> *!/*/}
+                        {/*            <ButtonRow label={'Career Objectives'} col={' col-span-full'}*/}
+                        {/*                       buttonsPerRow={4}*/}
+                        {/*                       buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8']}/>*/}
+                        {/*            /!* Yaha par atleast ek jab select karo tab niche ke options dikhane hain dhruv. *!/*/}
+                        {/*            <SkillRating*/}
+                        {/*                label='Rate Yourself in each skill for your desired objective:'/>*/}
+                        {/*        </div>*/}
+                        {/*        <div className="w-full flex justify-between px-2">*/}
+                        {/*            <button type="button" onClick={handleBack}*/}
+                        {/*                    className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back*/}
+                        {/*            </button>*/}
+                        {/*            <button type="button" onClick={handleNext}*/}
+                        {/*                    className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next*/}
+                        {/*            </button>*/}
+                        {/*        </div>*/}
+                        {/*    </div>*/}
+                        {/*)}*/}
+                        {/* Skill Verification */}
+                        {/*{currentStep === 3 && (*/}
+                        {/*    <div>*/}
+                        {/*        <div*/}
+                        {/*            className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b">*/}
+                        {/*            /!* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> *!/*/}
+                        {/*            <label*/}
+                        {/*                className="block text-sm font-medium leading-6 text-gray-900 tracking-tight col-span-full">Certify*/}
+                        {/*                Your Claimed Skills</label>*/}
+                        {/*            <div*/}
+                        {/*                className="sm:col-span-1 bg-slate-500 h-fit rounded-md py-2 text-white text-center">Option*/}
+                        {/*                1*/}
+                        {/*            </div>*/}
+                        {/*            <div*/}
+                        {/*                className="col-span-2 lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">*/}
+                        {/*                <div className="flex gap-6 px-auto mx-auto col-span-1">*/}
+                        {/*                    <div*/}
+                        {/*                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">*/}
+                        {/*                        <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill*/}
+                        {/*                            1</p>*/}
+                        {/*                        <StarRating onRatingChange={handleRatingChange}/>*/}
+                        {/*                    </div>*/}
+                        {/*                    <div className="text-center">*/}
+                        {/*                        <button type='button'*/}
+                        {/*                                className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">*/}
+                        {/*                            Certify Yourself*/}
+                        {/*                        </button>*/}
+                        {/*                    </div>*/}
+                        {/*                </div>*/}
+                        {/*                <div className="flex gap-6 px-auto mx-auto col-span-1">*/}
+                        {/*                    <div*/}
+                        {/*                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">*/}
+                        {/*                        <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill*/}
+                        {/*                            2</p>*/}
+                        {/*                        <StarRating onRatingChange={handleRatingChange}/>*/}
+                        {/*                    </div>*/}
+                        {/*                    <div className="text-center">*/}
+                        {/*                        <button type='button'*/}
+                        {/*                                className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">*/}
+                        {/*                            Certify Yourself*/}
+                        {/*                        </button>*/}
+                        {/*                    </div>*/}
+                        {/*                </div>*/}
+                        {/*                <div className="flex gap-6 px-auto mx-auto col-span-1">*/}
+                        {/*                    <div*/}
+                        {/*                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">*/}
+                        {/*                        <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill*/}
+                        {/*                            3</p>*/}
+                        {/*                        <StarRating onRatingChange={handleRatingChange}/>*/}
+                        {/*                    </div>*/}
+                        {/*                    <div className="text-center">*/}
+                        {/*                        <button type='button'*/}
+                        {/*                                className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">*/}
+                        {/*                            Certify Yourself*/}
+                        {/*                        </button>*/}
+                        {/*                    </div>*/}
+                        {/*                </div>*/}
+                        {/*                <div className="flex gap-6 px-auto mx-auto col-span-1">*/}
+                        {/*                    <div*/}
+                        {/*                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">*/}
+                        {/*                        <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill*/}
+                        {/*                            4</p>*/}
+                        {/*                        <StarRating onRatingChange={handleRatingChange}/>*/}
+                        {/*                    </div>*/}
+                        {/*                    <div className="text-center">*/}
+                        {/*                        <button type='button'*/}
+                        {/*                                className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">*/}
+                        {/*                            Certify Yourself*/}
+                        {/*                        </button>*/}
+                        {/*                    </div>*/}
+                        {/*                </div>*/}
+                        {/*                <div className="flex gap-6 px-auto mx-auto col-span-1">*/}
+                        {/*                    <div*/}
+                        {/*                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">*/}
+                        {/*                        <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill*/}
+                        {/*                            5</p>*/}
+                        {/*                        <StarRating onRatingChange={handleRatingChange}/>*/}
+                        {/*                    </div>*/}
+                        {/*                    <div className="text-center">*/}
+                        {/*                        <button type='button'*/}
+                        {/*                                className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">*/}
+                        {/*                            Certify Yourself*/}
+                        {/*                        </button>*/}
+                        {/*                    </div>*/}
+                        {/*                </div>*/}
+                        {/*                <div className="flex gap-6 px-auto mx-auto col-span-1">*/}
+                        {/*                    <div*/}
+                        {/*                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">*/}
+                        {/*                        <p className="bg-slate-50 rounded-md text-center px-6 sm:px-14 sm:px-auto py-1">Skill*/}
+                        {/*                            6</p>*/}
+                        {/*                        <StarRating onRatingChange={handleRatingChange}/>*/}
+                        {/*                    </div>*/}
+                        {/*                    <div className="text-center">*/}
+                        {/*                        <button type='button'*/}
+                        {/*                                className="px-5 py-1 text-blue-600 bg-slate-100 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">*/}
+                        {/*                            Certify Yourself*/}
+                        {/*                        </button>*/}
+                        {/*                    </div>*/}
+                        {/*                </div>*/}
+                        {/*            </div>*/}
+                        {/*        </div>*/}
+                        {/*        <div className="w-full flex justify-between px-2">*/}
+                        {/*            <button type="button" onClick={handleBack}*/}
+                        {/*                    className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back*/}
+                        {/*            </button>*/}
+                        {/*            <button type="button" onClick={handleNext}*/}
+                        {/*                    className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next*/}
+                        {/*            </button>*/}
+                        {/*        </div>*/}
+                        {/*    </div>*/}
+                        {/*)}*/}
+                        {/* Internships */}
+                        {currentStep === 4 && (
+                            <form onSubmit={handleNext}>
                                 <div>
                                     <div
                                         className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
@@ -771,242 +808,242 @@ const MultiStepForm = () => {
                                         </button>
                                     </div>
                                 </div>
-                                </form>
-                            )}
-                            {/* Projects */}
-                            {currentStep === 5 && (
-                                <div>
-                                    <div
-                                        className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
-                                        {profileData.projects.map((x, index) => {
-                                            return (<div
-                                                className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
-                                                <Text name={'Name of the Role'}
-                                                      value={profileData.projects[index].title}
-                                                      disp='title' list='projects' index={index}
-                                                      setValue={setProfileData} col={' col-span-full'}/>
-                                                <Text name={'Company Name'}
-                                                      value={profileData.projects[index].company_name}
-                                                      disp='company_name' list='projects' index={index}
-                                                      setValue={setProfileData} col={4}/>
-                                                <Text name={'Location'}
-                                                      value={profileData.projects[index].location}
-                                                      disp='location' list='projects' index={index}
-                                                      setValue={setProfileData} col={2}/>
-                                                {/* USE MM YYYY ONLY */}
-                                                <Text name={'Start Date'}
-                                                      value={profileData.projects[index].start_date}
-                                                      disp='start_date' index={index} list='projects'
-                                                      setValue={setProfileData} type={'date'} col={3}/>
-                                                <Text name={'End Date'}
-                                                      value={profileData.projects[index].end_date}
-                                                      disp='end_date' list='projects' index={index}
-                                                      setValue={setProfileData} type={'date'} col={3}/>
-                                                <Block name={'Responsibilities'}
-                                                       value={profileData.projects[index].description}
-                                                       disp='description'
-                                                       index={index} list='projects'
-                                                       setValue={setProfileData}
-                                                       col={' col-span full'} rows={3}/>
-                                                <Text name={'Achievements'}
-                                                      value={profileData.projects[index].summary}
-                                                      disp='summary' index={index} list='projects'
-                                                      setValue={setProfileData} col={' col-span-full'}/>
+                            </form>
+                        )}
+                        {/* Projects */}
+                        {currentStep === 5 && (
+                            <div>
+                                <div
+                                    className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
+                                    {profileData.projects.map((x, index) => {
+                                        return (<div
+                                            className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
+                                            <Text name={'Name of the Role'}
+                                                  value={profileData.projects[index].title}
+                                                  disp='title' list='projects' index={index}
+                                                  setValue={setProfileData} col={' col-span-full'}/>
+                                            <Text name={'Company Name'}
+                                                  value={profileData.projects[index].company_name}
+                                                  disp='company_name' list='projects' index={index}
+                                                  setValue={setProfileData} col={4}/>
+                                            <Text name={'Location'}
+                                                  value={profileData.projects[index].location}
+                                                  disp='location' list='projects' index={index}
+                                                  setValue={setProfileData} col={2}/>
+                                            {/* USE MM YYYY ONLY */}
+                                            <Text name={'Start Date'}
+                                                  value={profileData.projects[index].start_date}
+                                                  disp='start_date' index={index} list='projects'
+                                                  setValue={setProfileData} type={'date'} col={3}/>
+                                            <Text name={'End Date'}
+                                                  value={profileData.projects[index].end_date}
+                                                  disp='end_date' list='projects' index={index}
+                                                  setValue={setProfileData} type={'date'} col={3}/>
+                                            <Block name={'Responsibilities'}
+                                                   value={profileData.projects[index].description}
+                                                   disp='description'
+                                                   index={index} list='projects'
+                                                   setValue={setProfileData}
+                                                   col={' col-span full'} rows={3}/>
+                                            <Text name={'Achievements'}
+                                                  value={profileData.projects[index].summary}
+                                                  disp='summary' index={index} list='projects'
+                                                  setValue={setProfileData} col={' col-span-full'}/>
 
-                                                <ButtonRow label='Skills Displayed' col={' col-span-full'}
-                                                           buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4']}/>
-                                            </div>)
-                                        })}
-                                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
+                                            <ButtonRow label='Skills Displayed' col={' col-span-full'}
+                                                       buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4']}/>
+                                        </div>)
+                                    })}
+                                    {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
 
-                                        <div className="flex items-center justify-center rounded-md">
-                                            <div
-                                                onClick={() => {
-                                                    setProfileData((prev) => ({
-                                                        ...prev, projects: [...prev.projects, {
-                                                            title: null,
-                                                            company_name: null,
-                                                            location: null,
-                                                            start_date: null,
-                                                            end_date: null,
-                                                            description: null,
-                                                            summary: null
-                                                        }]
-                                                    }))
-                                                }}
-                                                className="bg-gray-100 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
-                                                <CirclePlus className='w-10 h-10 text-gray-600'/>
-                                                <p className="text-sm text-gray-600">Add Project</p>
-                                            </div>
+                                    <div className="flex items-center justify-center rounded-md">
+                                        <div
+                                            onClick={() => {
+                                                setProfileData((prev) => ({
+                                                    ...prev, projects: [...prev.projects, {
+                                                        title: null,
+                                                        company_name: null,
+                                                        location: null,
+                                                        start_date: null,
+                                                        end_date: null,
+                                                        description: null,
+                                                        summary: null
+                                                    }]
+                                                }))
+                                            }}
+                                            className="bg-gray-100 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
+                                            <CirclePlus className='w-10 h-10 text-gray-600'/>
+                                            <p className="text-sm text-gray-600">Add Project</p>
                                         </div>
                                     </div>
-                                    <div className="w-full flex justify-between px-2">
-                                        <button type="button" onClick={handleBack}
-                                                className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                        </button>
-                                        <button type="button" onClick={handleNext}
-                                                className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
-                                        </button>
-                                    </div>
                                 </div>
-                            )}
-                            {/* Volunteer */}
-                            {currentStep === 6 && (
-                                <div>
-                                    <div
-                                        className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
-                                        {profileData.volunteers.map((x, index) => {
-                                            return (<div
-                                                className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
-                                                <Text name={'Name of the Role'}
-                                                      value={profileData.volunteers[index].title}
-                                                      disp='title' list='volunteers' index={index}
-                                                      setValue={setProfileData} col={' col-span-full'}/>
-                                                <Text name={'Institution Name'}
-                                                      value={profileData.volunteers[index].company_name}
-                                                      disp='company_name' list='volunteers' index={index}
-                                                      setValue={setProfileData} col={4}/>
-                                                <Text name={'Location'}
-                                                      value={profileData.volunteers[index].location}
-                                                      disp='location' list='volunteers' index={index}
-                                                      setValue={setProfileData} col={2}/>
-                                                {/* USE MM YYYY ONLY */}
-                                                <Text name={'Start Date'}
-                                                      value={profileData.volunteers[index].start_date}
-                                                      disp='start_date' index={index} list='volunteers'
-                                                      setValue={setProfileData} type={'date'} col={3}/>
-                                                <Text name={'End Date'}
-                                                      value={profileData.volunteers[index].end_date}
-                                                      disp='end_date' list='volunteers' index={index}
-                                                      setValue={setProfileData} type={'date'} col={3}/>
-                                                <Block name={'Brief Description'}
-                                                       value={profileData.volunteers[index].description}
-                                                       disp='description'
-                                                       index={index} list='volunteers'
-                                                       setValue={setProfileData}
-                                                       col={' col-span full'} rows={3}/>
-                                                <Text name={'Achievements'}
-                                                      value={profileData.volunteers[index].summary}
-                                                      disp='summary' index={index} list='volunteers'
-                                                      setValue={setProfileData} col={' col-span-full'}/>
+                                <div className="w-full flex justify-between px-2">
+                                    <button type="button" onClick={handleBack}
+                                            className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
+                                    </button>
+                                    <button type="button" onClick={handleNext}
+                                            className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                        {/* Volunteer */}
+                        {currentStep === 6 && (
+                            <div>
+                                <div
+                                    className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
+                                    {profileData.volunteers.map((x, index) => {
+                                        return (<div
+                                            className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
+                                            <Text name={'Name of the Role'}
+                                                  value={profileData.volunteers[index].title}
+                                                  disp='title' list='volunteers' index={index}
+                                                  setValue={setProfileData} col={' col-span-full'}/>
+                                            <Text name={'Institution Name'}
+                                                  value={profileData.volunteers[index].company_name}
+                                                  disp='company_name' list='volunteers' index={index}
+                                                  setValue={setProfileData} col={4}/>
+                                            <Text name={'Location'}
+                                                  value={profileData.volunteers[index].location}
+                                                  disp='location' list='volunteers' index={index}
+                                                  setValue={setProfileData} col={2}/>
+                                            {/* USE MM YYYY ONLY */}
+                                            <Text name={'Start Date'}
+                                                  value={profileData.volunteers[index].start_date}
+                                                  disp='start_date' index={index} list='volunteers'
+                                                  setValue={setProfileData} type={'date'} col={3}/>
+                                            <Text name={'End Date'}
+                                                  value={profileData.volunteers[index].end_date}
+                                                  disp='end_date' list='volunteers' index={index}
+                                                  setValue={setProfileData} type={'date'} col={3}/>
+                                            <Block name={'Brief Description'}
+                                                   value={profileData.volunteers[index].description}
+                                                   disp='description'
+                                                   index={index} list='volunteers'
+                                                   setValue={setProfileData}
+                                                   col={' col-span full'} rows={3}/>
+                                            <Text name={'Achievements'}
+                                                  value={profileData.volunteers[index].summary}
+                                                  disp='summary' index={index} list='volunteers'
+                                                  setValue={setProfileData} col={' col-span-full'}/>
 
-                                                <ButtonRow label='Skills Displayed' col={' col-span-full'}
-                                                           buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4']}/>
-                                            </div>)
-                                        })}
-                                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
+                                            <ButtonRow label='Skills Displayed' col={' col-span-full'}
+                                                       buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4']}/>
+                                        </div>)
+                                    })}
+                                    {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
 
-                                        <div className="flex items-center justify-center rounded-md">
-                                            <div
-                                                onClick={() => {
-                                                    setProfileData((prev) => ({
-                                                        ...prev, volunteers: [...prev.volunteers, {
-                                                            title: null,
-                                                            company_name: null,
-                                                            location: null,
-                                                            start_date: null,
-                                                            end_date: null,
-                                                            description: null,
-                                                            summary: null
-                                                        }]
-                                                    }))
-                                                }}
-                                                className="bg-gray-100 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
-                                                <CirclePlus className='w-10 h-10 text-gray-600'/>
-                                                <p className="text-sm text-gray-600">Add Volunteers</p>
-                                            </div>
+                                    <div className="flex items-center justify-center rounded-md">
+                                        <div
+                                            onClick={() => {
+                                                setProfileData((prev) => ({
+                                                    ...prev, volunteers: [...prev.volunteers, {
+                                                        title: null,
+                                                        company_name: null,
+                                                        location: null,
+                                                        start_date: null,
+                                                        end_date: null,
+                                                        description: null,
+                                                        summary: null
+                                                    }]
+                                                }))
+                                            }}
+                                            className="bg-gray-100 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
+                                            <CirclePlus className='w-10 h-10 text-gray-600'/>
+                                            <p className="text-sm text-gray-600">Add Volunteers</p>
                                         </div>
                                     </div>
-                                    <div className="w-full flex justify-between px-2">
-                                        <button type="button" onClick={handleBack}
-                                                className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                        </button>
-                                        <button type="button" onClick={handleNext}
-                                                className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
-                                        </button>
-                                    </div>
                                 </div>
-                            )}
-                            {/* Extra-Curricular Activities */}
-                            {currentStep === 7 && (
-                                <div>
-                                    <div
-                                        className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
-                                        {profileData.extra_curriculars.map((x, index) => {
-                                            return (<div
-                                                className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
-                                                <Text name={'Activity Name'}
-                                                      value={profileData.extra_curriculars[index].title}
-                                                      disp='title' list='extra_curriculars' index={index}
-                                                      setValue={setProfileData} col={' col-span-full'}/>
-                                                <Text name={'Role/Position'}
-                                                      value={profileData.extra_curriculars[index].company_name}
-                                                      disp='company_name' list='extra_curriculars'
-                                                      index={index}
-                                                      setValue={setProfileData} col={4}/>
-                                                <Text name={'Location'}
-                                                      value={profileData.extra_curriculars[index].location}
-                                                      disp='location' list='extra_curriculars' index={index}
-                                                      setValue={setProfileData} col={2}/>
-                                                {/* USE MM YYYY ONLY */}
-                                                <Text name={'Start Date'}
-                                                      value={profileData.extra_curriculars[index].start_date}
-                                                      disp='start_date' index={index}
-                                                      list='extra_curriculars'
-                                                      setValue={setProfileData} type={'date'} col={3}/>
-                                                <Text name={'End Date'}
-                                                      value={profileData.extra_curriculars[index].end_date}
-                                                      disp='end_date' list='extra_curriculars' index={index}
-                                                      setValue={setProfileData} type={'date'} col={3}/>
-                                                <Block name={'Contribution'}
-                                                       value={profileData.extra_curriculars[index].description}
-                                                       disp='description'
-                                                       index={index} list='extra_curriculars'
-                                                       setValue={setProfileData}
-                                                       col={' col-span full'} rows={3}/>
-                                                <Text name={'Achievements'}
-                                                      value={profileData.extra_curriculars[index].summary}
-                                                      disp='summary' index={index} list='extra_curriculars'
-                                                      setValue={setProfileData} col={' col-span-full'}/>
+                                <div className="w-full flex justify-between px-2">
+                                    <button type="button" onClick={handleBack}
+                                            className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
+                                    </button>
+                                    <button type="button" onClick={handleNext}
+                                            className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                        {/* Extra-Curricular Activities */}
+                        {currentStep === 7 && (
+                            <div>
+                                <div
+                                    className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
+                                    {profileData.extra_curriculars.map((x, index) => {
+                                        return (<div
+                                            className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
+                                            <Text name={'Activity Name'}
+                                                  value={profileData.extra_curriculars[index].title}
+                                                  disp='title' list='extra_curriculars' index={index}
+                                                  setValue={setProfileData} col={' col-span-full'}/>
+                                            <Text name={'Role/Position'}
+                                                  value={profileData.extra_curriculars[index].company_name}
+                                                  disp='company_name' list='extra_curriculars'
+                                                  index={index}
+                                                  setValue={setProfileData} col={4}/>
+                                            <Text name={'Location'}
+                                                  value={profileData.extra_curriculars[index].location}
+                                                  disp='location' list='extra_curriculars' index={index}
+                                                  setValue={setProfileData} col={2}/>
+                                            {/* USE MM YYYY ONLY */}
+                                            <Text name={'Start Date'}
+                                                  value={profileData.extra_curriculars[index].start_date}
+                                                  disp='start_date' index={index}
+                                                  list='extra_curriculars'
+                                                  setValue={setProfileData} type={'date'} col={3}/>
+                                            <Text name={'End Date'}
+                                                  value={profileData.extra_curriculars[index].end_date}
+                                                  disp='end_date' list='extra_curriculars' index={index}
+                                                  setValue={setProfileData} type={'date'} col={3}/>
+                                            <Block name={'Contribution'}
+                                                   value={profileData.extra_curriculars[index].description}
+                                                   disp='description'
+                                                   index={index} list='extra_curriculars'
+                                                   setValue={setProfileData}
+                                                   col={' col-span full'} rows={3}/>
+                                            <Text name={'Achievements'}
+                                                  value={profileData.extra_curriculars[index].summary}
+                                                  disp='summary' index={index} list='extra_curriculars'
+                                                  setValue={setProfileData} col={' col-span-full'}/>
 
-                                                <ButtonRow label='Skills Displayed' col={' col-span-full'}
-                                                           buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4']}/>
-                                            </div>)
-                                        })}
-                                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
+                                            <ButtonRow label='Skills Displayed' col={' col-span-full'}
+                                                       buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4']}/>
+                                        </div>)
+                                    })}
+                                    {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
 
-                                        <div className="flex items-center justify-center rounded-md">
-                                            <div
-                                                onClick={() => {
-                                                    setProfileData((prev) => ({
-                                                        ...prev,
-                                                        extra_curriculars: [...prev.extra_curriculars, {
-                                                            title: null,
-                                                            company_name: null,
-                                                            location: null,
-                                                            start_date: null,
-                                                            end_date: null,
-                                                            description: null,
-                                                            summary: null
-                                                        }]
-                                                    }))
-                                                }}
-                                                className="bg-gray-100 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
-                                                <CirclePlus className='w-10 h-10 text-gray-600'/>
-                                                <p className="text-sm text-gray-600">Add Extra
-                                                    Curriculars</p>
-                                            </div>
+                                    <div className="flex items-center justify-center rounded-md">
+                                        <div
+                                            onClick={() => {
+                                                setProfileData((prev) => ({
+                                                    ...prev,
+                                                    extra_curriculars: [...prev.extra_curriculars, {
+                                                        title: null,
+                                                        company_name: null,
+                                                        location: null,
+                                                        start_date: null,
+                                                        end_date: null,
+                                                        description: null,
+                                                        summary: null
+                                                    }]
+                                                }))
+                                            }}
+                                            className="bg-gray-100 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
+                                            <CirclePlus className='w-10 h-10 text-gray-600'/>
+                                            <p className="text-sm text-gray-600">Add Extra
+                                                Curriculars</p>
                                         </div>
                                     </div>
-                                    <div className="w-full flex justify-between px-2">
-                                        <button type="button" onClick={handleBack}
-                                                className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                        </button>
-                                        <button type="button" onClick={handleSubmit}
-                                                className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Submit
-                                        </button>
-                                    </div>
                                 </div>
+                                <div className="w-full flex justify-between px-2">
+                                    <button type="button" onClick={handleBack}
+                                            className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
+                                    </button>
+                                    <button type="button" onClick={handleSubmit}
+                                            className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Submit
+                                    </button>
+                                </div>
+                            </div>
 // <<<<<<< dew
 //                           </div>
 //                         </div>
@@ -1135,7 +1172,7 @@ const MultiStepForm = () => {
 //             )}
 //           </div>
 // =======
-                            )}
+                        )}
                         {/*</form>*/}
                     </div>
                 </div>
