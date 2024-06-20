@@ -15,7 +15,7 @@ const stringify = (inputString) => {
 //       <label htmlFor={stringify(name)} className="block text-sm font-medium leading-6 text-gray-900 tracking-tight">
 //         {name} { isRequired && <span className="text-red-700">*</span>}
 // =======
-const Input = ({list, index, value, disp, setValue, setstate, name, col, type = 'text',step='1', variant = 'input', options, rows, isRequired = false }) => {
+const Input = ({disabled, list, index, value, disp, setValue, setstate, name, col, type = 'text',step='1', variant = 'input', options, rows, isRequired = false }) => {
     // useEffect(()=>{
     //     console.log(index)
     //         console.log(list)
@@ -30,6 +30,7 @@ const Input = ({list, index, value, disp, setValue, setstate, name, col, type = 
         {variant === 'input' && (
           isRequired ? 
           <input
+              disabled={disabled}
               value={value}
             id={stringify(name)}
             onChange={(e)=>{
