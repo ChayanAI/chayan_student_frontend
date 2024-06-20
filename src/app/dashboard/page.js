@@ -118,7 +118,7 @@ else{
                 </div>
 
                 {/* Right container */}
-                <div className="w-3/4 w-full" style={{ marginTop: '-6px', marginLeft: '-8px' }}>
+                <div className="w-full" style={{ marginTop: '-6px', marginLeft: '-8px' }}>
                     {/* Top section */}
                     <div className="w-full" style={{ marginBottom: '-.8rem' }}>
                         <div className="grid grid-cols-4 gap-4">
