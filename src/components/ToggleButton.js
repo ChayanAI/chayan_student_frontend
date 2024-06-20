@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // ToggleButton component
-const ToggleButton = ({ name ,value,disp, setValue,}) => {
+const ToggleButton = ({ name ,value,disp, setValue}) => {
   const [isActiveToggle, setIsActiveToggle] = useState(false);
   const [uuid, setId] = useState()
   const uniqueId = uuidv4();
@@ -31,7 +31,22 @@ const ToggleButton = ({ name ,value,disp, setValue,}) => {
 };
 
 // ButtonRow component
-const ButtonRow = ({value,disp, setValue, label = 'NOLABEL', buttonNames, col, numberOfRows = 1, buttonsPerRow = Math.ceil(buttonNames.length / numberOfRows)}) => {
+const ButtonRow = ({ value, disp, setValue, label = 'NOLABEL', buttonNames, col, numberOfRows = 1, buttonsPerRow = Math.ceil(buttonNames.length / numberOfRows), isRequired = false}) => {
+  const [showValidation, setShowValidation] = useState(false);
+
+  const handleButtonClick = (name) => {
+    setValue((prev) => ({ ...prev, [disp]: name }));
+    setShowValidation(false);
+  };
+
+  const handleSubmit = () => {
+    if (isRequired && !value[disp]) {
+      setShowValidation(true);
+    } else {
+      setShowValidation(false);
+      // Handle form submission or other logic
+    }
+  };
     return (
       <div className={`sm:col-span-${col}`}>
         {label !== 'NOLABEL' && (
@@ -48,4 +63,19 @@ const ButtonRow = ({value,disp, setValue, label = 'NOLABEL', buttonNames, col, n
     );
 };
 
-export {ToggleButton, ButtonRow};
+// ClickyButton
+const ClickyButton = ({ name, classes, yellow = false }) => {
+  const uniqueId = uuidv4();
+
+  return (
+    <button
+      id={uniqueId}
+      type='button'
+      className={`px-4 py-2 text-sm font-semibold rounded-r text-white ${ yellow ? 'bg-yellow-600 focus:bg-gray-500' : 'bg-blue-700 focus:bg-white' } ${classes}`}
+    >
+      {name}
+    </button>
+  );
+};
+
+export {ToggleButton, ButtonRow, ClickyButton};
