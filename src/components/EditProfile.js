@@ -8,12 +8,14 @@ import OtpInput from './OtpInput';
 import SkillRating from './SkillRating';
 import StarRating from './StarRating';
 import {ToggleButton, ButtonRow, ClickyButton} from './ToggleButton';
-import {CircleCheckBig, CirclePlus} from 'lucide-react';
+import {ChevronLeft, CircleCheckBig, CirclePlus, X} from 'lucide-react';
 import axios from "axios";
 import {useParams} from "next/navigation";
+import VerticalNav from './VerticalNav';
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import Link from 'next/link';
 
-const MultiStepForm = ({userId}) => {
+const EditProfile = ({userId}) => {
     const params = useParams()
 
 
@@ -173,88 +175,86 @@ const MultiStepForm = ({userId}) => {
         return (<></>)
     } else {
         return (
-            <div className="flex flex-col w-full gap-4">
-                <h1 className="text-3xl font-bold p-8">Your Profile</h1>
-                <div className="flex min-h-screen bg-white gap-6">
-                    <div className="w-1/4 p-8">
-                        <ProgressBar currentStep={currentStep} onStepClick={handleStepClick}/>
+            <div className="flex flex-col w-full gap-4 bg-gray-100 dark:bg-[#101117] dark:text-[#f8f8f8]">
+                <div className="flex min-h-[calc(100vh-4rem)] gap-6 relative">
+                    <div className="w-1/4 px-8 lg:px-16 dark:bg-[#1b1b21]">
+                        <Link href={'/dashboard'} className="flex -ml-6 gap-2 pt-5 text-gray-500 font-semibold">
+                          <ChevronLeft />
+                          Dashboard
+                        </Link>
+                        <h1 className="text-lg font-bold pt-8 pb-10">Edit your Profile</h1>
+                        <VerticalNav currentStep={currentStep} setCurrentStep={setCurrentStep} />
                     </div>
-                    <div className="w-3/4 p-8">
+                    <div className="w-3/4 px-8 pt-8">
                         {/* Personal Information */}
                         {currentStep === 0 && (
                                 <form onSubmit={handleNext}>
-                                    <div>
-                                        <div
-                                            className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-6 border-b lg:w-[60%] ">
-                                            {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
-                                            <div className="col-span-full">
-                                              <label htmlFor="photo" className="block text-sm font-medium leading-6 text-gray-900">
-                                                Profile Photo
-                                              </label>
-                                              <div className="mt-2 flex items-center gap-x-3">
-                                                <UserCircleIcon className="h-20 w-20 text-gray-300" aria-hidden="true" />
-                                                <button
-                                                  type="button"
-                                                  className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                                                >
-                                                  Change
-                                                </button>
-                                                <button
-                                                  type="button"
-                                                  className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                                                >
-                                                  Delete
-                                                </button>
-                                              </div>
-                                            </div>
-                                            <Text name={'First Name'} value={profileData.first_name} isRequired={true}
-                                                  disp='first_name'
-                                                  setValue={setProfileData} col={'3'} />
-                                            <Text name={'Last Name'} value={profileData.last_name} disp='last_name'
-                                                  setValue={setProfileData} col={'3'}/>
-                                            <Text name={'Date of birth'} value={profileData.date_of_birth}
-                                                  isRequired={true}
-                                                  disp='date_of_birth'
-                                                  setValue={setProfileData} type={'date'} col={'3'}/>
-                                            <Text name={'Hometown'} value={profileData.city} disp='city'
-                                                  setValue={setProfileData} col={'3'}/>
-                                            <ButtonRow label={'Gender'} value={profileData.gender} disp='gender'
-                                                       setValue={setProfileData} col={4}
-                                                       buttonNames={['Male', 'Female', 'Others']}/>
+                                    <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 mb-4">
+                                        <h2 className="col-span-5 text-2xl dark:text-[#cdcdcf] font-semibold tracking-wide">{steps[currentStep]}</h2>
+                                        <button type="button" onClick={handleBack}
+                                                className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
+                                        </button>
+                                        <button type="button" onClick={handleSubmit}
+                                                className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-blue-600 dark:bg-[#4373dc] rounded-md hover:bg-blue-700 hover:dark:bg-[#3f5688] focus:outline-none focus:bg-blue-700">Save
+                                        </button>
+                                    </div>
+                                    <div className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-6 lg:w-[75%] ">
+                                        <div className="col-span-full">
+                                          <div className="mt-2 -ml-2 flex items-center gap-x-3">
+                                            <UserCircleIcon className="h-24 w-24 text-gray-300" aria-hidden="true" />
+                                            <button
+                                              type="button"
+                                              className="rounded-md bg-black px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                            >
+                                              Change
+                                            </button>
+                                            <button
+                                              type="button"
+                                              className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                            >
+                                              Delete
+                                            </button>
+                                          </div>
+                                        </div>
+                                        <Text name={'First Name'} value={profileData.first_name} isRequired={true}
+                                              disp='first_name'
+                                              setValue={setProfileData} col={'3'} />
+                                        <Text name={'Last Name'} value={profileData.last_name} disp='last_name'
+                                              setValue={setProfileData} col={'3'}/>
+                                        <Text name={'Date of birth'} value={profileData.date_of_birth}
+                                              isRequired={true}
+                                              disp='date_of_birth'
+                                              setValue={setProfileData} type={'date'} col={'3'}/>
+                                        <Text name={'Hometown'} value={profileData.city} disp='city'
+                                              setValue={setProfileData} col={'3'}/>
+                                        <ButtonRow label={'Gender'} value={profileData.gender} disp='gender'
+                                                   setValue={setProfileData} col={4}
+                                                   buttonNames={['Male', 'Female', 'Others']}/>
 
-                                            <div className="flex col-span-3 relative">
-                                                <Text name={'Phone Number'} isRequired={true}
-                                                  value={profileData.phone_number}
-                                                  disp='phone_number'
-                                                  setValue={setProfileData} type='tel' col={' w-full'}/>
-                                                <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Get OTP'} yellow={true} />
-                                            </div>
-                                            <div className="flex col-span-3 relative grayscale opacity-80">
-                                                <Text name={'Enter OTP'}
-                                                  setValue={setProfileData} type='tel' col={' w-full relative'} />
-                                                <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Validate'} yellow={true} />
-                                            </div>
+                                        <div className="flex col-span-3 relative">
+                                            <Text name={'Phone Number'} isRequired={true}
+                                              value={profileData.phone_number}
+                                              disp='phone_number'
+                                              setValue={setProfileData} type='tel' col={' w-full'}/>
+                                            <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Get OTP'} yellow={true} />
+                                        </div>
+                                        <div className="flex col-span-3 relative grayscale opacity-80">
+                                            <Text name={'Enter OTP'}
+                                              setValue={setProfileData} type='tel' col={' w-full relative'} />
+                                            <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Validate'} yellow={true} />
+                                        </div>
 
-                                            <div className='flex col-span-3 relative'>
-                                                <Text name={'Email'} isRequired={true}
-                                                  value={profileData.email}
-                                                  disp='email'
-                                                  setValue={setProfileData} type='email' col={'3'} />
-                                                <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Get OTP'} yellow={true} />
-                                            </div>
-                                            <div className="flex col-span-3 relative grayscale opacity-80">
-                                                <Text name={'Enter OTP'}
-                                                  setValue={setProfileData} type='tel' col={' w-full relative'} />
-                                                <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Validate'} yellow={true} />
-                                            </div>
-                                            
-                                            <div className="w-full flex justify-between col-span-full mt-4">
-                                                <div></div>
-                                                <button type='submit'
-                                                        className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
-                                                    Next
-                                                </button>
-                                            </div>
+                                        <div className='flex col-span-3 relative'>
+                                            <Text name={'Email'} isRequired={true}
+                                              value={profileData.email}
+                                              disp='email'
+                                              setValue={setProfileData} type='email' col={' w-full'} />
+                                            <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Get OTP'} yellow={true} />
+                                        </div>
+                                        <div className="flex col-span-3 relative grayscale opacity-80">
+                                            <Text name={'Enter OTP'}
+                                              setValue={setProfileData} type='tel' col={' w-full relative'} />
+                                            <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Validate'} yellow={true} />
                                         </div>
                                     </div>
                                 </form>
@@ -262,9 +262,16 @@ const MultiStepForm = ({userId}) => {
                         {/* Academics */}
                         {currentStep === 1 && (
                                 <form onSubmit={handleNext}>
-                                <div>
-                                    <div className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b lg:w-[60%] lg:min-w-[580px] ">
-                                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
+                                    <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 mb-4">
+                                        <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
+                                        <button type="button" onClick={handleBack}
+                                                className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
+                                        </button>
+                                        <button type="button" onClick={handleSubmit}
+                                                className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Save
+                                        </button>
+                                    </div>
+                                    <div className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 lg:w-[75%] lg:min-w-[580px] ">
                                         <Text name={'College Name'} value={profileData.college_name}
                                               isRequired={true} disp='college_name'
                                               setValue={setProfileData}
@@ -314,7 +321,7 @@ const MultiStepForm = ({userId}) => {
                                                                 sem1: e.target.value
                                                             }
                                                         }))} id='sgpa1' placeholder='Sem-1'
-                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
+                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:bg-[#d0cfd1] shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
                                                     </div>
                                                     <div className="col-span-1"><input
                                                         value={profileData.sgpa.sem2}
@@ -325,7 +332,7 @@ const MultiStepForm = ({userId}) => {
                                                                 sem2: e.target.value
                                                             }
                                                         }))} id='sgpa2' placeholder='Sem-2'
-                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
+                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:bg-[#d0cfd1] shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
                                                     </div>
                                                     <div className="col-span-1"><input
                                                         value={profileData.sgpa.sem3}
@@ -336,7 +343,7 @@ const MultiStepForm = ({userId}) => {
                                                                 sem3: e.target.value
                                                             }
                                                         }))} id='sgpa3' placeholder='Sem-3'
-                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
+                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:bg-[#d0cfd1] shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
                                                     </div>
                                                     <div className="col-span-1"><input
                                                         value={profileData.sgpa.sem4}
@@ -347,7 +354,7 @@ const MultiStepForm = ({userId}) => {
                                                                 sem4: e.target.value
                                                             }
                                                         }))} id='sgpa4' placeholder='Sem-4'
-                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
+                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:bg-[#d0cfd1] shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
                                                     </div>
                                                     <div className="col-span-1"><input
                                                         value={profileData.sgpa.sem5}
@@ -358,7 +365,7 @@ const MultiStepForm = ({userId}) => {
                                                                 sem5: e.target.value
                                                             }
                                                         }))} id='sgpa5' placeholder='Sem-5'
-                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
+                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:bg-[#d0cfd1] shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
                                                     </div>
                                                     <div className="col-span-1"><input
                                                         value={profileData.sgpa.sem6}
@@ -369,7 +376,7 @@ const MultiStepForm = ({userId}) => {
                                                                 sem6: e.target.value
                                                             }
                                                         }))} id='sgpa6' placeholder='Sem-6'
-                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
+                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:bg-[#d0cfd1] shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
                                                     </div>
                                                     <div className="col-span-1"><input
                                                         value={profileData.sgpa.sem7}
@@ -380,7 +387,7 @@ const MultiStepForm = ({userId}) => {
                                                                 sem7: e.target.value
                                                             }
                                                         }))} id='sgpa7' placeholder='Sem-7'
-                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
+                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:bg-[#d0cfd1] shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
                                                     </div>
                                                     <div className="col-span-1"><input
                                                         value={profileData.sgpa.sem8}
@@ -391,7 +398,7 @@ const MultiStepForm = ({userId}) => {
                                                                 sem8: e.target.value
                                                             }
                                                         }))} id='sgpa8' placeholder='Sem-8'
-                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
+                                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:bg-[#d0cfd1] shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -403,45 +410,43 @@ const MultiStepForm = ({userId}) => {
                                         <Text name={'12th Percentage'} isRequired={true}
                                               value={profileData.class_12_percentage}
                                               disp='class_12_percentage' setValue={setProfileData} col={3}/>
-                                        <div className="w-full flex justify-between px-2 col-span-full mt-4">
-                                            <button type="button" onClick={handleBack}
-                                                    className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                            </button>
-                                            <button type="submit"
-                                                    className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
-                                            </button>
-                                        </div>
                                     </div>
-                                </div>
                                 </form>
                         )}
                         {/* Professional Goals */}
                         {currentStep === 2 && (
                                 <form onSubmit={handleNext}>
-                                    <div
-                                        className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 border-b lg:w-[70%] lg:min-w-[580px]">
-                                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
+                                    <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 mb-4">
+                                        <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
+                                        <button type="button" onClick={handleBack}
+                                                className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
+                                        </button>
+                                        <button type="button" onClick={handleSubmit}
+                                                className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Save
+                                        </button>
+                                    </div>
+                                    <div className="rounded-lg p-10 mb-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 lg:w-[75%] lg:min-w-[580px]">
                                         <ButtonRow label={'Career Objectives'} col={' col-span-full'} buttonsPerRow={4}
                                                    buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8']}/>
                                         {/* Yaha par atleast ek jab select karo tab niche ke options dikhane hain dhruv. */}
                                         <SkillRating label='Rate Yourself in each skill for your desired objective:'/>
-                                        <div className="w-full flex justify-between px-2 col-span-full mt-4">
-                                            <button type="button" onClick={handleBack}
-                                                    className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                            </button>
-                                            <button type="submit"
-                                                    className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
-                                            </button>
-                                        </div>
                                     </div>
                                 </form>
                         )}
                         {/* Skill Verification */}
                         {currentStep === 3 && (
                                 <form onSubmit={handleNext}>
-                                    <div
-                                        className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-7 border-b lg:w-[80%] lg:min-w-[580px]">
-                                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
+                                    <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 mb-4">
+                                        <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
+                                        <button type="button" onClick={handleBack}
+                                                className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
+                                        </button>
+                                        <button type="button" onClick={handleSubmit}
+                                                className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Save
+                                        </button>
+                                    </div>
+                                    <div className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-7 lg:w-[80%] lg:min-w-[580px]">
+                                        
                                         <label
                                             className="block text-sm font-medium leading-6 text-gray-900 tracking-tight col-span-full">Certify
                                             Your Claimed Skills</label>
@@ -527,14 +532,6 @@ const MultiStepForm = ({userId}) => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="w-full flex justify-between px-2 col-span-full mt-4">
-                                            <button type="button" onClick={handleBack}
-                                                    className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                            </button>
-                                            <button type="submit"
-                                                    className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
-                                            </button>
-                                        </div>
                                     </div>
                                 </form>
                         )}
@@ -542,11 +539,21 @@ const MultiStepForm = ({userId}) => {
                         {currentStep === 4 && (
                             <form onSubmit={handleNext}>
                             <div>
-                                <div
-                                    className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
+                                <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 pb-4 mb-4">
+                                    <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
+                                    <button type="button" onClick={handleBack}
+                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
+                                    </button>
+                                    <button type="button" onClick={handleSubmit}
+                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Save
+                                    </button>
+                                </div>
+                                <div className="rounded-lg px-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                                     {profileData.internships.map((x, index) => {
-                                        return (<div
-                                            className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
+                                        return (
+                                        <div
+                                            className="grid grid-cols-6 relative rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-300">
+                                            {index !=0 && <X className='absolute top-2 right-2 cursor-pointer' />}
                                             <Text name={'Name of the Role'}
                                                   value={profileData.internships[index].title}
                                                   disp='title' list='internships' index={index}
@@ -600,19 +607,11 @@ const MultiStepForm = ({userId}) => {
                                                     }]
                                                 }))
                                             }}
-                                            className="bg-gray-100 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
+                                            className="bg-gray-200 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
                                             <CirclePlus className='w-10 h-10 text-gray-600'/>
                                             <p className="text-sm text-gray-600">Add Internship</p>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="w-full flex justify-between px-2">
-                                    <button type="button" onClick={handleBack}
-                                            className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                    </button>
-                                    <button type="submit"
-                                            className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
-                                    </button>
                                 </div>
                             </div>
                             </form>
@@ -620,11 +619,20 @@ const MultiStepForm = ({userId}) => {
                         {/* Projects */}
                         {currentStep === 5 && (
                             <div>
-                                <div
-                                    className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
+                                <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 pb-4 mb-4">
+                                    <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
+                                    <button type="button" onClick={handleBack}
+                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
+                                    </button>
+                                    <button type="button" onClick={handleSubmit}
+                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Save
+                                    </button>
+                                </div>
+                                <div className="rounded-lg px-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                                     {profileData.projects.map((x, index) => {
                                         return (<div
-                                            className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
+                                            className="grid grid-cols-6 relative rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-300">
+                                            {index !=0 && <X className='absolute top-2 right-2 cursor-pointer' />}
                                             <Text name={'Name of the Role'}
                                                   value={profileData.projects[index].title}
                                                   disp='title' list='projects' index={index}
@@ -678,30 +686,31 @@ const MultiStepForm = ({userId}) => {
                                                     }]
                                                 }))
                                             }}
-                                            className="bg-gray-100 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
+                                            className="bg-gray-200 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
                                             <CirclePlus className='w-10 h-10 text-gray-600'/>
                                             <p className="text-sm text-gray-600">Add Project</p>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="w-full flex justify-between px-2">
-                                    <button type="button" onClick={handleBack}
-                                            className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                    </button>
-                                    <button type="button" onClick={handleNext}
-                                            className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
-                                    </button>
                                 </div>
                             </div>
                         )}
                         {/* Volunteer */}
                         {currentStep === 6 && (
                             <div>
-                                <div
-                                    className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
+                                <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 pb-4 mb-4">
+                                    <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
+                                    <button type="button" onClick={handleBack}
+                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
+                                    </button>
+                                    <button type="button" onClick={handleSubmit}
+                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Save
+                                    </button>
+                                </div>
+                                <div className="rounded-lg px-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                                     {profileData.volunteers.map((x, index) => {
                                         return (<div
-                                            className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
+                                            className="grid grid-cols-6 relative rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-300">
+                                            {index !=0 && <X className='absolute top-2 right-2 cursor-pointer' />}
                                             <Text name={'Name of the Role'}
                                                   value={profileData.volunteers[index].title}
                                                   disp='title' list='volunteers' index={index}
@@ -755,30 +764,31 @@ const MultiStepForm = ({userId}) => {
                                                     }]
                                                 }))
                                             }}
-                                            className="bg-gray-100 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
+                                            className="bg-gray-200 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
                                             <CirclePlus className='w-10 h-10 text-gray-600'/>
                                             <p className="text-sm text-gray-600">Add Volunteers</p>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="w-full flex justify-between px-2">
-                                    <button type="button" onClick={handleBack}
-                                            className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                    </button>
-                                    <button type="button" onClick={handleNext}
-                                            className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
-                                    </button>
                                 </div>
                             </div>
                         )}
                         {/* Extra-Curricular Activities */}
                         {currentStep === 7 && (
                             <div>
-                                <div
-                                    className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
+                                <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 pb-4 mb-4">
+                                    <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
+                                    <button type="button" onClick={handleBack}
+                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
+                                    </button>
+                                    <button type="button" onClick={handleSubmit}
+                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Save
+                                    </button>
+                                </div>
+                                <div className="rounded-lg px-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                                     {profileData.extra_curriculars.map((x, index) => {
                                         return (<div
-                                            className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
+                                            className="grid grid-cols-6 relative rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-300">
+                                            {index !=0 && <X className='absolute top-2 right-2 cursor-pointer' />}
                                             <Text name={'Activity Name'}
                                                   value={profileData.extra_curriculars[index].title}
                                                   disp='title' list='extra_curriculars' index={index}
@@ -835,20 +845,12 @@ const MultiStepForm = ({userId}) => {
                                                     }]
                                                 }))
                                             }}
-                                            className="bg-gray-100 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
+                                            className="bg-gray-200 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
                                             <CirclePlus className='w-10 h-10 text-gray-600'/>
                                             <p className="text-sm text-gray-600">Add Extra
                                                 Curriculars</p>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="w-full flex justify-between px-2">
-                                    <button type="button" onClick={handleBack}
-                                            className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                    </button>
-                                    <button type="button" onClick={handleSubmit}
-                                            className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Submit
-                                    </button>
                                 </div>
                             </div>
                         )}
@@ -863,4 +865,4 @@ const MultiStepForm = ({userId}) => {
 
 };
 
-export default MultiStepForm;
+export default EditProfile;

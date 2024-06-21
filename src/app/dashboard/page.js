@@ -2,11 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaHeart } from 'react-icons/fa';
+import { Settings, CircleStop, CircleCheck } from 'lucide-react';
 
 import OpportunitiesView from './OpportunitiesView';
 import LearningPathView from './LearningPathView';
 import ResumeBuilderView from './ResumeBuilderView';
 import MockInterviewsView from './MockInterviewsView';
+import { useNavigate } from 'react-router-dom';
+import Link from 'next/link';
 
 
 const Dashboard = () => {
@@ -94,9 +97,9 @@ else{
                             <div key={index} className="flex justify-between items-left mb-2 border-b border-dotted border-gray-300 pb-1" >
                                 <p>{section.title}</p>
                                 {section.filled ? (
-                                    <div className="h-4 w-4 rounded-full bg-green-500"></div>
+                                    <CircleCheck className="h-4 w-4 rounded-full text-green-600 bg-green-100 mt-1" />
                                 ) : (
-                                    <div className="h-4 w-4 rounded-full bg-red-500"></div>
+                                    <CircleStop className="h-4 w-4 rounded-full text-red-600 bg-red-100 mt-1" />
                                 )}
                             </div>
                         ))}
@@ -104,12 +107,10 @@ else{
 
                     {/* Settings and Logout Buttons */}
                     <div className="p-3 bg-white rounded-lg shadow-md flex justify-between items-center border-2 border-blue-600">
-                        <div className="flex items-center">
-                            <svg className="w-5 h-5 mr-2 mt-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6 0h1a2 2 0 002-2V7a2 2 0 00-2-2h-2.586A1.5 1.5 0 0017 3.414L14.586 1A2 2 0 0013 0H7a2 2 0 00-2 2v2.586A1.5 1.5 0 004.414 6L2 8.414V13a2 2 0 002 2h1m8-4h1a1 1 0 011 1v1a1 1 0 01-1 1h-1"></path>
-                            </svg>
-                            <span className=" ml-1 text-black-900 font-semibold cursor-pointer">Settings</span>
-                        </div>
+                        <Link href={'/editprofile'} className="flex items-center cursor-pointer">
+                            <Settings />
+                            <span className=" ml-1 text-black-900 font-semibold">Settings</span>
+                        </Link>
                         <div className="flex items-center">
                             <span className="text-blue-500 cursor-pointer">Logout</span>
                         </div>

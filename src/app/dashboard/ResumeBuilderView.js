@@ -10,12 +10,12 @@ const ResumeBuilderView = () => {
 
     // Sample data for resume templates (replace with actual data or fetch dynamically)
     const templates = [
-        { id: 1, name: 'Template 1' },
-        { id: 2, name: 'Template 2' },
-        { id: 3, name: 'Template 3' },
-        { id: 4, name: 'Template 4' },
-        { id: 5, name: 'Template 5' },
-        { id: 6, name: 'Template 6' },
+        { id: 1, name: 'Template 1', img: '/media/images/Template1.svg' },
+        { id: 2, name: 'Template 2', img: '/media/images/Template2.svg' },
+        { id: 3, name: 'Template 3', img: '/media/images/Template3.svg' },
+        { id: 4, name: 'Template 4', img: '/media/images/Template4.svg' },
+        { id: 5, name: 'Template 5', img: '/media/images/Template5.svg' },
+        { id: 6, name: 'Template 6', img: '/media/images/Template6.svg' },
     ];
 
     const employabilityScore = 80; // Example score
@@ -91,10 +91,10 @@ const ResumeBuilderView = () => {
                                 {templates.map(template => (
                                     <div
                                         key={template.id}
-                                        className={`border-[3px] rounded p-4 mx-auto cursor-pointer w-36 h-48 ${selectedTemplate === template.id ? 'border-yellow-500' : 'border-[#48749c]'}`}
+                                        className={`border-[3px] p-2 rounded mx-auto cursor-pointer w-36 h-auto ${selectedTemplate === template.id ? 'border-yellow-500' : 'border-black'}`}
                                         onClick={() => handleTemplateSelect(template.id)}
                                     >
-                                        <p className="text-center mt-2">{template.name}</p>
+                                        <img src={template.img} className='m-auto' alt={template.name} />
                                     </div>
                                 ))}
                             </div>
@@ -108,8 +108,8 @@ const ResumeBuilderView = () => {
                             <div className="flex flex-col w-1/2 text-center pl-2 pr-6">
                                 <h3 className="font-bold mb-4">Resume</h3>
                                 {selectedTemplate ? (
-                                    <div className="rounded p-4 border-2 lg:min-h-72 border-yellow-500 mb-4">
-                                        <p className="text-center">{`Selected Template ${selectedTemplate}`}</p>
+                                    <div className="rounded border-2 border-black mb-4">
+                                        <img src={templates[selectedTemplate-1].img} className='m-auto' alt={`Selected Template ${selectedTemplate}`} />
                                     </div>                                    
                                 ) : (
                                     <p>Please select a template from the left.</p>
@@ -177,10 +177,10 @@ const ResumeBuilderView = () => {
                                 {templates.map(template => (
                                     <div
                                         key={template.id}
-                                        className={`border-[3px] rounded p-4 mx-auto cursor-pointer w-36 h-48 ${selectedTemplate === template.id ? 'border-yellow-500' : 'border-[#48749c]'}`}
+                                        className={`border-[3px] p-2 rounded mx-auto cursor-pointer w-36 h-auto ${selectedTemplate === template.id ? 'border-yellow-500' : 'border-black'}`}
                                         onClick={() => handleTemplateSelect(template.id)}
                                     >
-                                        <p className="text-center mt-2">{template.name}</p>
+                                        <img src={template.img} className='m-auto' alt={template.name} />
                                     </div>
                                 ))}
                             </div>
@@ -194,8 +194,8 @@ const ResumeBuilderView = () => {
                             <div className="flex flex-col w-1/2 text-center pl-2 pr-6">
                                 <h3 className="font-bold mb-4">Resume</h3>
                                 {selectedTemplate ? (
-                                    <div className="rounded p-4 border-2 lg:min-h-72 border-yellow-500 mb-4">
-                                        <p className="text-center">{`Selected Template ${selectedTemplate}`}</p>
+                                    <div className="rounded border-2 border-black mb-4">
+                                        <img src={templates[selectedTemplate-1].img} className='m-auto' alt={`Selected Template ${selectedTemplate}`} />
                                     </div>                                    
                                 ) : (
                                     <p>Please select a template from the left.</p>
@@ -260,10 +260,10 @@ const ResumeBuilderView = () => {
                                 {templates.map(template => (
                                     <div
                                         key={template.id}
-                                        className={`border-[3px] rounded p-4 mx-auto cursor-pointer w-36 h-48 ${selectedTemplate === template.id ? 'border-yellow-500' : 'border-[#48749c]'}`}
+                                        className={`border-[3px] p-2 rounded mx-auto cursor-pointer w-36 h-auto ${selectedTemplate === template.id ? 'border-yellow-500' : 'border-black'}`}
                                         onClick={() => handleTemplateSelect(template.id)}
                                     >
-                                        <p className="text-center mt-2">{template.name}</p>
+                                        <img src={template.img} className='m-auto' alt={template.name} />
                                     </div>
                                 ))}
                             </div>
@@ -277,8 +277,8 @@ const ResumeBuilderView = () => {
                             <div className="flex flex-col w-1/2 text-center pl-2 pr-6">
                                 <h3 className="font-bold mb-4">Resume</h3>
                                 {selectedTemplate ? (
-                                    <div className="rounded p-4 border-2 lg:min-h-72 border-yellow-500 mb-4">
-                                        <p className="text-center">{`Selected Template ${selectedTemplate}`}</p>
+                                    <div className="rounded border-2 border-black mb-4">
+                                        <img src={templates[selectedTemplate-1].img} className='m-auto' alt={`Selected Template ${selectedTemplate}`} />
                                     </div>                                    
                                 ) : (
                                     <p>Please select a template from the left.</p>

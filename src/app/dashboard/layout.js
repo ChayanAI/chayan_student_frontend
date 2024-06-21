@@ -47,7 +47,7 @@ export default function dashboardLayout({ children , params,}) {
   if(!success){
     return <></>
   }
-  return (<main>
+  return (<main >
     {children}
   </main>)
 }
