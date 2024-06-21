@@ -42,7 +42,7 @@ export default function dashboardLayout({ children , params,}) {
   if(!success){
     return <></>
   }
-  return (<main>
+  return (<main className='w-full'>
     {children}
   </main>)
 }

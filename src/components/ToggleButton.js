@@ -22,7 +22,7 @@ const ToggleButton = ({ name ,value,disp, setValue}) => {
       onClick={handleToggle}
       type='button'
       className={`w-full px-4 py-2 text-sm font-semibold rounded ${
-          (value===name) ? 'bg-blue-700 text-white' : 'bg-white text-black border border-gray-300'
+          (value===name) ? 'bg-blue-700 text-white' : 'bg-white dark:bg-[#d0cfd1] text-black border border-gray-300'
       }`}
     >
       {name}

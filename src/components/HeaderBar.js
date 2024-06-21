@@ -13,7 +13,7 @@ export default function HeaderBar() {
   };
 
   return (
-    <header className="hidden md:flex justify-between items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 z-50 relative">
+    <header className="hidden md:flex justify-between items-center px-4 py-2 bg-slate-200 dark:bg-[#161618] z-50 relative">
       <div className="text-lg font-semibold"></div>
       <div className="flex items-center space-x-4">
         <button onClick={toggleDarkMode} className="p-2 rounded-full focus:outline-none">

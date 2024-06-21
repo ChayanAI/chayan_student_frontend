@@ -14,8 +14,8 @@ export default function MainLayout({ children, showHeader = true }) {
 
   return (
     <div className="flex">
-      <DesktopSidebar />
-      <MobileSidebar isMobileOpen={isMobileOpen} toggleMobileSidebar={toggleMobileSidebar} />
+      {/* <DesktopSidebar />
+      <MobileSidebar isMobileOpen={isMobileOpen} toggleMobileSidebar={toggleMobileSidebar} /> */}
       <div className="flex flex-col flex-1">
         {showHeader && <>
           <div className="hidden md:block">
@@ -25,7 +25,7 @@ export default function MainLayout({ children, showHeader = true }) {
             <MobileHeader onToggleMobileSidebar={toggleMobileSidebar} />
           </div>
         </>}
-        <main className={`flex-1 ${showHeader ? 'pt-2' : ''}`}>
+        <main className={`flex-1 ${showHeader ? 'border-t-8 border-white dark:border-black' : ''}`}>
           {children}
         </main>
       </div>
