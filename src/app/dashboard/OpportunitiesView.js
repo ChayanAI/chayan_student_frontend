@@ -10,15 +10,18 @@ const OpportunitiesView = () => {
     const [applications, setApplications] = useState(20);
     const [skillRatings, setSkillRatings] = useState({ mustHave: [], goodToHave: [] });
     const [appliedJobs, setAppliedJobs] = useState(new Set()); // Track applied jobs
+    const [company, setCompany] = useState(''); // Store the company name
+
 
     useEffect(() => {
         const fetchJobs = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/studentjob/jobs');
                 setJobs(response.data);
+                console.log("hi", response.data)
                 setSelectedJob(response.data[0]);
                 fetchSkillsFromJob(response.data[0]);
-                console.log(response.data)
+                fetchCompany(response.data[0].recruiter_id);
             } catch (error) {
                 console.error('Error fetching jobs:', error);
             }
@@ -29,6 +32,7 @@ const OpportunitiesView = () => {
     const handleJobClick = (job) => {
         setSelectedJob(job);
         fetchSkillsFromJob(job);
+        fetchCompany(job.recruiter_id);
     };
 
     const handleLike = (jobId) => {
@@ -76,6 +80,17 @@ const OpportunitiesView = () => {
         }
 
         setSkillRatings({ mustHave: mustHaveSkills, goodToHave: goodToHaveSkills });
+    };
+
+    const fetchCompany = async (recruiterId) => {
+        try {
+            const response = await axios.post('http://localhost:5000/user/getprofilebyId', { user_id: recruiterId });
+            console.log("li", response.data)
+            setCompany(response.data || 'Company Name');
+        } catch (error) {
+            console.error('Error fetching company name:', error);
+            setCompany('Company Name');
+        }
     };
 
 
@@ -132,25 +147,25 @@ const OpportunitiesView = () => {
                             {/* Company Details */}
                             <div className="flex items-left mb-2">
                                 <div>
-                                    <h2 className="text-lg pt-0 mb-2 font-semibold">{selectedJob.companyName || 'Company Name'}</h2>
+                                    <h2 className="text-lg pt-0 mb-2 font-semibold">{company.company_name || 'Company Name'}</h2>
                                     <div className="flex space-x-32">
-                                        <p className="text-gray-600 text-sm">Sector - {selectedJob.sector}</p>
+                                        <p className="text-gray-600 text-sm">Sector - {company.company_sector}</p>
                                         <p className="text-gray-600 text-sm">Product - {selectedJob.product}</p>
                                     </div>
                                 </div>
                             </div>
                             <div className="flex mb-2 space-x-32">
-                                <p className="text-gray-800 text-sm"> {selectedJob.num_employees} 1-10 Employees</p>
-                                <p className="text-gray-800 text-sm">MNC - {selectedJob.is_mnc ? 'Yes' : 'No'}</p>
+                                <p className="text-gray-800 text-sm"> {company.employee_count} Employees</p>
+                                <p className="text-gray-800 text-sm">MNC - {company.is_mnc ? 'Yes' : 'No'}</p>
                             </div>
                             <div className="flex mb-2 pb-2 space-x-32 border-b border-dotted border-gray-300">
-                                <p className="text-gray-800 text-sm"> {selectedJob.head_office} Head office - </p>
+                                <p className="text-gray-800 text-sm">  Head office - {company.office_address} </p>
                             </div>
 
                             {/* Job Role Information */}
                             <div className="mb-2">
                                 <h2 className="text-lg font-semibold mb-1">{selectedJob.title}</h2>
-                                <p className="text-gray-800 text-sm mb-2">Department | Location - {selectedJob.location || 'N/A'}</p>
+                                <p className="text-gray-800 text-sm mb-2">{selectedJob.department || Department} | Location - {selectedJob.location || 'N/A'}</p>
                                 <div className="grid grid-cols-3 gap-1 text-sm text-gray-800 border border-gray-300">
                                     {/* Header Row */}
                                     <div className="col-span-1 bg-blue-600 text-white text-center p-2"><strong></strong></div>
