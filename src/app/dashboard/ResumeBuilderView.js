@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
+import ZoomableIframe from '../../components/ZoomableIFrame';
 
 const ResumeBuilderView = () => {
 
@@ -252,11 +253,11 @@ const ResumeBuilderView = () => {
                             ><span className='mr-2'>+ Upload New JD</span></button>
                     </div>
 
-                    <div className="flex border-t-2 border-dashed">
+                    <div className="flex border-t-2 border-dashed relative h-fit">
                         {/* Left section - Template chooser */}
-                        <div className="w-1/2 p-6 text-center justify-center">
+                        <div className="w-1/5 px-6 pt-6 pb-4 text-center justify-center">
                             <h3 className="font-bold mb-4">Choose / Change Template</h3>
-                            <div className="grid grid-cols-3 gap-x-4 gap-y-2 mb-4">
+                            <div className="flex flex-col gap-2 items-center h-[25rem] overflow-y-scroll">
                                 {templates.map(template => (
                                     <div
                                         key={template.id}
@@ -270,26 +271,26 @@ const ResumeBuilderView = () => {
                         </div>
 
                         {/* Dotted line separator */}
-                        <div className="border-r-2 border-dashed"></div>
+                        <div className="border-r-2 mb-4 border-dashed"></div>
 
                         {/* Right section - Selected template details */}
-                        <div className="w-1/2 p-6 h-fit flex">
-                            <div className="flex flex-col w-1/2 text-center pl-2 pr-6">
+                        <div className="w-4/5 px-6 pt-6 pb-4 h-fit flex">
+                            <div className="flex flex-col w-2/3 text-center pl-2 pr-6">
                                 <h3 className="font-bold mb-4">Resume</h3>
                                 {selectedTemplate ? (
-                                    <div className="rounded border-2 border-black mb-4">
-                                        <img src={templates[selectedTemplate-1].img} className='m-auto' alt={`Selected Template ${selectedTemplate}`} />
+                                    <div className="rounded border-2 border-black mb-4 h-96 relative">
+                                        <ZoomableIframe url={'/test_resume.html'} idealWidth = {1160} idealHeight = {768} />
                                     </div>                                    
                                 ) : (
                                     <p>Please select a template from the left.</p>
                                 )}
-                                <div className="flex justify-between">
+                                <div className="flex justify-around">
                                     <Link href={'/studentprofile'} className='text-blue-600 font-bold'>Edit</Link>
                                     <Link href={'/studentprofile'} className='text-blue-600 font-bold'>Download</Link>
                                 </div>
                                 <Link href={'/studentprofile'} className='text-gray-500 mt-3 font-bold'>Edit Experience</Link>
                             </div>
-                            <div className="flex flex-col w-1/2 justify-center">
+                            <div className="flex flex-col w-1/3 justify-center">
                                 <div className="rounded p-4 mb-4">
                                     <div className="flex w-full text-center text-md lg:text-lg font-bold gap-1">
                                         <h4 className="text-blue-600">Employability Score</h4>
