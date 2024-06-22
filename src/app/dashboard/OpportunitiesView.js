@@ -18,18 +18,17 @@ const OpportunitiesView = () => {
                 setJobs(response.data);
                 setSelectedJob(response.data[0]);
                 fetchSkillsFromJob(response.data[0]);
+                console.log(response.data)
             } catch (error) {
                 console.error('Error fetching jobs:', error);
             }
         };
-        console.log("hi", skillRatings.mustHave.length)
         fetchJobs();
     }, []);
 
     const handleJobClick = (job) => {
         setSelectedJob(job);
         fetchSkillsFromJob(job);
-        console.log("hi", skillRatings.mustHave.length)
     };
 
     const handleLike = (jobId) => {
@@ -48,7 +47,6 @@ const OpportunitiesView = () => {
                     [jobId]: (prevLikes[jobId] || 0) + 1,
                 }));
             }
-            console.log("hi", skillRatings.mustHave.length)
             return newSet;
         });
     };
@@ -64,7 +62,6 @@ const OpportunitiesView = () => {
     };
 
     const fetchSkillsFromJob = (job) => {
-        console.log("lo", job.skills_required);
 
         // Handle mustHaveSkills
         let mustHaveSkills = [];
@@ -89,7 +86,7 @@ const OpportunitiesView = () => {
     };
 
     return (
-        <div className="p-4 bg-white rounded-lg shadow-md flex transition-transform duration-300 overflow-y-auto border-2 border-blue-500" style={{ minHeight: '40rem', height: '42.8rem' }}>
+        <div className="p-4 bg-white rounded-lg shadow-md flex transition-transform duration-300 overflow-y-auto border-2 border-blue-500" style={{ minHeight: '38rem', height: '39.8rem' }}>
             {/* Left Column: Job Cards */}
             <div className="w-1/5 pr-4 overflow-y-auto" style={{ height: '100%', width: '27%' }}>
                 {jobs.map((job, index) => (
@@ -101,7 +98,7 @@ const OpportunitiesView = () => {
                         <div className="flex items-center mb-2">
                             <img
                                 src={job.companyLogo || '/media/images/amazon_PNG21.png'}
-                                alt={job.companyName}
+                                alt={job.company_name}
                                 className="h-12 w-12 mr-3" style={{ marginTop: '-5rem' }}
                             />
                             <div>
@@ -135,26 +132,26 @@ const OpportunitiesView = () => {
                             {/* Company Details */}
                             <div className="flex items-left mb-2">
                                 <div>
-                                    <h2 className="text-xl pt-0 mb-2 font-semibold">{selectedJob.companyName || 'Company Name'}</h2>
+                                    <h2 className="text-lg pt-0 mb-2 font-semibold">{selectedJob.companyName || 'Company Name'}</h2>
                                     <div className="flex space-x-32">
-                                        <p className="text-gray-600">Sector - {selectedJob.sector}</p>
-                                        <p className="text-gray-600">Product - {selectedJob.product}</p>
+                                        <p className="text-gray-600 text-sm">Sector - {selectedJob.sector}</p>
+                                        <p className="text-gray-600 text-sm">Product - {selectedJob.product}</p>
                                     </div>
                                 </div>
                             </div>
                             <div className="flex mb-2 space-x-32">
-                                <p className="text-gray-800"> {selectedJob.num_employees} 1-10 Employees</p>
-                                <p className="text-gray-800">MNC - {selectedJob.is_mnc ? 'Yes' : 'No'}</p>
+                                <p className="text-gray-800 text-sm"> {selectedJob.num_employees} 1-10 Employees</p>
+                                <p className="text-gray-800 text-sm">MNC - {selectedJob.is_mnc ? 'Yes' : 'No'}</p>
                             </div>
                             <div className="flex mb-2 pb-2 space-x-32 border-b border-dotted border-gray-300">
-                                <p className="text-gray-800"> {selectedJob.head_office} Head office - </p>
+                                <p className="text-gray-800 text-sm"> {selectedJob.head_office} Head office - </p>
                             </div>
 
                             {/* Job Role Information */}
                             <div className="mb-2">
-                                <h2 className="text-xl font-semibold mb-1">{selectedJob.title}</h2>
-                                <p className="text-gray-800 mb-2">Department | Location - {selectedJob.location || 'N/A'}</p>
-                                <div className="grid grid-cols-3 gap-1 text-gray-800 border border-gray-300">
+                                <h2 className="text-lg font-semibold mb-1">{selectedJob.title}</h2>
+                                <p className="text-gray-800 text-sm mb-2">Department | Location - {selectedJob.location || 'N/A'}</p>
+                                <div className="grid grid-cols-3 gap-1 text-sm text-gray-800 border border-gray-300">
                                     {/* Header Row */}
                                     <div className="col-span-1 bg-blue-600 text-white text-center p-2"><strong></strong></div>
                                     <div className="col-span-1 bg-blue-600 text-white text-center p-2"><strong>Must Have</strong></div>
@@ -184,14 +181,14 @@ const OpportunitiesView = () => {
 
                             {/* Job Description */}
                             <div className="border p-4  rounded-lg mb-2">
-                                <h3 className="text-xl font-semibold mb-2">Job Description</h3>
-                                <p className="text-gray-800 mb-2">{selectedJob.description}</p>
+                                <h3 className="text-lg font-semibold mb-2">Job Description</h3>
+                                <p className="text-gray-800 text-sm mb-2">{selectedJob.description}</p>
                             </div>
 
                             {/* Key Responsibilities */}
                             <div className="border p-4 rounded-lg mb-4">
-                                <h3 className="text-xl font-semibold mb-2">Key Responsibilities</h3>
-                                <ul className="list-disc list-inside text-gray-800">
+                                <h3 className="text-lg font-semibold mb-2">Key Responsibilities</h3>
+                                <ul className="list-disc list-inside text-sm text-gray-800">
                                     {selectedJob.responsibilities_array.map((resp, index) => (
                                         <li key={index}>{resp}</li>
                                     ))}
@@ -201,7 +198,7 @@ const OpportunitiesView = () => {
 
                         {/* Claim Your Candidacy */}
                         <div className=" p-2 bg-white rounded-lg shadow-md h-auto overflow-y-auto" style={{ maxWidth: '100%' }}>
-                            <h2 className="text-xl pt-2 text-center font-semibold mb-4">Claim Your Candidacy</h2>
+                            <h2 className="text-lg pt-2 text-center font-semibold mb-4">Claim Your Candidacy</h2>
 
                             {/* Must Have Skills */}
                             {skillRatings.mustHave.length > 0 ? (

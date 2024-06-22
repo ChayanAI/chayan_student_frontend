@@ -4,6 +4,7 @@ import { FaStar } from 'react-icons/fa';
 const LearningPathView = () => {
     const [selectedView, setSelectedView] = useState('careerPaths'); // State to track selected view
     const [selectedCareer, setSelectedCareer] = useState(1); // State to track selected career (default to first career)
+    const [selectedOpportunity, setSelectedOpportunity] = useState(1); // State to track selected opportunity (default to first opportunity)
 
     // Sample data for career options and skills
     const careerOptions = [
@@ -28,6 +29,12 @@ const LearningPathView = () => {
         ],
     };
 
+    const opportunitiesOptions = [
+        { id: 1, name: 'Front-End Developer', employabilityScore: 88, companyName: 'Google', likedOn: '12/05/2023', learningPath: ['Advanced React'] },
+        { id: 2, name: 'Back-End Developer', employabilityScore: 82, companyName: 'Amazon', appliedOn: '20/06/2023', learningPath: ['Master Node.js'] },
+        { id: 3, name: 'Data Scientist', employabilityScore: 90, companyName: 'Facebook', likedOn: '01/07/2023', learningPath: ['Complete Data Science Course'] },
+    ];
+
     const handleCareerSelect = (careerId) => {
         setSelectedCareer(careerId);
     };
@@ -44,17 +51,17 @@ const LearningPathView = () => {
     };
 
     return (
-        <div className="bg-white shadow-md border-2 border-blue-500 h-full w-full " style={{ maxHeight: '42.8rem' }}>
+        <div className="bg-white shadow-md border-2 border-blue-500 h-full w-full " style={{ maxHeight: '39.6rem' }}>
             {/* Header with two view options */}
             <div className="flex justify-between mb-4">
                 <div
-                    className={`w-1/2 text-xl text-center cursor-pointer ${selectedView === 'careerPaths' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-4`}
+                    className={`w-1/2 text-lg text-center cursor-pointer ${selectedView === 'careerPaths' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-3`}
                     onClick={() => setSelectedView('careerPaths')}
                 >
                     For Your Career Paths
                 </div>
                 <div
-                    className={`w-1/2 text-xl text-center cursor-pointer ${selectedView === 'opportunities' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-4`}
+                    className={`w-1/2 text-lg text-center cursor-pointer ${selectedView === 'opportunities' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-3`}
                     onClick={() => setSelectedView('opportunities')}
                 >
                     For the Opportunities of Your Interest
@@ -64,12 +71,12 @@ const LearningPathView = () => {
             {selectedView === 'careerPaths' && (
                 <div className="flex p-8 h-full">
                     {/* Left section - Career options */}
-                    <div className="w-1/5 pr-4 overflow-y-auto" style={{ maxHeight: '40rem' }}>
-                        <h3 className="text-center text-xl border-2 border-blue-500 font-semibold mb-14 p-4">Career Paths</h3>
+                    <div className="w-1/5 pr-4 overflow-y-auto" style={{ maxHeight: '36rem' }}>
+                        <h3 className="text-center text-lg border-2 border-blue-500 font-semibold mb-14 p-4">Career Paths</h3>
                         {careerOptions.map(option => (
                             <div className="text-center mb-14" key={option.id}>
                                 <div
-                                    className={`border rounded-lg p-2 mb-2 cursor-pointer ${selectedCareer === option.id ? 'bg-yellow-400' : ''}`}
+                                    className={`border text-lg rounded-lg p-2 mb-2 cursor-pointer ${selectedCareer === option.id ? 'bg-yellow-400' : ''}`}
                                     onClick={() => handleCareerSelect(option.id)}
                                     style={{
                                         backgroundImage: selectedCareer === option.id ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
@@ -86,7 +93,7 @@ const LearningPathView = () => {
 
                     {/* Right section - Skills mapped to selected career */}
                     <div className="w-4/5 pl-4 flex flex-col justify-between">
-                        <h3 className="text-center text-xl border-2 border-blue-500 font-semibold mb-6 p-4">Skills for the Selected Career Path</h3>
+                        <h3 className="text-center text-lg border-2 border-blue-500 font-semibold mb-6 p-4">Skills for the Selected Career Path</h3>
                         {selectedCareer && skillsData[selectedCareer] ? (
                             <div className="overflow-x-auto h-full">
                                 <table className="min-w-full bg-white table-auto">
@@ -146,14 +153,14 @@ const LearningPathView = () => {
 
             {
                 selectedView === 'opportunities' && (
-                    <div className="flex p-8 h-full">
+                    <div className="flex p-6 h-full">
                         {/* Left section - Career options */}
-                        <div className="w-1/5 pr-4 overflow-y-auto" style={{ maxHeight: '40rem' }}>
-                            <h3 className="text-center text-xl border-2 border-blue-500 font-semibold mb-14 p-4">Career Paths</h3>
-                            {careerOptions.map(option => (
-                                <div className="text-center mb-14" key={option.id}>
+                        <div className="w-1/5 pr-4 overflow-y-auto" style={{ maxHeight: '32rem' }}>
+                            <h3 className="text-center text-lg border-2 border-blue-500 font-semibold mb-10 p-4">Opportunities</h3>
+                            {opportunitiesOptions.map(option => (
+                                <div className="text-center mb-8" key={option.id}>
                                     <div
-                                        className={`border rounded-lg p-2 mb-2 cursor-pointer ${selectedCareer === option.id ? 'bg-yellow-400' : ''}`}
+                                        className={`border text-lg rounded-lg p-2 mb-2 cursor-pointer ${selectedCareer === option.id ? 'bg-yellow-400' : ''}`}
                                         onClick={() => handleCareerSelect(option.id)}
                                         style={{
                                             backgroundImage: selectedCareer === option.id ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
@@ -162,7 +169,14 @@ const LearningPathView = () => {
                                         <div className="text-center">{option.name}</div>
                                     </div>
                                     <div>
-                                        <div className="text-lg text-center text-blue-700">Employability Score - {option.employabilityScore}%</div>
+                                        <div className="text-sm ">
+                                            {option.companyName} |
+                                            <span className="text-blue-500 underline cursor-pointer">  View Job Details</span>
+                                        </div>
+                                        <div className="text-sm text-center">
+                                            {option.appliedOn ? `Applied On - ${option.appliedOn}` : `Liked On - ${option.likedOn}`}
+                                        </div>
+                                        <div className="text-base text-center text-blue-700">Employability Score - {option.employabilityScore}%</div>
                                     </div>
                                 </div>
                             ))}
@@ -170,7 +184,7 @@ const LearningPathView = () => {
 
                         {/* Right section - Skills mapped to selected career */}
                         <div className="w-4/5 pl-4 flex flex-col justify-between">
-                            <h3 className="text-center text-xl border-2 border-blue-500 font-semibold mb-6 p-4">Skills for the Selected Career Path</h3>
+                            <h3 className="text-center text-lg border-2 border-blue-500 font-semibold mb-6 p-4">Skills for the Selected Opportunities of your Interest</h3>
                             {selectedCareer && skillsData[selectedCareer] ? (
                                 <div className="overflow-x-auto h-full">
                                     <table className="min-w-full bg-white table-auto">
