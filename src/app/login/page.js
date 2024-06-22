@@ -13,12 +13,13 @@ const LoginPage = () => {
   const [passwordError, setPasswordError] = useState('');
   const [popupVisible, setPopupVisible] = useState(false);
   const [goToVerification, setGoToVerification] = useState(false);
+  const [userId, setUserId] = useState()
 
   const router = useRouter();
-
+  axios.defaults.withCredentials = true;
   useEffect(() => {
     if (goToVerification) {
-      router.push('/verify');
+      router.push(`/verify/${userId}`);
     }
   }, [goToVerification, router]);
 
@@ -45,8 +46,9 @@ const LoginPage = () => {
       });
 
       if (response.status === 200) {
+        setUserId(response.data.user_id)
         setIsLoggedIn(true);
-        setPopupVisible(true);
+        handleGoToVerification()
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -60,7 +62,7 @@ const LoginPage = () => {
   };
 
   const handleGoToVerification = () => {
-    setPopupVisible(false);
+
     setGoToVerification(true);
   };
 
@@ -154,28 +156,28 @@ const LoginPage = () => {
                 </button>
               </div>
             </form>
-            {popupVisible && (
-              <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                <div className="bg-white p-6 rounded-lg shadow-lg">
-                  <p className="text-lg font-semibold">Login successful</p>
-                  <p className="mt-2">Go to the verification page.</p>
-                  <div className="mt-4 flex justify-end">
-                    <button
-                      onClick={handleGoToVerification}
-                      className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    >
-                      Go to Verification
-                    </button>
-                    <button
-                      onClick={() => setPopupVisible(false)}
-                      className="ml-3 rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+            {/*{popupVisible && (*/}
+            {/*  <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">*/}
+            {/*    <div className="bg-white p-6 rounded-lg shadow-lg">*/}
+            {/*      <p className="text-lg font-semibold">Login successful</p>*/}
+            {/*      <p className="mt-2">Go to the verification page.</p>*/}
+            {/*      <div className="mt-4 flex justify-end">*/}
+            {/*        <button*/}
+            {/*          onClick={handleGoToVerification}*/}
+            {/*          className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"*/}
+            {/*        >*/}
+            {/*          Go to Verification*/}
+            {/*        </button>*/}
+            {/*        <button*/}
+            {/*          onClick={() => setPopupVisible(false)}*/}
+            {/*          className="ml-3 rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"*/}
+            {/*        >*/}
+            {/*          Close*/}
+            {/*        </button>*/}
+            {/*      </div>*/}
+            {/*    </div>*/}
+            {/*  </div>*/}
+            {/*)}*/}
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center" aria-hidden="true">

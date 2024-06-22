@@ -1,8 +1,8 @@
 import Input from './Input';
 
 
-const Text = ({value,disp, setValue, setState, name, col, type ,step, list, index, isRequired}) => {
-  return <Input value={value} disp={disp} setValue={setValue} list={list} isRequired={isRequired} index={index} setstate={setState} step={step} name={name} col={col} type={type} variant="input" />;
+const Text = ({value,disp, setValue, setState, name, col, type ,step, list, index, isRequired, disabled}) => {
+  return <Input value={value} disp={disp} setValue={setValue} list={list} disabled={disabled} isRequired={isRequired} index={index} setstate={setState} step={step} name={name} col={col} type={type} variant="input" />;
 };
 
 const Select = ({value, setValue, disp, setState, name, col, options, list ,index, isRequired}) => {

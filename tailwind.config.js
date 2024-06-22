@@ -31,9 +31,14 @@ module.exports = {
         '7xl': '5rem',
         customSize: '2.75rem',
       },
+      listStyleType: {
+        'square': "'\\25A1'",
+      },
+
     },
   },
   plugins: [
     require('@tailwindcss/forms'),
   ],
 };
+

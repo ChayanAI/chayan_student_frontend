@@ -1,14 +1,18 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 const MockInterviewsView = () => {
+    const router = useRouter();
+
     const [isInstructionsRead, setIsInstructionsRead] = useState(false);
     const [activeView, setActiveView] = useState('practice');
-    const [selectedInterview, setSelectedInterview] = useState(0);
-    const [selectedRole, setSelectedRole] = useState('');
-    const [selectedFormat, setSelectedFormat] = useState('');
-    const [selectedTimeLength, setSelectedTimeLength] = useState('');
-
+    const [selectedInterview, setSelectedInterview] = useState(1);
+    const [selectedRole, setSelectedRole] = useState(0);
+    const [selectedRoleSelect, setSelectedRoleSelect] = useState(0);
+    const [selectedFormat, setSelectedFormat] = useState(0);
+    const [selectedTimeLength, setSelectedTimeLength] = useState('15 min');
+    
     const mockInterviews = [
         {
             id: 1,
@@ -35,75 +39,120 @@ const MockInterviewsView = () => {
         // Add more mock interviews as needed
     ];
 
+    const selectedInterviewDetails = mockInterviews.find(
+        (interview) => interview.id === selectedInterview
+    );
+
+    
+    const getNumberWithSuffix = (num) => {
+        const lastDigit = num % 10;
+        const lastTwoDigits = num % 100;
+      
+        let suffix;
+      
+        if (lastTwoDigits >= 11 && lastTwoDigits <= 13) {
+          suffix = 'th';
+        } else {
+          switch (lastDigit) {
+            case 1:
+              suffix = 'st';
+              break;
+            case 2:
+              suffix = 'nd';
+              break;
+            case 3:
+              suffix = 'rd';
+              break;
+            default:
+              suffix = 'th';
+          }
+        }
+        return `${num}${suffix}`;
+    };
+
     const handleInterviewClick = (index) => {
         setSelectedInterview(index);
     };
 
     return (
-        <div className="p-6 bg-white rounded-lg shadow-md mb-4">
+        <div className="bg-white shadow-md border-2 border-blue-500 h-fit w-full rounded-b-lg min-h-[35rem]">
             {/* Header with two view options */}
-            <div className="flex justify-between items-center border-2 mb-3">
+            <div className="flex justify-between mb-4 border-b-2 border-blue-500">
                 <div
-                    className={`flex-1 text-center border-r-2 cursor-pointer ${activeView === 'practice' ? 'bg-blue-500 text-white' : ''}`}
+                    className={`w-1/2 text-xl text-center cursor-pointer ${activeView === 'practice' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-4`}
                     onClick={() => setActiveView('practice')}
                 >
-                    <h3 className="font-semibold">Practice 3rd AI Mock Interview</h3>
+                    For Your Career Paths
                 </div>
                 <div
-                    className={`flex-1 text-center cursor-pointer ${activeView === 'history' ? 'bg-blue-500 text-white' : ''}`}
+                    className={`w-1/2 text-xl text-center cursor-pointer ${activeView === 'history' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-4`}
                     onClick={() => setActiveView('history')}
                 >
-                    <h3 className="font-semibold">My AI Interview History</h3>
+                    For the Opportunities of Your Interest
                 </div>
             </div>
 
             {activeView === 'practice' && (
-                <div className="flex">
+                <div className="flex h-full">
                     {/* Left section - 60% width */}
-                    <div className="w-3/5 pr-4">
-                        <div className="border rounded-lg p-4 ">
-                            <h4 className="text-center mb-4 bg-green-400">Define Mock Interview Structure</h4>
+                    <div className="w-3/5">
+                        <div className="p-4 pt-0">
+                            <div className="px-10 py-1 rounded-xl mx-auto w-fit text-center mb-4 bg-green-600 font-semibold text-lg text-white">Define Mock Interview Structure</div>
 
                             {/* Select Role */}
-                            <div className="mb-4">
-                                <div className="flex gap-2 text-center">
+                            <div className="mt-8 py-2 pr-4">
+                                <div className="flex gap-4 text-center">
                                     <div className="flex-none w-1/5 text-center mt-9">
-                                        <span className="underline text-center">Select Role</span>
+                                        <span className="underline underline-offset-2 font-bold text-center">Select Role</span>
                                     </div>
-                                    <div className="flex-grow grid grid-cols-3 gap-2">
+                                    <div className="flex flex-col gap-2 w-fit mr-2">
+                                        <button className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRoleSelect === 0 ? 'bg-yellow-800 text-white' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                            onClick={() => setSelectedRoleSelect(0)}
+                                            style={{
+                                                // backgroundImage: selectedRoleSelect === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                            }}
+                                            >Career Path</button>
+                                        <button className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRoleSelect === 1 ? 'bg-yellow-800 text-white' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                            onClick={() => setSelectedRoleSelect(1)}
+                                            style={{
+                                                // backgroundImage: selectedRoleSelect === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                            }}
+                                            >Jobs Liked/Applied</button>
+                                    </div>
+                                    <div className="flex-grow grid grid-cols-2 gap-2">
                                         <button
-                                            className={`border rounded p-2 ${selectedRole === 'Career Path' ? 'bg-yellow-200' : ''}`}
-                                            onClick={() => setSelectedRole('Career Path')}
-                                        >
-                                            Career Path
-                                        </button>
-                                        <button
-                                            className={`border rounded p-2 ${selectedRole === 'Role 1' ? 'bg-yellow-200' : ''}`}
-                                            onClick={() => setSelectedRole('Role 1')}
+                                            className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRole === 0 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                            onClick={() => setSelectedRole(0)}
+                                            style={{
+                                                backgroundImage: selectedRole === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                            }}
                                         >
                                             Role 1
                                         </button>
                                         <button
-                                            className={`border rounded p-2 ${selectedRole === 'Role 2' ? 'bg-yellow-200' : ''}`}
-                                            onClick={() => setSelectedRole('Role 2')}
+                                            className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRole === 1 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                            onClick={() => setSelectedRole(1)}
+                                            style={{
+                                                backgroundImage: selectedRole === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                            }}
                                         >
                                             Role 2
                                         </button>
                                         <button
-                                            className={`border rounded p-2 ${selectedRole === 'Jobs Liked/Applied' ? 'bg-yellow-200' : ''}`}
-                                            onClick={() => setSelectedRole('Jobs Liked/Applied')}
-                                        >
-                                            Jobs Liked/Applied
-                                        </button>
-                                        <button
-                                            className={`border rounded p-2 ${selectedRole === 'Role 3' ? 'bg-yellow-200' : ''}`}
-                                            onClick={() => setSelectedRole('Role 3')}
+                                            className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRole === 2 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                            onClick={() => setSelectedRole(2)}
+                                            style={{
+                                                backgroundImage: selectedRole === 2 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                            }}
                                         >
                                             Role 3
                                         </button>
                                         <button
-                                            className={`border rounded p-2 ${selectedRole === 'Role 4' ? 'bg-yellow-200' : ''}`}
-                                            onClick={() => setSelectedRole('Role 4')}
+                                            className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRole === 3 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                            onClick={() => setSelectedRole(3)}
+                                            style={{
+                                                backgroundImage: selectedRole === 3 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                            }}
                                         >
                                             Role 4
                                         </button>
@@ -111,37 +160,46 @@ const MockInterviewsView = () => {
                                 </div>
                             </div>
 
-                            <hr className="border-dotted mb-4" />
+                            <hr className="border-t-2 border-dashed my-4" />
 
                             {/* Select Format */}
-                            <div className="mt-4 mb-4 text-center">
-                                <div className="flex gap-2">
+                            <div className="py-2 pr-4">
+                                <div className="flex gap-4 text-center">
                                     <div className="flex-none w-1/5 mt-4">
-                                        <span className="underline ">Select Format</span>
+                                        <span className="underline underline-offset-2 font-bold text-center">Select Format</span>
                                     </div>
                                     <div className="flex-grow flex flex-wrap gap-4">
-                                        <div className="flex flex-col items-center">
+                                        <div className="flex flex-col w-[30%] items-center">
                                             <button
-                                                className={`border rounded pl-8 pr-8 pb-3 pt-3 ${selectedFormat === 'Format 1' ? 'bg-yellow-200' : ''}`}
-                                                onClick={() => setSelectedFormat('Format 1')}
+                                                className={`px-4 py-2 w-full text-md border rounded font-medium shadow-md ${selectedFormat === 0 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                                onClick={() => setSelectedFormat(0)}
+                                                style={{
+                                                    backgroundImage: selectedFormat === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                                }}
                                             >
                                                 Technical
                                             </button>
                                             <div className="text-blue-500 underline cursor-pointer">Read Details</div>
                                         </div>
-                                        <div className="flex flex-col items-center">
+                                        <div className="flex flex-col w-[30%] items-center">
                                             <button
-                                                className={`border rounded pl-8 pr-8 pb-3 pt-3 ${selectedFormat === 'Format 2' ? 'bg-yellow-200' : ''}`}
-                                                onClick={() => setSelectedFormat('Format 2')}
+                                                className={`px-4 py-2 w-full text-md border rounded font-medium shadow-md ${selectedFormat === 1 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                                onClick={() => setSelectedFormat(1)}
+                                                style={{
+                                                    backgroundImage: selectedFormat === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                                }}
                                             >
                                                 Behavioral
                                             </button>
                                             <div className="text-blue-500 underline cursor-pointer">Read Details</div>
                                         </div>
-                                        <div className="flex flex-col items-center">
+                                        <div className="flex flex-col w-[30%] items-center">
                                             <button
-                                                className={`border rounded pl-8 pr-8 pb-3 pt-3 ${selectedFormat === 'Format 3' ? 'bg-yellow-200' : ''}`}
-                                                onClick={() => setSelectedFormat('Format 3')}
+                                                className={`px-4 py-2 w-full text-md border rounded font-medium shadow-md ${selectedFormat === 2 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                                onClick={() => setSelectedFormat(2)}
+                                                style={{
+                                                    backgroundImage: selectedFormat === 2 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                                }}
                                             >
                                                 HR
                                             </button>
@@ -151,24 +209,30 @@ const MockInterviewsView = () => {
                                 </div>
                             </div>
 
-                            <hr className="border-dotted mb-4" />
+                            <hr className="border-t-2 border-dashed my-4" />
 
                             {/* Select Time Length */}
-                            <div className="mb-4 text-center">
-                                <div className="flex gap-2">
+                            <div className="py-2 pr-4">
+                                <div className="flex gap-4 text-center">
                                     <div className="flex-none w-1/5">
-                                        <span className="underline">Select Time Length</span>
+                                        <span className="underline underline-offset-2 font-bold text-center">Select Time Length</span>
                                     </div>
-                                    <div className="flex-grow flex gap-14">
+                                    <div className="flex-grow flex gap-4">
                                         <button
-                                            className={`border rounded pl-8 pr-8 pb-3 pt-3 ${selectedTimeLength === '15 min' ? 'bg-yellow-200' : ''}`}
+                                            className={`px-8 py-2 w-[30%] text-md border rounded font-medium shadow-md ${selectedTimeLength === '15 min' ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
                                             onClick={() => setSelectedTimeLength('15 min')}
+                                            style={{
+                                                backgroundImage: selectedTimeLength === '15 min' ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                            }}
                                         >
                                             15 min
                                         </button>
                                         <button
-                                            className={`border rounded pl-8 pr-8 pb-3 pt-3 ${selectedTimeLength === '20 min' ? 'bg-yellow-200' : ''}`}
+                                            className={`px-8 py-2 w-[30%] text-md border rounded font-medium shadow-md ${selectedTimeLength === '20 min' ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
                                             onClick={() => setSelectedTimeLength('20 min')}
+                                            style={{
+                                                backgroundImage: selectedTimeLength === '20 min' ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                            }}
                                         >
                                             20 min
                                         </button>
@@ -179,38 +243,35 @@ const MockInterviewsView = () => {
                     </div>
 
                     {/* Dotted line between left and right sections */}
-                    <div className="border-r-2 border-dotted"></div>
+                    <div className="border-r-2 border-dashed mb-4"></div>
 
                     {/* Right section - 40% width */}
                     <div className="w-2/5 pl-4">
-                        <h4 className="mb-4 font-bold text-lg">Flow of the Interview - Instructions</h4>
-                        <div className="border rounded p-4 mb-4 overflow-y-auto" style={{ maxHeight: '400px' }}>
-                            {/* <p>Flow of the interview - Basic Instructions</p> */}
-                            <ol className="list-decimal list-inside">
-                                <li>Perform a quick system check to ensure your webcam, microphone, and internet connection are working properly.</li>
-                                <li>Make sure you choose a quiet, well-lit space for the interview.</li>
-                                <li>This is a 15/20-minute interview (format chosen) where the system will ask 4-5 questions. The questions will also be visible on your screen while you respond.</li>
-                                <li>There will be a time limit for each question; you need to finish your response within the allotted time.</li>
-                                <li>Once you finish your response to a question, click the 'Response Over' button. The system will then ask you the next question.</li>
-                                <li>You will be evaluated on your body language, personality, response content, response structure, tone, and language.</li>
-                                <li>During the interview, the system will provide you with live alerts if required so that you are able to understand the instance with the alert too.</li>
-                                <li>After the interview is over, CHAYAN.Ai will provide you with detailed feedback about the interview for you to reflect upon.</li>
-                                <li>You can connect with our expert with your feedback if needed.</li>
-                            </ol>
-                        </div>
-                        <div className="flex items-center mb-4">
+                        <h4 className="mb-4 ml-6 font-bold text-lg">Flow of the Interview - Instructions</h4>
+                        <ol className="list-decimal list-outside text-sm px-6 text-gray-800">
+                            <li className='leading-tight pt-1 pl-1'>Perform a quick system check to ensure your webcam, microphone, and internet connection are working properly.</li>
+                            <li className='leading-tight pt-1 pl-1'>Make sure you choose a quiet, well-lit space for the interview.</li>
+                            <li className='leading-tight pt-1 pl-1'>This is a 15/20-minute interview (format chosen) where the system will ask 4-5 questions. The questions will also be visible on your screen while you respond.</li>
+                            <li className='leading-tight pt-1 pl-1'>There will be a time limit for each question; you need to finish your response within the allotted time.</li>
+                            <li className='leading-tight pt-1 pl-1'>Once you finish your response to a question, click the 'Response Over' button. The system will then ask you the next question.</li>
+                            <li className='leading-tight pt-1 pl-1'>You will be evaluated on your body language, personality, response content, response structure, tone, and language.</li>
+                            <li className='leading-tight pt-1 pl-1'>During the interview, the system will provide you with live alerts if required so that you are able to understand the instance with the alert too.</li>
+                            <li className='leading-tight pt-1 pl-1'>After the interview is over, CHAYAN.Ai will provide you with detailed feedback about the interview for you to reflect upon.</li>
+                            <li className='leading-tight pt-1 pl-1'>You can connect with our expert with your feedback if needed.</li>
+                        </ol>
+                        <div className="flex my-4">
                             <input
                                 type="checkbox"
                                 id="readInstructions"
-                                className="mr-2"
+                                className="mx-2 mt-2 w-3 h-3 border-2 border-blue-600 focus:ring-transparent"
                                 onChange={(e) => setIsInstructionsRead(e.target.checked)}
                             />
                             <label htmlFor="readInstructions">I have read all the details and am ready for the mock interview</label>
                         </div>
                         <button
-                            className="mx-auto block p-2 bg-blue-500 text-white rounded"
+                            className={`mx-auto block px-8 mb-4 py-2 text-white rounded ${!isInstructionsRead ? 'bg-blue-400' : 'bg-blue-600 shadow-lg hover:scale-105' }`}
                             disabled={!isInstructionsRead}
-                            onClick={() => { /* handle click event */ }}
+                            onClick={() => {router.push(`/interview`)}}
                         >
                             Start
                         </button>
@@ -219,35 +280,44 @@ const MockInterviewsView = () => {
             )}
 
             {activeView === 'history' && (
-                <div>
-                    <div className="flex">
+                <div className="flex h-full">
                         {/* Left section - 50% width */}
-                        <div className="w-1/2 pr-4">
-                            {mockInterviews.map((interview, index) => (
-                                <button
-                                    key={interview.id}
-                                    className={`border rounded p-2 mb-2 w-full ${selectedInterview === index ? 'bg-blue-500 text-white' : ''}`}
-                                    onClick={() => handleInterviewClick(index)}
-                                >
-                                    {interview.title}
-                                    <br />
-                                    {`${interview.date} | ${interview.time}`}
-                                    <br />
-                                    {`${interview.careerPath} | ${interview.company}`}
-                                    <br />
-                                    {`${interview.format} | ${interview.timeLength}`}
-                                </button>
-                            ))}
+                        <div className="w-3/5 px-4">
+                                <div className="flex gap-12">
+                                    <div className="w-2/5 flex flex-col gap-y-6 my-8">
+                                        {mockInterviews.map((interview) => (
+                                            <button
+                                                className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedInterview === interview.id ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                                onClick={() => setSelectedInterview(interview.id)}
+                                                style={{
+                                                    backgroundImage: selectedInterview === interview.id ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                                }}
+                                            >{getNumberWithSuffix(interview.id)} Mock Interview</button>
+                                        ))}
+                                    </div>
+                                    <div className="w-3/5 flex flex-col">
+                                        <div className="px-4 py-4 border-b-2 border-dashed flex flex-col gap-4">
+                                            <p className="">{`${selectedInterviewDetails.date} | ${selectedInterviewDetails.time}`}</p>
+                                            <p className="">{`${selectedInterviewDetails.careerPath} | ${selectedInterviewDetails.company}`}</p>
+                                            <p className="">{`${selectedInterviewDetails.format} | ${selectedInterviewDetails.timeLength}`}</p>
+                                        </div>
+                                        <div className="px-4 py-4 flex flex-col gap-4 min-h-40">
+                                            <p className="mr-12">Youtube Video link with video thumbnail for the interview</p>
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
 
+                        {/* Dotted line between left and right sections */}
+                        <div className="border-r-2 border-dashed mb-4"></div>
+
                         {/* Right section - 50% width */}
-                        <div className="w-1/2 pl-4">
-                            <h4 className="mb-4">CHAYAN Assessment of the mock Interview</h4>
+                        <div className="w-2/5 px-4">
+                            <h4 className="font-bold text-lg mb-4">CHAYAN Assessment of the mock Interview</h4>
                             <div className="border rounded p-2 mb-4 overflow-y-auto" style={{ maxHeight: '200px' }}>
-                                <p>{mockInterviews[selectedInterview].assessment}</p>
+                                <p>{selectedInterviewDetails.assessment}</p>
                             </div>
                         </div>
-                    </div>
                 </div>
             )}
         </div>
