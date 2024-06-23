@@ -1,9 +1,13 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import ZoomableIframe from '../../components/ZoomableIFrame';
 
+const PdfViewer = dynamic(() => import('../../components/PdfViewer'), { ssr: false });
+
 const ResumeBuilderView = () => {
+
 
     const [selectedView, setSelectedView] = useState('build'); // State to track selected view (build, customize, upload)
     const [selectedTemplate, setSelectedTemplate] = useState(1); // State to track selected template
@@ -278,8 +282,9 @@ const ResumeBuilderView = () => {
                             <div className="flex flex-col w-2/3 text-center pl-2 pr-6">
                                 <h3 className="font-bold mb-4">Resume</h3>
                                 {selectedTemplate ? (
-                                    <div className="rounded border-2 border-black mb-4 h-96 relative">
-                                        <ZoomableIframe url={'/test_resume.html'} idealWidth = {1160} idealHeight = {768} />
+                                    <div className="rounded border-2 border-black mb-4 h-96">
+                                        {/* <ZoomableIframe url={'/test_resume.html'} idealWidth = {1160} idealHeight = {768} /> */}
+                                        <PdfViewer pdfUrl="/templates.pdf" />
                                     </div>                                    
                                 ) : (
                                     <p>Please select a template from the left.</p>
