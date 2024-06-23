@@ -14,10 +14,6 @@ export default function dashboardLayout({ children , params,}) {
         router.push('/login')
         return
       }
-      if((!user.is_verified)){
-        router.push(`/verify/${user.id}`)
-        return
-      }
       if((!user.has_profile)){
         router.push(`/studentprofile/${user.id}`)
         return
