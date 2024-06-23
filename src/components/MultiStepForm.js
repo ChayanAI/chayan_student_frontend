@@ -148,7 +148,7 @@ const MultiStepForm = ({userId}) => {
                 last_name: profileData.last_name,
                 date_of_birth: profileData.date_of_birth,
                 gender: profileData.gender,
-                hometown: profileData.city,
+                city: profileData.city,
                 degree: profileData.degree,
                 course_length: profileData.course_length,
                 course_started: profileData.course_started,
@@ -162,7 +162,8 @@ const MultiStepForm = ({userId}) => {
                 internships: profileData.internships,
                 projects: profileData.projects,
                 volunteers: profileData.volunteers,
-                extra_curriculars: profileData.extra_curriculars
+                extra_curriculars: profileData.extra_curriculars,
+                college_name: profileData.college_name
             }).then((res)=>console.log(res))
         } catch (err) {
             alert(err)

@@ -19,7 +19,7 @@ const LoginPage = () => {
   axios.defaults.withCredentials = true;
   useEffect(() => {
     if (goToVerification) {
-      router.push(`/verify/${userId}`);
+      router.push(`/studentprofile/${userId}`);
     }
   }, [goToVerification, router]);
 
