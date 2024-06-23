@@ -40,7 +40,7 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/studentauth/login', {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentauth/login`, {
         username,
         password,
       });

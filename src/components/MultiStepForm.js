@@ -93,7 +93,7 @@ const MultiStepForm = ({userId}) => {
     const [currentStep, setCurrentStep] = useState(0);
     useEffect(() => {
         try {
-            axios.post('http://localhost:5000/get/findbyId', {userId: userId}).then((res) => {
+            axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/get/findbyId`, {userId: userId}).then((res) => {
 
                 setProfileData((prev) => ({...prev, email: res.data.email, phone_number: res.data.phone_number}))
             })
@@ -142,7 +142,7 @@ const MultiStepForm = ({userId}) => {
         event.preventDefault();
         console.log(profileData)
         try {
-            await axios.post('http://localhost:5000/studentprofile/submit-form', {
+            await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/submit-form`, {
                 user_id: params.userId,
                 first_name: profileData.first_name,
                 last_name: profileData.last_name,

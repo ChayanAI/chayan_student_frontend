@@ -35,9 +35,9 @@ const Dashboard = () => {
     const [loader, setLoader] = useState(false)
     useEffect(() => {
         (async () => {
-            await axios.get('http://localhost:5000/auth/verify').then(async (res) => {
+            await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/auth/verify`).then(async (res) => {
                 setUserdata(res.data)
-                await axios.post('http://localhost:5000/user/getprofilebyId', { user_id: res.data.id }).then((res) => {
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, { user_id: res.data.id }).then((res) => {
                     setProfile(res.data)
                     console.log(res.data)
                 })
@@ -49,7 +49,7 @@ const Dashboard = () => {
     }, []);
 
     const handlelogout=async()=>{
-        await axios.get('http://localhost:5000/studentauth/clear').then(()=>{
+        await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentauth/clear`).then(()=>{
             router.push('/login')
         })
 
