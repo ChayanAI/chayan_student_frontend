@@ -10,9 +10,11 @@ import ResumeBuilderView from './ResumeBuilderView';
 import MockInterviewsView from './MockInterviewsView';
 import { useNavigate } from 'react-router-dom';
 import Link from 'next/link';
+import {useRouter} from "next/navigation";
 
 
 const Dashboard = () => {
+    const router = useRouter()
     const [userData, setUserdata] = useState(null)
     const [profile, setProfile] = useState(null);
     const [progress, setProgress] = useState(80); // Example progress, you can fetch actual completion progress
@@ -45,6 +47,13 @@ const Dashboard = () => {
 
 
     }, []);
+
+    const handlelogout=async()=>{
+        await axios.get('http://localhost:5000/studentauth/clear').then(()=>{
+            router.push('/login')
+        })
+
+    }
     if (!loader) {
         return (<></>)
     }
@@ -112,7 +121,7 @@ const Dashboard = () => {
                                 <span className=" ml-1 text-black-900 font-semibold">Settings</span>
                             </Link>
                             <div className="flex items-center">
-                                <span className="text-blue-500 cursor-pointer">Logout</span>
+                                <span onClick={handlelogout} className="text-blue-500 cursor-pointer">Logout</span>
                             </div>
                         </div>
 
