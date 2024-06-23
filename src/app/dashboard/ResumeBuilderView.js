@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import ZoomableIframe from '../../components/ZoomableIFrame';
 
 const PdfViewer = dynamic(() => import('../../components/PdfViewer'), { ssr: false });
 
