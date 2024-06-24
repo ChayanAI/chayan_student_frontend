@@ -8,7 +8,7 @@ const StudentProfile = () => {
     const [userId, setuserId] = useState()
     useEffect(() => {
         (async () => {
-            const user = await axios.get('http://localhost:5000/auth/verify')
+            const user = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/auth/verify`)
             setuserId(user.data.id)
             setSuccess(true)
         })()

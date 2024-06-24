@@ -101,18 +101,18 @@ const EditProfile = ({userId}) => {
         (async () => {
             try {
 
-                await axios.post('http://localhost:5000/user/getprofilebyId', {user_id: userId}).then((res) => {
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, {user_id: userId}).then((res) => {
                     // console.log(res.data)
                     setProfileData(res.data)
 
                 })
-                await axios.post('http://localhost:5000/get/findbyId', {userId: userId}).then((res) => {
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/get/findbyId`, {userId: userId}).then((res) => {
                     // console.log(res.data)
 
 
                     setProfileData((prev) => ({...prev, email: res.data.email, phone_number: res.data.phone_number}))
                 })
-                await axios.post('http://localhost:5000/studentprofile/getinternbyId', {userId}).then((res) => {
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getinternbyId`, {userId}).then((res) => {
                     // console.log(res.data)
                     // console.log(res.data.internships[0].start_year+"/"+(months.indexOf(res.data.internships[0].start_month)+1).toString().padStart(2,'0')+"/01")
                     // console.log((months.indexOf(res.data.internships[0].start_month)+1).toString().padStart(2,'0'))
@@ -172,7 +172,7 @@ const EditProfile = ({userId}) => {
         event.preventDefault();
         console.log(profileData)
         try {
-            await axios.post('http://localhost:5000/studentprofile/submit-form', {
+            await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/submit-form`, {
                 user_id: params.userId,
                 first_name: profileData.first_name,
                 last_name: profileData.last_name,
