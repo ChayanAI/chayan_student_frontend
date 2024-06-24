@@ -1,7 +1,7 @@
 import Input from './Input';
 
 const Text = ({
-  value, disp, setValue, setState, name, col, type, step, list, index, isRequired, disabled, ...props
+  value, disp, setValue, setState, name, col, type, step, list, index, isRequired, readOnly, disabled, ...props
 }) => {
   return (
     <Input
@@ -10,6 +10,7 @@ const Text = ({
       setValue={setValue}
       list={list}
       disabled={disabled}
+      readOnly={readOnly}
       isRequired={isRequired}
       index={index}
       setstate={setState}
@@ -45,7 +46,7 @@ const Select = ({
 };
 
 const Block = ({
-  value, disp, setValue, setState, name, col, rows, list, index, isRequired, ...props
+  value, disp, setValue, setState, name, col, rows, list, index, isRequired, readOnly, ...props
 }) => {
   return (
     <Input
@@ -54,6 +55,7 @@ const Block = ({
       setValue={setValue}
       list={list}
       isRequired={isRequired}
+      readOnly={readOnly}
       index={index}
       setstate={setState}
       name={name}

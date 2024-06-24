@@ -14,7 +14,7 @@ const classNames = (...classes) => {
 };
 
 const Input = ({
-  disabled, list, index, value, disp, setValue, setstate, name, col, type = 'text', step = '1', variant = 'input', options = [], rows, isRequired = false, ...props
+  disabled, list, index, value, disp, setValue, setstate, name, col, type = 'text', step = '1', variant = 'input', options = [], rows, isRequired = false, readOnly = false, ...props
 }) => {
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(value);
@@ -60,6 +60,7 @@ const Input = ({
             onChange={handleChange}
             disabled={disabled}
             autoComplete={stringify(name)}
+            readOnly={readOnly}
             required={isRequired}
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset dark:bg-[#d0cfd1] ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
           />
@@ -90,6 +91,7 @@ const Input = ({
             rows={rows}
             value={value}
             onChange={handleChange}
+            readOnly={readOnly}
             required={isRequired}
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
           />
