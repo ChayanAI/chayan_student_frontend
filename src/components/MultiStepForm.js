@@ -84,7 +84,9 @@ const MultiStepForm = ({userId}) => {
             end_date: null,
             description: null,
             summary: null
-        }]
+        }],
+
+        career_path: []
 
 
     })
@@ -170,6 +172,24 @@ const MultiStepForm = ({userId}) => {
         }
         router.push('/dashboard');
     };
+    const [selectedCareer, setselectedCareer] = useState()
+    const CareerJobs = {
+        ["Software Developer"]: [
+            "Data Structure",
+            "C++",
+            "Java",
+            "JavaScript"],
+        ["Data Scientist"]: [
+            "Statistics",
+            "Machine Learning",
+            "Visualization",
+            "Python"],
+        ["Product Manager"]: [
+            "Project management",
+            "Market Research",
+            "User Experience",
+            "Business Strategy"]
+    }
     if (loader) {
         return (<></>)
     } else {
@@ -424,125 +444,122 @@ const MultiStepForm = ({userId}) => {
                         {/* Professional Goals */}
                         {currentStep === 2 && (
                                 <form onSubmit={handleNext}>
-                                    <div
-                                        className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 border-b lg:w-[75%] lg:min-w-[580px]">
-                                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
-                                        <ButtonRow label={'Career Objectives'} col={' col-span-full'} buttonsPerRow={4}
-                                                   buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8']}/>
-                                        {/* Yaha par atleast ek jab select karo tab niche ke options dikhane hain dhruv. */}
-                                        <SkillRating label='Rate Yourself in each skill for your desired objective:'/>
-                                        <div className="w-full flex justify-between px-2 col-span-full mt-4">
-                                            <button type="button" onClick={handleBack}
-                                                    className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                            </button>
-                                            <button type="submit"
-                                                    className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+                                <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 mb-4">
+                                    <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
+                                    <button type="button" onClick={handleBack}
+                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
+                                    </button>
+                                    <button type="button" onClick={handleSubmit}
+                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Save
+                                    </button>
+                                </div>
+                                <div
+                                    className="rounded-lg p-10 mb-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 lg:w-[75%] lg:min-w-[580px]">
+                                    <ButtonRow type='multi' value={profileData.career_path} disp='career_path'
+                                               setValue={setProfileData} label={'Career Objectives'}
+                                               col={' col-span-full'} buttonsPerRow={4}
+                                               buttonNames={['Software Developer', 'Data Scientist', 'Product Manager']}/>
+                                    {/* Yaha par atleast ek jab select karo tab niche ke options dikhane hain dhruv. */}
+                                    <SkillRating careers={profileData.career_path}
+                                                 label='Rate Yourself in each skill for your desired objective:'/>
+                                </div>
+                            </form>
                         )}
                         {/* Skill Verification */}
                         {currentStep === 3 && (
                                 <form onSubmit={handleNext}>
-                                    <div
-                                        className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-7 border-b lg:w-[75%] lg:min-w-[580px]">
-                                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
-                                        <label
-                                            className="block text-sm font-medium leading-6 text-gray-900 tracking-tight col-span-full">Certify
-                                            Your Claimed Skills</label>
-                                        <div className='sm:col-span-2 flex flex-col gap-2'>
-                                            <div className="w-full mb-5 text-center">
-                                                <button type='button' className="w-full max-w-40 bg-yellow-600 h-fit rounded-md py-2 font-semibold text-white text-center shadow-lg drop-shadow-lg hover:scale-105">Option 1</button>
-                                                <p className="text-blue-600 text-sm font-medium text-center">Employability: 75%</p>
-                                            </div>
-                                            <div className="w-full mb-5 text-center grayscale">
-                                                <button type='button' className="w-full max-w-40 bg-yellow-600 h-fit rounded-md py-2 font-semibold text-white text-center shadow-lg drop-shadow-lg hover:scale-105">Option 1</button>
-                                                <p className="text-blue-600 text-sm font-medium text-center">Employability: 75%</p>
-                                            </div>
-                                        </div>
-                                        <div className="col-span-2 lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-8">
-                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">Skill
-                                                        1</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center mt-1">
-                                                    <button type='button'
-                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Assess Yourself
+                                <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 mb-4">
+                                    <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
+                                    <button type="button" onClick={handleBack}
+                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
+                                    </button>
+                                    <button type="button" onClick={handleSubmit}
+                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Save
+                                    </button>
+                                </div>
+                                <div
+                                    className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-7 lg:w-[80%] lg:min-w-[580px]">
+
+                                    <label
+                                        className="block text-sm font-medium leading-6 text-gray-900 tracking-tight col-span-full">Certify
+                                        Your Claimed Skills</label>
+                                    <div className='sm:col-span-2 flex flex-col gap-2'>
+                                        {profileData.career_path.map((career) => {
+                                            return (
+                                                <div className="w-full mb-5 text-center">
+                                                    <button type='button' onClick={() => setselectedCareer(career)}
+                                                            className={`w-full max-w-40 ${selectedCareer === career ? ("bg-yellow-600") : ("bg-slate-500")} h-fit rounded-md py-2 font-semibold text-white text-center shadow-lg drop-shadow-lg hover:scale-105`}>{career}
+
                                                     </button>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">Skill
-                                                        2</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center mt-1">
-                                                    <button type='button'
-                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Assess Yourself
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">Skill
-                                                        3</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center mt-1">
-                                                    <button type='button'
-                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Assess Yourself
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">Skill
-                                                        4</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center mt-1">
-                                                    <button type='button'
-                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Assess Yourself
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">Skill
-                                                        5</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center mt-1">
-                                                    <button type='button'
-                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Assess Yourself
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="w-full flex justify-between px-2 col-span-full mt-4">
-                                            <button type="button" onClick={handleBack}
-                                                    className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                            </button>
-                                            <button type="submit"
-                                                    className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
-                                            </button>
-                                        </div>
+                                                    <p className="text-blue-600 text-sm font-medium text-center">Employability:
+                                                        75%</p>
+                                                </div>)
+                                        })}
+
+
                                     </div>
-                                </form>
+                                    <div
+                                        className="col-span-2 lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-8">
+
+                                        {selectedCareer ? (<>
+                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
+                                                <div
+                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
+                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][0]}</p>
+                                                    <StarRating onRatingChange={handleRatingChange}/>
+                                                </div>
+                                                <div className="text-center mt-1">
+                                                    <button type='button'
+                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
+                                                        Assess Yourself
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
+                                                <div
+                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
+                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][1]}</p>
+                                                    <StarRating onRatingChange={handleRatingChange}/>
+                                                </div>
+                                                <div className="text-center mt-1">
+                                                    <button type='button'
+                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
+                                                        Assess Yourself
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
+                                                <div
+                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
+                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][2]}</p>
+                                                    <StarRating onRatingChange={handleRatingChange}/>
+                                                </div>
+                                                <div className="text-center mt-1">
+                                                    <button type='button'
+                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
+                                                        Assess Yourself
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
+                                                <div
+                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
+                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][3]}</p>
+                                                    <StarRating onRatingChange={handleRatingChange}/>
+                                                </div>
+                                                <div className="text-center mt-1">
+                                                    <button type='button'
+                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
+                                                        Assess Yourself
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </>) : (<></>)}
+
+
+                                    </div>
+                                </div>
+                            </form>
                         )}
                         {/* Internships */}
                         {currentStep === 4 && (
