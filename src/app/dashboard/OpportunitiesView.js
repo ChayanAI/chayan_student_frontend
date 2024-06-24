@@ -16,7 +16,7 @@ const OpportunitiesView = () => {
     useEffect(() => {
         const fetchJobs = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/studentjob/jobs');
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentjob/jobs`);
                 setJobs(response.data);
                 console.log("hi", response.data)
                 setSelectedJob(response.data[0]);
@@ -84,7 +84,7 @@ const OpportunitiesView = () => {
 
     const fetchCompany = async (recruiterId) => {
         try {
-            const response = await axios.post('http://localhost:5000/user/getprofilebyId', { user_id: recruiterId });
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, { user_id: recruiterId });
             console.log("li", response.data)
             setCompany(response.data || 'Company Name');
         } catch (error) {
