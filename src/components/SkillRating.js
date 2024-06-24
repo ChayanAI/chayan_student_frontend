@@ -4,18 +4,45 @@ const CareerJobs = {
     ["Software Developer"]: [
         "Data Structure",
         "C++",
-        "Java",
-        "JavaScript"],
+        "JavaScript",
+        "Analytical Thinking"
+    ],
     ["Data Scientist"]: [
         "Statistics",
         "Machine Learning",
         "Visualization",
-        "Python"],
+        "Python"
+    ],
     ["Product Manager"]: [
         "Project management",
         "Market Research",
         "User Experience",
-        "Business Strategy"]
+        "Business Strategy"
+    ],
+    ["DevOps Engineer"]: [
+        "CI/CD",
+        "Cloud Platforms",
+        "Scripts",
+        "Infrastructure"
+    ],
+    ["Cybersecurity Analyst"]: [
+        "Network Security",
+        "Ethical Hacking",
+        "Cryptography",
+        "Risk Assessment"
+    ],
+    ["AI/ML Engineer"]: [
+        "Machine Learning",
+        "Neural Networks",
+        "Deep Learning",
+        "Python"
+    ],
+    ["Consultant"]: [
+        "Analytical Skills",
+        "Problem Solving",
+        "Project Management",
+        "Communication"
+    ]
 }
 const SkillRating = ({careers, label = 'NOLABEL'}) => {
     const handleRatingChange = (rating) => {

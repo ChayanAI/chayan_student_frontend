@@ -209,18 +209,45 @@ const EditProfile = ({userId}) => {
         ["Software Developer"]: [
             "Data Structure",
             "C++",
-            "Java",
-            "JavaScript"],
+            "JavaScript",
+            "Analytical Thinking"
+        ],
         ["Data Scientist"]: [
             "Statistics",
             "Machine Learning",
             "Visualization",
-            "Python"],
+            "Python"
+        ],
         ["Product Manager"]: [
             "Project management",
             "Market Research",
             "User Experience",
-            "Business Strategy"]
+            "Business Strategy"
+        ],
+        ["DevOps Engineer"]: [
+            "CI/CD",
+            "Cloud Platforms",
+            "Scripts",
+            "Infrastructure"
+        ],
+        ["Cybersecurity Analyst"]: [
+            "Network Security",
+            "Ethical Hacking",
+            "Cryptography",
+            "Risk Assessment"
+        ],
+        ["AI/ML Engineer"]: [
+            "Machine Learning",
+            "Neural Networks",
+            "Deep Learning",
+            "Python"
+        ],
+        ["Consultant"]: [
+            "Analytical Skills",
+            "Problem Solving",
+            "Project Management",
+            "Communication"
+        ]
     }
 
     if (loader) {
@@ -494,7 +521,7 @@ const EditProfile = ({userId}) => {
                                     <ButtonRow type='multi' value={profileData.career_path} disp='career_path'
                                                setValue={setProfileData} label={'Career Objectives'}
                                                col={' col-span-full'} buttonsPerRow={4}
-                                               buttonNames={['Software Developer', 'Data Scientist', 'Product Manager']}/>
+                                               buttonNames={['Software Developer', 'Data Scientist', 'Product Manager', "DevOps Engineer", "Cybersecurity Analyst", "AI/ML Engineer", "Consultant"]}/>
                                     {/* Yaha par atleast ek jab select karo tab niche ke options dikhane hain dhruv. */}
                                     <SkillRating careers={profileData.career_path}
                                                  label='Rate Yourself in each skill for your desired objective:'/>
