@@ -17,7 +17,7 @@ const InputForm = () => {
     useEffect(() => {
         const fetchFormDetails = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/studentprofile/form-details');
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/form-details`);
                 console.log('Form details response:', response.data);
                 setPrefilledData(response.data);
             } catch (error) {
@@ -75,7 +75,7 @@ const InputForm = () => {
 
     const handleConfirmSave = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/studentprofile/submit-form', formData);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/submit-form`, formData);
             setShowConfirmationPopup(false);
         } catch (error) {
             console.error('Error submitting form:', error);
