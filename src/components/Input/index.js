@@ -1,17 +1,68 @@
 import Input from './Input';
 
-
-const Text = ({value,disp, setValue, setState, name, col, type ,step, list, index, isRequired, disabled}) => {
-  return <Input value={value} disp={disp} setValue={setValue} list={list} disabled={disabled} isRequired={isRequired} index={index} setstate={setState} step={step} name={name} col={col} type={type} variant="input" />;
+const Text = ({
+  value, disp, setValue, setState, name, col, type, step, list, index, isRequired, disabled, ...props
+}) => {
+  return (
+    <Input
+      value={value}
+      disp={disp}
+      setValue={setValue}
+      list={list}
+      disabled={disabled}
+      isRequired={isRequired}
+      index={index}
+      setstate={setState}
+      step={step}
+      name={name}
+      col={col}
+      type={type}
+      variant="input"
+      {...props}
+    />
+  );
 };
 
-const Select = ({value, setValue, disp, setState, name, col, options, list ,index, isRequired}) => {
-  return <Input value={value} setValue={setValue} setstate={setState} isRequired={isRequired} list={list} index={index} disp={disp} name={name} col={col} options={options} variant="select" />;
+const Select = ({
+  value, setValue, disp, setState, name, col, options, list, index, isRequired, ...props
+}) => {
+  return (
+    <Input
+      value={value}
+      setValue={setValue}
+      setstate={setState}
+      isRequired={isRequired}
+      list={list}
+      index={index}
+      disp={disp}
+      name={name}
+      col={col}
+      options={options}
+      variant="select"
+      {...props}
+    />
+  );
 };
 
-const Block = ({value,disp, setValue, setState, name, col, rows, list , index, isRequired}) => {
-  return <Input value={value} disp={disp} setValue={setValue} list={list} isRequired={isRequired} index={index} setstate={setState} name={name} col={` col-span-full ${col}`} rows={rows} variant="textarea" />;
-
+const Block = ({
+  value, disp, setValue, setState, name, col, rows, list, index, isRequired, ...props
+}) => {
+  return (
+    <Input
+      value={value}
+      disp={disp}
+      setValue={setValue}
+      list={list}
+      isRequired={isRequired}
+      index={index}
+      setstate={setState}
+      name={name}
+      col={`col-span-full ${col}`}
+      rows={rows}
+      variant="textarea"
+      {...props}
+    />
+  );
 };
 
 export { Text, Select, Block };

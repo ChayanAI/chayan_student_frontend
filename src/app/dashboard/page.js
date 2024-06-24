@@ -17,19 +17,19 @@ const Dashboard = () => {
     const router = useRouter()
     const [userData, setUserdata] = useState(null)
     const [profile, setProfile] = useState(null);
-    const [progress, setProgress] = useState(80); // Example progress, you can fetch actual completion progress
+    const [progress, setProgress] = useState(36.3); // Example progress, you can fetch actual completion progress
     const [profileSections, setProfileSections] = useState([
         { title: 'Personal Information', filled: true },
-        { title: 'Academics', filled: false }, // Example, replace with actual logic
+        { title: 'Academics', filled: true }, // Example, replace with actual logic
         { title: 'Career Objectives', filled: true },
         { title: 'Skills Assessment', filled: false }, // Example, replace with actual logic
-        { title: 'Projects', filled: true },
         { title: 'Internships', filled: true },
-        { title: 'Volunteer work', filled: true },
+        { title: 'Projects', filled: false },
+        { title: 'Volunteer work', filled: false },
         { title: 'Extra-curricular activities', filled: false },
         { title: 'Certifications', filled: false },
         { title: 'Awards and Recognition', filled: false },
-        { title: 'Any Other Distinction', filled: true },
+        { title: 'Any Other Distinction', filled: false },
     ]);
     const [selectedSection, setSelectedSection] = useState('exploreOpportunities');
     const [loader, setLoader] = useState(false)
@@ -48,6 +48,31 @@ const Dashboard = () => {
 
     }, []);
 
+    const calculateYearOfStudy = (startDateString) => {
+        const startDate = new Date(startDateString);
+        const now = new Date();
+        let yearDifference = now.getFullYear() - startDate.getFullYear();
+    
+        if (now.getMonth() < startDate.getMonth() || 
+            (now.getMonth() === startDate.getMonth() && now.getDate() < startDate.getDate())) {
+            yearDifference -= 1;
+        }
+    
+        let studyYear = yearDifference + 1;
+        let suffix = 'th';
+    
+        if (studyYear % 10 === 1 && studyYear % 100 !== 11) suffix = 'st';
+        else if (studyYear % 10 === 2 && studyYear % 100 !== 12) suffix = 'nd';
+        else if (studyYear % 10 === 3 && studyYear % 100 !== 13) suffix = 'rd';
+    
+        return `${studyYear}${suffix} Year`;
+    }
+    
+    // Example usage
+    const courseStartDate = "2022-05-31T18:30:00.000Z";
+    console.log(calculateYearOfStudy(courseStartDate));
+    
+
     const handlelogout=async()=>{
         await axios.get('http://localhost:5000/studentauth/clear').then(()=>{
             router.push('/login')
@@ -61,8 +86,8 @@ const Dashboard = () => {
         return (
             <div className="w-full min-h-screen p-6 bg-gray-100 flex flex-col">
                 {/* Header */}
-                <div className="w-full p-6 bg-blue-600 text-white shadow-md mb-6 relative">
-                    <h1 className="text-3xl text-center font-bold">CHAYAN - YOUR PLACEMENT COACH</h1>
+                <div className="w-full py-14 bg-blue-600 text-white shadow-md mb-6 relative">
+                    <h1 className="text-[2.5rem] pl-12 text-center font-extrabold font-lato">CHAYAN - YOUR PLACEMENT COACH</h1>
 
                 </div>
 
@@ -71,30 +96,30 @@ const Dashboard = () => {
                     {/* Left container */}
                     <div className="w-1/5 pr-8">
                         {/* Profile Card */}
-                        <div className=" p-4 pb- w-60 bg-white rounded-lg shadow-md flex flex-col items-center absolute border-2 border-blue-600" style={{ zIndex: 1, top: '20%' }}>
+                        <div className=" p-4 w-60 bg-white rounded-lg shadow-md flex flex-col items-center absolute border-2 border-blue-600" style={{ zIndex: 1, top: '20%' }}>
                             <img
                                 src="/media/images/300-1.jpg" // Replace with actual image source
                                 alt="Profile"
-                                className="h-28 w-28 rounded-full  shadow-lg absolute"
+                                className="h-28 w-28 rounded-full absolute border-4 border-white"
                                 style={{ zIndex: 1, top: '-15%', left: '9%' }}
                             />
                             <div className="w-full mt-16 mb-4 text-left">
-                                <h2 className="text-lg  font-semibold">Amit Malakar</h2>
-                                <p className="text-sm ">B.Tech - Chemical | 2nd Year</p>
-                                <p className="text-sm ">CGPA : 9.17 | Personality: Good</p>
+                                <h2 className="text-lg  font-semibold">{profile.first_name} {profile.last_name}</h2>
+                                <p className="text-sm ">{profile.degree} - {profile.branch} | {calculateYearOfStudy(profile.course_started)}</p>
+                                <p className="text-sm ">CGPA : {profile.cgpa} | Personality: INTJ</p>
                             </div>
                             <div className="w-full" style={{ marginTop: '-10px', }}>
-                                <h2 className="text-lg font-semibold mb-2 text-left">Career Objectives</h2>
-                                <ul className="list-disc list-inside text-sm space-y-2">
-                                    <li className=" ">Web Developer</li>
-                                    <li className=" ">DevOps Engineer</li>
-                                    <li className=" ">AI Engineer</li>
+                                <h2 className="text-lg font-semibold mt-1 text-left">Career Objectives</h2>
+                                <ul className="list-disc list-inside text-sm">
+                                    <li className=" ">Software Developer</li>
+                                    <li className=" ">Data Scientist</li>
+                                    <li className=" ">Product Manager</li>
                                 </ul>
                             </div>
                         </div>
 
                         {/* Profile Completion Section */}
-                        <div className=" p-6 pt-4 w-60 bg-white rounded-lg shadow-md mb-4 mt-60 border-2 border-blue-600 text-sm" style={{ width: '' }}>
+                        <div className=" p-6 pt-4 w-60 mt-44 bg-white rounded-lg shadow-md mb-4 border-2 border-blue-600 text-sm" style={{ width: '' }}>
                             <h2 className="text-lg font-semibold mb-2">My CHAYAN Profile</h2>
                             <div className="mb-4 text-sm">
                                 <p className="mb-2">Profile Completion: {progress}%</p>
@@ -128,7 +153,7 @@ const Dashboard = () => {
                     </div>
 
                     {/* Right container */}
-                    <div className="w-full" style={{ marginTop: '-6px', marginLeft: '-8px' }}>
+                    <div className="w-full h-fit" style={{ marginTop: '-6px', marginLeft: '-8px' }}>
                         {/* Top section */}
                         <div className="w-full" style={{ marginBottom: '-.8rem' }}>
                             <div className="grid grid-cols-4 gap-8">

@@ -231,7 +231,8 @@ const EditProfile = ({userId}) => {
                                     className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-6 lg:w-[75%] ">
                                     <div className="col-span-full">
                                         <div className="mt-2 -ml-2 flex items-center gap-x-3">
-                                            <UserCircleIcon className="h-24 w-24 text-gray-300" aria-hidden="true"/>
+                                            <img src='/media/images/300-1.jpg' alt='profile' className='h-24 w-24 ml-2 border-2 border-gray-400 rounded-[50%]' />
+                                            {/* <UserCircleIcon className="h-24 w-24 text-gray-300" aria-hidden="true"/> */}
                                             <button
                                                 type="button"
                                                 className="rounded-md bg-black px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
