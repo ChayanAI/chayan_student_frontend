@@ -16,8 +16,7 @@ import {PhotoIcon, UserCircleIcon} from '@heroicons/react/24/solid'
 import Link from 'next/link';
 
 
-
-const months=['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
 
 const EditProfile = ({userId}) => {
     const params = useParams()
@@ -90,7 +89,9 @@ const EditProfile = ({userId}) => {
             end_date: null,
             description: null,
             summary: null
-        }]
+        }],
+
+        career_path: []
 
 
     })
@@ -103,7 +104,7 @@ const EditProfile = ({userId}) => {
 
                 await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, {user_id: userId}).then((res) => {
                     // console.log(res.data)
-                    setProfileData(res.data)
+                    setProfileData((prev) => ({...prev, ...res.data}))
 
                 })
                 await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/get/findbyId`, {userId: userId}).then((res) => {
@@ -159,6 +160,7 @@ const EditProfile = ({userId}) => {
     };
 
     const handleBack = () => {
+        // console.log(profileData.career_path)
         if (currentStep > 0) {
             setCurrentStep(currentStep - 1);
         }
@@ -167,13 +169,14 @@ const EditProfile = ({userId}) => {
     const handleStepClick = (index) => {
         setCurrentStep(index);
     };
+    const [selectedCareer, setselectedCareer] = useState()
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         console.log(profileData)
         try {
-            await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/submit-form`, {
-                user_id: params.userId,
+            await axios.put(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/update-form`, {
+                user_id: userId,
                 first_name: profileData.first_name,
                 last_name: profileData.last_name,
                 date_of_birth: profileData.date_of_birth,
@@ -196,10 +199,30 @@ const EditProfile = ({userId}) => {
                 college_name: profileData.college_name
             }).then((res) => console.log(res))
         } catch (err) {
-            alert(err)
+            alert(err.response.data)
         }
         router.push('/dashboard');
     };
+
+    const [option, setOption] = useState("")
+    const CareerJobs = {
+        ["Software Developer"]: [
+            "Data Structure",
+            "C++",
+            "Java",
+            "JavaScript"],
+        ["Data Scientist"]: [
+            "Statistics",
+            "Machine Learning",
+            "Visualization",
+            "Python"],
+        ["Product Manager"]: [
+            "Project management",
+            "Market Research",
+            "User Experience",
+            "Business Strategy"]
+    }
+
     if (loader) {
         return (<></>)
     } else {
@@ -462,10 +485,13 @@ const EditProfile = ({userId}) => {
                                 </div>
                                 <div
                                     className="rounded-lg p-10 mb-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 lg:w-[75%] lg:min-w-[580px]">
-                                    <ButtonRow label={'Career Objectives'} col={' col-span-full'} buttonsPerRow={4}
-                                               buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8']}/>
+                                    <ButtonRow type='multi' value={profileData.career_path} disp='career_path'
+                                               setValue={setProfileData} label={'Career Objectives'}
+                                               col={' col-span-full'} buttonsPerRow={4}
+                                               buttonNames={['Software Developer', 'Data Scientist', 'Product Manager']}/>
                                     {/* Yaha par atleast ek jab select karo tab niche ke options dikhane hain dhruv. */}
-                                    <SkillRating label='Rate Yourself in each skill for your desired objective:'/>
+                                    <SkillRating careers={profileData.career_path}
+                                                 label='Rate Yourself in each skill for your desired objective:'/>
                                 </div>
                             </form>
                         )}
@@ -488,95 +514,79 @@ const EditProfile = ({userId}) => {
                                         className="block text-sm font-medium leading-6 text-gray-900 tracking-tight col-span-full">Certify
                                         Your Claimed Skills</label>
                                     <div className='sm:col-span-2 flex flex-col gap-2'>
-                                        <div className="w-full mb-5 text-center">
-                                            <button type='button'
-                                                    className="w-full max-w-40 bg-yellow-600 h-fit rounded-md py-2 font-semibold text-white text-center shadow-lg drop-shadow-lg hover:scale-105">Option
-                                                1
-                                            </button>
-                                            <p className="text-blue-600 text-sm font-medium text-center">Employability:
-                                                75%</p>
-                                        </div>
-                                        <div className="w-full mb-5 text-center grayscale">
-                                            <button type='button'
-                                                    className="w-full max-w-40 bg-yellow-600 h-fit rounded-md py-2 font-semibold text-white text-center shadow-lg drop-shadow-lg hover:scale-105">Option
-                                                1
-                                            </button>
-                                            <p className="text-blue-600 text-sm font-medium text-center">Employability:
-                                                75%</p>
-                                        </div>
+                                        {profileData.career_path.map((career) => {
+                                            return (
+                                                <div className="w-full mb-5 text-center">
+                                                    <button type='button' onClick={() => setselectedCareer(career)}
+                                                            className={`w-full max-w-40 ${selectedCareer === career ? ("bg-yellow-600") : ("bg-slate-500")} h-fit rounded-md py-2 font-semibold text-white text-center shadow-lg drop-shadow-lg hover:scale-105`}>{career}
+
+                                                    </button>
+                                                    <p className="text-blue-600 text-sm font-medium text-center">Employability:
+                                                        75%</p>
+                                                </div>)
+                                        })}
+
+
                                     </div>
                                     <div
                                         className="col-span-2 lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-8">
-                                        <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                            <div
-                                                className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">Skill
-                                                    1</p>
-                                                <StarRating onRatingChange={handleRatingChange}/>
+
+                                        {selectedCareer ? (<>
+                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
+                                                <div
+                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
+                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][0]}</p>
+                                                    <StarRating onRatingChange={handleRatingChange}/>
+                                                </div>
+                                                <div className="text-center mt-1">
+                                                    <button type='button'
+                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
+                                                        Assess Yourself
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div className="text-center mt-1">
-                                                <button type='button'
-                                                        className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                    Assess Yourself
-                                                </button>
+                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
+                                                <div
+                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
+                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][1]}</p>
+                                                    <StarRating onRatingChange={handleRatingChange}/>
+                                                </div>
+                                                <div className="text-center mt-1">
+                                                    <button type='button'
+                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
+                                                        Assess Yourself
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                            <div
-                                                className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">Skill
-                                                    2</p>
-                                                <StarRating onRatingChange={handleRatingChange}/>
+                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
+                                                <div
+                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
+                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][2]}</p>
+                                                    <StarRating onRatingChange={handleRatingChange}/>
+                                                </div>
+                                                <div className="text-center mt-1">
+                                                    <button type='button'
+                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
+                                                        Assess Yourself
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div className="text-center mt-1">
-                                                <button type='button'
-                                                        className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                    Assess Yourself
-                                                </button>
+                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
+                                                <div
+                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
+                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][3]}</p>
+                                                    <StarRating onRatingChange={handleRatingChange}/>
+                                                </div>
+                                                <div className="text-center mt-1">
+                                                    <button type='button'
+                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
+                                                        Assess Yourself
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                            <div
-                                                className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">Skill
-                                                    3</p>
-                                                <StarRating onRatingChange={handleRatingChange}/>
-                                            </div>
-                                            <div className="text-center mt-1">
-                                                <button type='button'
-                                                        className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                    Assess Yourself
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                            <div
-                                                className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">Skill
-                                                    4</p>
-                                                <StarRating onRatingChange={handleRatingChange}/>
-                                            </div>
-                                            <div className="text-center mt-1">
-                                                <button type='button'
-                                                        className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                    Assess Yourself
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                            <div
-                                                className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">Skill
-                                                    5</p>
-                                                <StarRating onRatingChange={handleRatingChange}/>
-                                            </div>
-                                            <div className="text-center mt-1">
-                                                <button type='button'
-                                                        className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                    Assess Yourself
-                                                </button>
-                                            </div>
-                                        </div>
+                                        </>) : (<></>)}
+
+
                                     </div>
                                 </div>
                             </form>
@@ -615,11 +625,11 @@ const EditProfile = ({userId}) => {
                                                           setValue={setProfileData} col={2}/>
                                                     {/* USE MM YYYY ONLY */}
                                                     <Text name={'Start Date'}
-                                                          value={profileData.internships[index].start_year+"-"+(months.indexOf(profileData.internships[index].start_month)+1).toString().padStart(2,'0')+"-01"}
+                                                          value={(profileData.internships[index].start_date)?(profileData.internships[index].start_date):(profileData.internships[index].start_year + "-" + (months.indexOf(profileData.internships[index].start_month) + 1).toString().padStart(2, '0') + "-01")}
                                                           disp='start_date' index={index} list='internships'
                                                           setValue={setProfileData} type={'date'} col={3}/>
                                                     <Text name={'End Date'}
-                                                          value={profileData.internships[index].end_year+"-"+(months.indexOf(profileData.internships[index].end_month)+1).toString().padStart(2,'0')+"-01"}
+                                                          value={(profileData.internships[index].end_date)?(profileData.internships[index].end_date):(profileData.internships[index].end_year + "-" + (months.indexOf(profileData.internships[index].end_month) + 1).toString().padStart(2, '0') + "-01")}
                                                           disp='end_date' list='internships' index={index}
                                                           setValue={setProfileData} type={'date'} col={3}/>
                                                     <Block name={'Responsibilities'}
@@ -694,11 +704,11 @@ const EditProfile = ({userId}) => {
                                                   setValue={setProfileData} col={2}/>
                                             {/* USE MM YYYY ONLY */}
                                             <Text name={'Start Date'}
-                                                  value={profileData.projects[index].start_year+"-"+(months.indexOf(profileData.projects[index].start_month)+1).toString().padStart(2,'0')+"-01"}
+                                                  value={(profileData.projects[index].start_date)?(profileData.projects[index].start_date):(profileData.projects[index].start_year + "-" + (months.indexOf(profileData.projects[index].start_month) + 1).toString().padStart(2, '0') + "-01")}
                                                   disp='start_date' index={index} list='projects'
                                                   setValue={setProfileData} type={'date'} col={3}/>
                                             <Text name={'End Date'}
-                                                  value={profileData.projects[index].end_year+"-"+(months.indexOf(profileData.projects[index].end_month)+1).toString().padStart(2,'0')+"-01"}
+                                                  value={(profileData.projects[index].end_date)?(profileData.projects[index].end_date):(profileData.projects[index].end_year + "-" + (months.indexOf(profileData.projects[index].end_month) + 1).toString().padStart(2, '0') + "-01")}
                                                   disp='end_date' list='projects' index={index}
                                                   setValue={setProfileData} type={'date'} col={3}/>
                                             <Block name={'Responsibilities'}
@@ -772,11 +782,11 @@ const EditProfile = ({userId}) => {
                                                   setValue={setProfileData} col={2}/>
                                             {/* USE MM YYYY ONLY */}
                                             <Text name={'Start Date'}
-                                                  value={profileData.volunteers[index].start_year+"-"+(months.indexOf(profileData.volunteers[index].start_month)+1).toString().padStart(2,'0')+"-01"}
+                                                  value={(profileData.volunteers[index].start_date)?(profileData.volunteers[index].start_date):(profileData.volunteers[index].start_year + "-" + (months.indexOf(profileData.volunteers[index].start_month) + 1).toString().padStart(2, '0') + "-01")}
                                                   disp='start_date' index={index} list='volunteers'
                                                   setValue={setProfileData} type={'date'} col={3}/>
                                             <Text name={'End Date'}
-                                                  value={profileData.volunteers[index].end_year+"-"+(months.indexOf(profileData.volunteers[index].end_month)+1).toString().padStart(2,'0')+"-01"}
+                                                  value={(profileData.volunteers[index].end_date)?(profileData.volunteers[index].end_date):(profileData.volunteers[index].end_year + "-" + (months.indexOf(profileData.volunteers[index].end_month) + 1).toString().padStart(2, '0') + "-01")}
                                                   disp='end_date' list='volunteers' index={index}
                                                   setValue={setProfileData} type={'date'} col={3}/>
                                             <Block name={'Brief Description'}
@@ -851,12 +861,12 @@ const EditProfile = ({userId}) => {
                                                   setValue={setProfileData} col={2}/>
                                             {/* USE MM YYYY ONLY */}
                                             <Text name={'Start Date'}
-                                                  value={profileData.extra_curriculars[index].start_year+"-"+(months.indexOf(profileData.extra_curriculars[index].start_month)+1).toString().padStart(2,'0')+"-01"}
+                                                  value={(profileData.extra_curriculars[index].start_date)?(profileData.extra_curriculars[index].start_date):(profileData.extra_curriculars[index].start_year + "-" + (months.indexOf(profileData.extra_curriculars[index].start_month) + 1).toString().padStart(2, '0') + "-01")}
                                                   disp='start_date' index={index}
                                                   list='extra_curriculars'
                                                   setValue={setProfileData} type={'date'} col={3}/>
                                             <Text name={'End Date'}
-                                                  value={profileData.extra_curriculars[index].end_year+"-"+(months.indexOf(profileData.extra_curriculars[index].end_month)+1).toString().padStart(2,'0')+"-01"}
+                                                  value={(profileData.extra_curriculars[index].end_date)?(profileData.extra_curriculars[index].end_date):(profileData.extra_curriculars[index].end_year + "-" + (months.indexOf(profileData.extra_curriculars[index].end_month) + 1).toString().padStart(2, '0') + "-01")}
                                                   disp='end_date' list='extra_curriculars' index={index}
                                                   setValue={setProfileData} type={'date'} col={3}/>
                                             <Block name={'Contribution'}
