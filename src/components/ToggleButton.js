@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // ToggleButton component
-const ToggleButton = ({ name ,value,disp, setValue}) => {
-  const [isActiveToggle, setIsActiveToggle] = useState(false);
-  const [uuid, setId] = useState()
+const ToggleButton = ({type, name ,value,disp, setValue}) => {
+
   const uniqueId = uuidv4();
 
   const handleToggle = () => {
       // console.log(id)
-
-      if(!isActiveToggle){
+      //   console.log(value)
+        if(type!=='multi'){
           setValue((prev)=>{return({...prev, [disp]: name})})
-      }
-      setIsActiveToggle(!isActiveToggle)
+        }else{
+          setValue(prev=>({...prev,[disp]: (prev[disp].includes(name))?([...prev[disp].splice(0,prev[disp].indexOf(name)),...prev[disp].splice(prev[disp].indexOf(name)+1)]):([...prev[disp],name])}))
+        }
+
+
   };
 
   return (
@@ -22,7 +24,7 @@ const ToggleButton = ({ name ,value,disp, setValue}) => {
       onClick={handleToggle}
       type='button'
       className={`w-full px-4 py-2 text-sm font-semibold rounded ${
-          (value===name) ? 'bg-blue-700 text-white' : 'bg-white dark:bg-[#d0cfd1] text-black border border-gray-300'
+          ((type==='multi')?(value.includes(name)):(value===name)) ? 'bg-blue-700 text-white' : 'bg-white dark:bg-[#d0cfd1] text-black border border-gray-300'
       }`}
     >
       {name}
@@ -31,7 +33,7 @@ const ToggleButton = ({ name ,value,disp, setValue}) => {
 };
 
 // ButtonRow component
-const ButtonRow = ({ value, disp, setValue, label = 'NOLABEL', buttonNames, col, numberOfRows = 1, buttonsPerRow = Math.ceil(buttonNames.length / numberOfRows), isRequired = false}) => {
+const ButtonRow = ({type, value, disp, setValue, label = 'NOLABEL', buttonNames, col, numberOfRows = 1, buttonsPerRow = Math.ceil(buttonNames.length / numberOfRows), isRequired = false}) => {
   const [showValidation, setShowValidation] = useState(false);
 
   const handleButtonClick = (name) => {
@@ -56,7 +58,7 @@ const ButtonRow = ({ value, disp, setValue, label = 'NOLABEL', buttonNames, col,
         )}
         <div className={`mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${buttonsPerRow} gap-4`}>
           {buttonNames.map((name) => (
-            <ToggleButton key={name} name={name} value={value} disp={disp} setValue={setValue}/>
+            <ToggleButton type={type} key={name} name={name} value={value} disp={disp} setValue={setValue}/>
           ))}
         </div>
       </div>
