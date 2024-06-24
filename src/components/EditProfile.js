@@ -119,10 +119,42 @@ const EditProfile = ({userId}) => {
                     // console.log((months.indexOf(res.data.internships[0].start_month)+1).toString().padStart(2,'0'))
                     setProfileData((prev) => ({
                         ...prev,
-                        internships: (res.data.internships.length === 0) ? ([]) : (res.data.internships),
-                        projects: (res.data.projects.length === 0) ? ([]) : (res.data.projects),
-                        volunteers: (res.data.volunteers.length === 0) ? ([]) : (res.data.volunteers),
-                        extra_curriculars: (res.data.extra_curriculars.length === 0) ? ([]) : (res.data.extra_curriculars)
+                        internships: (res.data.internships.length === 0) ? ([{
+                title: null,
+                company_name: null,
+                location: null,
+                start_date: null,
+                end_date: null,
+                description: null,
+                summary: null
+            }]) : (res.data.internships),
+                        projects: (res.data.projects.length === 0) ? ([{
+                title: null,
+                company_name: null,
+                location: null,
+                start_date: null,
+                end_date: null,
+                description: null,
+                summary: null
+            }]) : (res.data.projects),
+                        volunteers: (res.data.volunteers.length === 0) ? ([{
+                title: null,
+                company_name: null,
+                location: null,
+                start_date: null,
+                end_date: null,
+                description: null,
+                summary: null
+            }]) : (res.data.volunteers),
+                        extra_curriculars: (res.data.extra_curriculars.length === 0) ? ([{
+                title: null,
+                company_name: null,
+                location: null,
+                start_date: null,
+                end_date: null,
+                description: null,
+                summary: null
+            }]) : (res.data.extra_curriculars)
                     }))
                 })
 
@@ -170,6 +202,9 @@ const EditProfile = ({userId}) => {
         setCurrentStep(index);
     };
     const [selectedCareer, setselectedCareer] = useState()
+    const handlecancel=async()=>{
+        await router.push('/dashboard')
+    }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -270,7 +305,7 @@ const EditProfile = ({userId}) => {
                             <form onSubmit={handleNext}>
                                 <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 mb-4">
                                     <h2 className="col-span-5 text-2xl dark:text-[#cdcdcf] font-semibold tracking-wide">{steps[currentStep]}</h2>
-                                    <button type="button" onClick={handleBack}
+                                    <button type="button" onClick={handlecancel}
                                             className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
                                     </button>
                                     <button type="button" onClick={handleSubmit}
@@ -351,7 +386,7 @@ const EditProfile = ({userId}) => {
                             <form onSubmit={handleNext}>
                                 <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 mb-4">
                                     <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
-                                    <button type="button" onClick={handleBack}
+                                    <button type="button" onClick={handlecancel}
                                             className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
                                     </button>
                                     <button type="button" onClick={handleSubmit}
@@ -509,7 +544,7 @@ const EditProfile = ({userId}) => {
                             <form onSubmit={handleNext}>
                                 <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 mb-4">
                                     <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
-                                    <button type="button" onClick={handleBack}
+                                    <button type="button" onClick={handlecancel}
                                             className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
                                     </button>
                                     <button type="button" onClick={handleSubmit}
@@ -533,7 +568,7 @@ const EditProfile = ({userId}) => {
                             <form onSubmit={handleNext}>
                                 <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 mb-4">
                                     <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
-                                    <button type="button" onClick={handleBack}
+                                    <button type="button" onClick={handlecancel}
                                             className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
                                     </button>
                                     <button type="button" onClick={handleSubmit}
@@ -630,7 +665,7 @@ const EditProfile = ({userId}) => {
                                 <div>
                                     <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 pb-4 mb-4">
                                         <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
-                                        <button type="button" onClick={handleBack}
+                                        <button type="button" onClick={handlecancel}
                                                 className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
                                         </button>
                                         <button type="button" onClick={handleSubmit}
@@ -711,7 +746,7 @@ const EditProfile = ({userId}) => {
                             <div>
                                 <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 pb-4 mb-4">
                                     <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
-                                    <button type="button" onClick={handleBack}
+                                    <button type="button" onClick={handlecancel}
                                             className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
                                     </button>
                                     <button type="button" onClick={handleSubmit}
@@ -789,7 +824,7 @@ const EditProfile = ({userId}) => {
                             <div>
                                 <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 pb-4 mb-4">
                                     <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
-                                    <button type="button" onClick={handleBack}
+                                    <button type="button" onClick={handlecancel}
                                             className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
                                     </button>
                                     <button type="button" onClick={handleSubmit}
@@ -867,7 +902,7 @@ const EditProfile = ({userId}) => {
                             <div>
                                 <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 pb-4 mb-4">
                                     <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
-                                    <button type="button" onClick={handleBack}
+                                    <button type="button" onClick={handlecancel}
                                             className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
                                     </button>
                                     <button type="button" onClick={handleSubmit}
