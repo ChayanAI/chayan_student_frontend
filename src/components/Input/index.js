@@ -65,4 +65,25 @@ const Block = ({
   );
 };
 
-export { Text, Select, Block };
+const ComboBox = ({
+  value, setValue, disp, setState, name, col, options, list, index, isRequired, ...props
+}) => {
+  return (
+    <Input
+      value={value}
+      setValue={setValue}
+      setstate={setState}
+      isRequired={isRequired}
+      list={list}
+      index={index}
+      disp={disp}
+      name={name}
+      col={col}
+      options={options}
+      variant="combobox"
+      {...props}
+    />
+  );
+};
+
+export { Text, Select, Block, ComboBox };
