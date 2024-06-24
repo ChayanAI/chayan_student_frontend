@@ -51,7 +51,7 @@ const ButtonRow = ({ value, disp, setValue, label = 'NOLABEL', buttonNames, col,
       <div className={`sm:col-span-${col}`}>
         {label !== 'NOLABEL' && (
           <label className="block text-sm font-medium leading-6 text-gray-900 tracking-tight">
-            {label}
+            {label} {isRequired && <span className="text-red-700">*</span>}
           </label>
         )}
         <div className={`mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${buttonsPerRow} gap-4`}>

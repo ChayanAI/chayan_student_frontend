@@ -21,9 +21,9 @@ const PdfViewer = ({ pdfUrl }) => {
     return (
         <div style={{ width: '100%', height: '100%', overflow: 'hidden', border: '1px solid #ddd' }}>
             <div style={{ marginBottom: '8px' }}>
-                <button onClick={zoomIn} style={{ marginRight: '8px' }}>Zoom In</button>
+                {/* <button onClick={zoomIn} style={{ marginRight: '8px' }}>Zoom In</button>
                 <button onClick={zoomOut} style={{ marginRight: '8px' }}>Zoom Out</button>
-                <button onClick={resetZoom}>Reset Zoom</button>
+                <button onClick={resetZoom}>Reset Zoom</button> */}
             </div>
             <div style={{ width: '100%', height: 'calc(100% - 40px)', overflow: 'auto' }}>
                 <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>

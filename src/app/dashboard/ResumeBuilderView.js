@@ -44,19 +44,19 @@ const ResumeBuilderView = () => {
             {/* View selector buttons at the top */}
             <div className="flex justify-between mb-4 border-b-2 border-b-blue-600">
                 <div
-                    className={`w-1/3 text-xl text-center cursor-pointer border-r-2 border-r-blue-500 ${selectedView === 'build' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-4`}
+                    className={`w-1/3 text-xl font-lato text-center cursor-pointer border-r-2 border-r-blue-500 ${selectedView === 'build' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-3`}
                     onClick={() => handleViewChange('build')}
                 >
                     Build Resume
                 </div>
                 <div
-                    className={`w-1/3 text-xl text-center cursor-pointer border-r-2 border-r-blue-600 ${selectedView === 'customize' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-4`}
+                    className={`w-1/3 text-xl font-lato text-center cursor-pointer border-r-2 border-r-blue-600 ${selectedView === 'customize' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-3`}
                     onClick={() => handleViewChange('customize')}
                 >
                     Customize Resume
                 </div>
                 <div
-                    className={`w-1/3 text-xl text-center cursor-pointer ${selectedView === 'upload' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-4`}
+                    className={`w-1/3 text-xl font-lato text-center cursor-pointer ${selectedView === 'upload' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-3`}
                     onClick={() => handleViewChange('upload')}
                 >
                     Upload JD
@@ -67,31 +67,31 @@ const ResumeBuilderView = () => {
                 <>
                     {/* Centered option buttons */}
                     <div className="flex justify-evenly mb-4 border-dashed">
-                        <button className={`px-16 py-2 text-lg border rounded ${selectedPath == 0 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
+                        <button className={`w-60 py-2 text-lg border rounded ${selectedPath == 0 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
                             onClick={() => setSelectedPath(0)}
                             style={{
                                 backgroundImage: selectedPath === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                             }}
-                            >Option 1</button>
-                        <button className={`px-16 py-2 text-lg border rounded ${selectedPath == 1 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
+                            >Software Developer</button>
+                        <button className={`w-60 py-2 text-lg border rounded ${selectedPath == 1 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
                             onClick={() => setSelectedPath(1)}
                             style={{
                                 backgroundImage: selectedPath === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                             }}
-                            >Option 2</button>
-                        <button className={`px-16 py-2 text-lg border rounded ${selectedPath == 2 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
+                            >Data Scientist</button>
+                        <button className={`w-60 py-2 text-lg border rounded ${selectedPath == 2 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
                             onClick={() => setSelectedPath(2)}
                             style={{
                                 backgroundImage: selectedPath === 2 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                             }}
-                            >Option 3</button>
+                            >Product Manager</button>
                     </div>
 
-                    <div className="flex border-t-2 border-dashed">
+                    <div className="flex border-t-2 border-dashed relative h-fit">
                         {/* Left section - Template chooser */}
-                        <div className="w-1/2 p-6 text-center justify-center">
+                        <div className="w-1/5 px-6 pt-6 pb-4 text-center justify-center">
                             <h3 className="font-bold mb-4">Choose / Change Template</h3>
-                            <div className="grid grid-cols-3 gap-x-4 gap-y-2 mb-4">
+                            <div className="flex flex-col gap-2 items-center h-[25rem] overflow-y-scroll">
                                 {templates.map(template => (
                                     <div
                                         key={template.id}
@@ -105,26 +105,25 @@ const ResumeBuilderView = () => {
                         </div>
 
                         {/* Dotted line separator */}
-                        <div className="border-r-2 border-dashed"></div>
+                        <div className="border-r-2 mb-4 border-dashed"></div>
 
                         {/* Right section - Selected template details */}
-                        <div className="w-1/2 h-fit p-6 flex">
-                            <div className="flex flex-col w-1/2 text-center pl-2 pr-6">
+                        <div className="w-4/5 px-6 pt-6 pb-8 h-fit flex">
+                            <div className="flex flex-col w-2/3 text-center pl-2 pr-6">
                                 <h3 className="font-bold mb-4">Resume</h3>
                                 {selectedTemplate ? (
-                                    <div className="rounded border-2 border-black mb-4">
-                                        <img src={templates[selectedTemplate-1].img} className='m-auto' alt={`Selected Template ${selectedTemplate}`} />
+                                    <div className="rounded border-2 border-black mb-4 h-96">
+                                        <PdfViewer pdfUrl="/templates.pdf" />
                                     </div>                                    
                                 ) : (
                                     <p>Please select a template from the left.</p>
                                 )}
-                                <div className="flex justify-between">
+                                <div className="flex justify-around">
                                     <Link href={'/studentprofile'} className='text-blue-600 font-bold'>Edit</Link>
                                     <Link href={'/studentprofile'} className='text-blue-600 font-bold'>Download</Link>
                                 </div>
-                                <Link href={'/studentprofile'} className='text-gray-500 mt-3 font-bold'>Edit Experience</Link>
                             </div>
-                            <div className="flex flex-col w-1/2 justify-center">
+                            <div className="flex flex-col w-1/3 justify-center">
                                 <div className="rounded p-4 mb-4">
                                     <div className="flex w-full text-center text-md lg:text-lg font-bold gap-1">
                                         <h4 className="text-blue-600">Employability Score</h4>
@@ -153,31 +152,31 @@ const ResumeBuilderView = () => {
                 <>
                     {/* Centered option buttons */}
                     <div className="flex justify-evenly mb-4 border-dashed">
-                        <button className={`px-16 py-2 text-lg border rounded ${selectedPath == 0 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
+                        <button className={`w-60 py-2 text-lg border rounded ${selectedPath == 0 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
                             onClick={() => setSelectedPath(0)}
                             style={{
                                 backgroundImage: selectedPath === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                             }}
-                            >Option 1</button>
-                        <button className={`px-16 py-2 text-lg border rounded ${selectedPath == 1 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
+                            >Full-Stack Developer</button>
+                        <button className={`w-60 py-2 text-lg border rounded ${selectedPath == 1 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
                             onClick={() => setSelectedPath(1)}
                             style={{
                                 backgroundImage: selectedPath === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                             }}
-                            >Option 2</button>
-                        <button className={`px-16 py-2 text-lg border rounded ${selectedPath == 2 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
+                            >Data Scientist</button>
+                        <button className={`w-60 py-2 text-lg border rounded ${selectedPath == 2 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
                             onClick={() => setSelectedPath(2)}
                             style={{
                                 backgroundImage: selectedPath === 2 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                             }}
-                            >Option 3</button>
+                            >Product Designer</button>
                     </div>
 
-                    <div className="flex border-t-2 border-dashed">
+                    <div className="flex border-t-2 border-dashed relative h-fit">
                         {/* Left section - Template chooser */}
-                        <div className="w-1/2 p-6 text-center justify-center">
+                        <div className="w-1/5 px-6 pt-6 pb-4 text-center justify-center">
                             <h3 className="font-bold mb-4">Choose / Change Template</h3>
-                            <div className="grid grid-cols-3 gap-x-4 gap-y-2 mb-4">
+                            <div className="flex flex-col gap-2 items-center h-[25rem] overflow-y-scroll">
                                 {templates.map(template => (
                                     <div
                                         key={template.id}
@@ -191,26 +190,25 @@ const ResumeBuilderView = () => {
                         </div>
 
                         {/* Dotted line separator */}
-                        <div className="border-r-2 border-dashed"></div>
+                        <div className="border-r-2 mb-4 border-dashed"></div>
 
                         {/* Right section - Selected template details */}
-                        <div className="w-1/2 p-6 h-fit flex">
-                            <div className="flex flex-col w-1/2 text-center pl-2 pr-6">
+                        <div className="w-4/5 px-6 pt-6 pb-8 h-fit flex">
+                            <div className="flex flex-col w-2/3 text-center pl-2 pr-6">
                                 <h3 className="font-bold mb-4">Resume</h3>
                                 {selectedTemplate ? (
-                                    <div className="rounded border-2 border-black mb-4">
-                                        <img src={templates[selectedTemplate-1].img} className='m-auto' alt={`Selected Template ${selectedTemplate}`} />
+                                    <div className="rounded border-2 border-black mb-4 h-96">
+                                        <PdfViewer pdfUrl="/templates.pdf" />
                                     </div>                                    
                                 ) : (
                                     <p>Please select a template from the left.</p>
                                 )}
-                                <div className="flex justify-between">
+                                <div className="flex justify-around">
                                     <Link href={'/studentprofile'} className='text-blue-600 font-bold'>Edit</Link>
                                     <Link href={'/studentprofile'} className='text-blue-600 font-bold'>Download</Link>
                                 </div>
-                                <Link href={'/studentprofile'} className='text-gray-500 mt-3 font-bold'>Edit Experience</Link>
                             </div>
-                            <div className="flex flex-col w-1/2 justify-center">
+                            <div className="flex flex-col w-1/3 justify-center">
                                 <div className="rounded p-4 mb-4">
                                     <div className="flex w-full text-center text-md lg:text-lg font-bold gap-1">
                                         <h4 className="text-blue-600">Employability Score</h4>
@@ -277,7 +275,7 @@ const ResumeBuilderView = () => {
                         <div className="border-r-2 mb-4 border-dashed"></div>
 
                         {/* Right section - Selected template details */}
-                        <div className="w-4/5 px-6 pt-6 pb-4 h-fit flex">
+                        <div className="w-4/5 px-6 pt-6 pb-8 h-fit flex">
                             <div className="flex flex-col w-2/3 text-center pl-2 pr-6">
                                 <h3 className="font-bold mb-4">Resume</h3>
                                 {selectedTemplate ? (
@@ -292,7 +290,6 @@ const ResumeBuilderView = () => {
                                     <Link href={'/studentprofile'} className='text-blue-600 font-bold'>Edit</Link>
                                     <Link href={'/studentprofile'} className='text-blue-600 font-bold'>Download</Link>
                                 </div>
-                                <Link href={'/studentprofile'} className='text-gray-500 mt-3 font-bold'>Edit Experience</Link>
                             </div>
                             <div className="flex flex-col w-1/3 justify-center">
                                 <div className="rounded p-4 mb-4">

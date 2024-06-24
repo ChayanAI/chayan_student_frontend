@@ -77,15 +77,15 @@ const MockInterviewsView = () => {
     return (
         <div className="bg-white shadow-md border-2 border-blue-500 h-fit w-full rounded-b-lg min-h-[35rem]">
             {/* Header with two view options */}
-            <div className="flex justify-between mb-4 border-b-2 border-blue-500">
+            <div className="flex justify-between mb-6 border-b-2 border-blue-500">
                 <div
-                    className={`w-1/2 text-xl text-center cursor-pointer ${activeView === 'practice' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-4`}
+                    className={`w-1/2 text-xl font-lato text-center cursor-pointer ${activeView === 'practice' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-3`}
                     onClick={() => setActiveView('practice')}
                 >
                     For Your Career Paths
                 </div>
                 <div
-                    className={`w-1/2 text-xl text-center cursor-pointer ${activeView === 'history' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-4`}
+                    className={`w-1/2 text-xl font-lato text-center cursor-pointer ${activeView === 'history' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-3`}
                     onClick={() => setActiveView('history')}
                 >
                     For the Opportunities of Your Interest
@@ -106,13 +106,13 @@ const MockInterviewsView = () => {
                                         <span className="underline underline-offset-2 font-bold text-center">Select Role</span>
                                     </div>
                                     <div className="flex flex-col gap-2 w-fit mr-2">
-                                        <button className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRoleSelect === 0 ? 'bg-yellow-800 text-white' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                        <button className={`px-4 py-2 text-md border rounded font-semibold font-poppins shadow-md ${selectedRoleSelect === 0 ? 'bg-slate-700 text-white' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
                                             onClick={() => setSelectedRoleSelect(0)}
                                             style={{
                                                 // backgroundImage: selectedRoleSelect === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                                             }}
                                             >Career Path</button>
-                                        <button className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRoleSelect === 1 ? 'bg-yellow-800 text-white' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                        <button className={`px-4 py-2 text-md border rounded font-semibold font-poppins shadow-md ${selectedRoleSelect === 1 ? 'bg-slate-700 text-white' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
                                             onClick={() => setSelectedRoleSelect(1)}
                                             style={{
                                                 // backgroundImage: selectedRoleSelect === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'

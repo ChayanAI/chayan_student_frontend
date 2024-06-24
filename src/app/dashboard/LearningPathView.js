@@ -8,9 +8,9 @@ const LearningPathView = () => {
 
     // Sample data for career options and skills
     const careerOptions = [
-        { id: 1, name: 'Web Developer', employabilityScore: 85 },
-        { id: 2, name: 'DevOps Engineer', employabilityScore: 78 },
-        { id: 3, name: 'AI Engineer', employabilityScore: 90 },
+        { id: 1, name: 'Software Developer', employabilityScore: 85 },
+        { id: 2, name: 'Data Scientist', employabilityScore: 78 },
+        { id: 3, name: 'Product Manager', employabilityScore: 90 },
     ];
 
     const skillsData = {
@@ -20,19 +20,21 @@ const LearningPathView = () => {
             { skill: 'Node.js', selfRating: 2, assessment: 'Below Average', completedDate: '15/02/2023', learningPath: ['Learn Node.Js'] },
         ],
         2: [
-            { skill: 'AWS', selfRating: 3, assessment: 'Pending', completedDate: null, learningPath: ['Master AWS'] },
-            { skill: 'SQL', selfRating: 4, assessment: 'Average', completedDate: '01/06/2023', learningPath: ['Basics of SQL'] },
+            { skill: 'Statistics', selfRating: 3, assessment: 'Pending', completedDate: null, learningPath: ['Master Statistics'] },
+            { skill: 'Machine Learning', selfRating: 4, assessment: 'Average', completedDate: '01/06/2023', learningPath: ['Basics of SQL'] },
+            { skill: 'Python', selfRating: 4, assessment: 'Average', completedDate: '01/06/2023', learningPath: ['Python Crash Course'] },
         ],
         3: [
-            { skill: 'Probability and Stats', selfRating: 4, assessment: 'Pending', completedDate: null, learningPath: ['Complete course on Probability'] },
-            { skill: 'Neural Networks', selfRating: 5, assessment: 'Average', completedDate: '01/09/2023', learningPath: ['Basics of Neural Networks'] },
+            { skill: 'Product Management', selfRating: 4, assessment: 'Pending', completedDate: null, learningPath: ['Complete course on Management'] },
+            { skill: 'User Experience', selfRating: 5, assessment: 'Average', completedDate: '01/09/2023', learningPath: ['Basics of UX'] },
+            { skill: 'Market Research', selfRating: 5, assessment: 'Above Average', completedDate: '02/09/2023', learningPath: ['Market Research 101'] },
         ],
     };
 
     const opportunitiesOptions = [
-        { id: 1, name: 'Front-End Developer', employabilityScore: 88, companyName: 'Google', likedOn: '12/05/2023', learningPath: ['Advanced React'] },
-        { id: 2, name: 'Back-End Developer', employabilityScore: 82, companyName: 'Amazon', appliedOn: '20/06/2023', learningPath: ['Master Node.js'] },
-        { id: 3, name: 'Data Scientist', employabilityScore: 90, companyName: 'Facebook', likedOn: '01/07/2023', learningPath: ['Complete Data Science Course'] },
+        { id: 1, name: 'Full-Stack Developer', employabilityScore: 88, companyName: 'Google', likedOn: '12/05/2023', learningPath: ['Advanced NodeJS'] },
+        { id: 2, name: 'Data Scientist', employabilityScore: 90, companyName: 'Facebook', likedOn: '01/07/2023', learningPath: ['Complete Data Science Course'] },
+        { id: 3, name: 'Product Designer', employabilityScore: 82, companyName: 'Amazon', appliedOn: '20/06/2023', learningPath: ['Master User Experience'] },
     ];
 
     const handleCareerSelect = (careerId) => {
@@ -51,17 +53,17 @@ const LearningPathView = () => {
     };
 
     return (
-        <div className="bg-white shadow-md border-2 border-blue-500 h-full w-full " style={{ maxHeight: '39.6rem' }}>
+        <div className="bg-white shadow-md border-2 border-blue-500 rounded-b-lg h-full w-full " style={{ maxHeight: '38rem' }}>
             {/* Header with two view options */}
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between mb-4 border-blue-500 border-b-2">
                 <div
-                    className={`w-1/2 text-lg text-center cursor-pointer ${selectedView === 'careerPaths' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-3`}
+                    className={`w-1/2 text-xl text-center cursor-pointer font-lato ${selectedView === 'careerPaths' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-3`}
                     onClick={() => setSelectedView('careerPaths')}
                 >
                     For Your Career Paths
                 </div>
                 <div
-                    className={`w-1/2 text-lg text-center cursor-pointer ${selectedView === 'opportunities' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-3`}
+                    className={`w-1/2 text-xl text-center cursor-pointer font-lato ${selectedView === 'opportunities' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'} px-4 py-3`}
                     onClick={() => setSelectedView('opportunities')}
                 >
                     For the Opportunities of Your Interest
@@ -72,11 +74,11 @@ const LearningPathView = () => {
                 <div className="flex p-8 h-full">
                     {/* Left section - Career options */}
                     <div className="w-1/5 pr-4 overflow-y-auto" style={{ maxHeight: '36rem' }}>
-                        <h3 className="text-center text-lg border-2 border-blue-500 font-semibold mb-14 p-4">Career Paths</h3>
+                        <h3 className="text-center text-lg rounded-md border-2 border-blue-500 font-semibold mb-14 p-4">Career Paths</h3>
                         {careerOptions.map(option => (
-                            <div className="text-center mb-14" key={option.id}>
+                            <div className="text-center mb-10" key={option.id}>
                                 <div
-                                    className={`border text-lg rounded-lg p-2 mb-2 cursor-pointer ${selectedCareer === option.id ? 'bg-yellow-400' : ''}`}
+                                    className={`border text-lg rounded-lg p-2 mb-2 font-poppins cursor-pointer ${selectedCareer === option.id ? 'bg-yellow-400' : ''}`}
                                     onClick={() => handleCareerSelect(option.id)}
                                     style={{
                                         backgroundImage: selectedCareer === option.id ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
@@ -85,15 +87,18 @@ const LearningPathView = () => {
                                     <div className="text-center">{option.name}</div>
                                 </div>
                                 <div>
-                                    <div className="text-lg text-center text-blue-700">Employability Score - {option.employabilityScore}%</div>
+                                    <div className="text-md font-roboto text-center text-blue-700">Employability Score - {option.employabilityScore}%</div>
                                 </div>
                             </div>
                         ))}
                     </div>
 
+                    {/* Dotted divider */}
+                    <div className="w-0 border-r-2 border-dashed h-auto mb-10"></div>
+
                     {/* Right section - Skills mapped to selected career */}
                     <div className="w-4/5 pl-4 flex flex-col justify-between">
-                        <h3 className="text-center text-lg border-2 border-blue-500 font-semibold mb-6 p-4">Skills for the Selected Career Path</h3>
+                        <h3 className="text-center text-lg border-2 rounded-md border-blue-500 font-semibold mb-6 p-4">Skills for the Selected Career Path</h3>
                         {selectedCareer && skillsData[selectedCareer] ? (
                             <div className="overflow-x-auto h-full">
                                 <table className="min-w-full bg-white table-auto">
@@ -109,7 +114,7 @@ const LearningPathView = () => {
                                         {skillsData[selectedCareer].map((skill, index) => (
                                             <tr key={index} className="mb-4">
                                                 <td className="px-4 py-4 text-center">
-                                                    <div className="border  p-4 bg-yellow-400">
+                                                    <div className="border text-gray-900 p-2 rounded-md font-roboto bg-yellow-400">
                                                         {skill.skill}
                                                     </div>
                                                 </td>
@@ -153,14 +158,14 @@ const LearningPathView = () => {
 
             {
                 selectedView === 'opportunities' && (
-                    <div className="flex p-6 h-full">
+                    <div className="flex p-8 h-full">
                         {/* Left section - Career options */}
                         <div className="w-1/5 pr-4 overflow-y-auto" style={{ maxHeight: '32rem' }}>
-                            <h3 className="text-center text-lg border-2 border-blue-500 font-semibold mb-10 p-4">Opportunities</h3>
+                            <h3 className="text-center text-lg border-2 rounded-md border-blue-500 font-semibold mb-8 p-4">Opportunities</h3>
                             {opportunitiesOptions.map(option => (
-                                <div className="text-center mb-8" key={option.id}>
+                                <div className="text-center mb-6" key={option.id}>
                                     <div
-                                        className={`border text-lg rounded-lg p-2 mb-2 cursor-pointer ${selectedCareer === option.id ? 'bg-yellow-400' : ''}`}
+                                        className={`border text-lg rounded-lg p-2 mb-1 cursor-pointer font-poppins ${selectedCareer === option.id ? 'bg-yellow-400' : ''}`}
                                         onClick={() => handleCareerSelect(option.id)}
                                         style={{
                                             backgroundImage: selectedCareer === option.id ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
@@ -169,22 +174,25 @@ const LearningPathView = () => {
                                         <div className="text-center">{option.name}</div>
                                     </div>
                                     <div>
-                                        <div className="text-sm ">
+                                        <div className="text-sm">
                                             {option.companyName} |
                                             <span className="text-blue-500 underline cursor-pointer">  View Job Details</span>
                                         </div>
-                                        <div className="text-sm text-center">
+                                        <div className="text-xs text-center text-gray-600">
                                             {option.appliedOn ? `Applied On - ${option.appliedOn}` : `Liked On - ${option.likedOn}`}
                                         </div>
-                                        <div className="text-base text-center text-blue-700">Employability Score - {option.employabilityScore}%</div>
+                                        <div className="text-base text-center font-roboto text-blue-700">Employability Score - {option.employabilityScore}%</div>
                                     </div>
                                 </div>
                             ))}
                         </div>
 
+                        {/* Dotted line */}
+                        <div className="w-0 border-r-2 border-dashed h-auto mb-10"></div>
+
                         {/* Right section - Skills mapped to selected career */}
                         <div className="w-4/5 pl-4 flex flex-col justify-between">
-                            <h3 className="text-center text-lg border-2 border-blue-500 font-semibold mb-6 p-4">Skills for the Selected Opportunities of your Interest</h3>
+                            <h3 className="text-center text-lg border-2 rounded-md border-blue-500 font-semibold mb-6 p-4">Skills for the Selected Opportunities of your Interest</h3>
                             {selectedCareer && skillsData[selectedCareer] ? (
                                 <div className="overflow-x-auto h-full">
                                     <table className="min-w-full bg-white table-auto">
@@ -200,7 +208,7 @@ const LearningPathView = () => {
                                             {skillsData[selectedCareer].map((skill, index) => (
                                                 <tr key={index} className="mb-4">
                                                     <td className="px-4 py-4 text-center">
-                                                        <div className="border  p-4 bg-yellow-400">
+                                                        <div className="border font-roboto p-2 rounded-md bg-yellow-400">
                                                             {skill.skill}
                                                         </div>
                                                     </td>
