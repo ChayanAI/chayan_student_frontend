@@ -99,9 +99,6 @@ const LoginPage = () => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                   />
-                  {usernameError && (
-                    <p className="mt-2 text-sm text-red-600">{usernameError}</p>
-                  )}
                 </div>
               </div>
 
