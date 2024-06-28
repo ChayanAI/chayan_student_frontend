@@ -191,6 +191,14 @@ const EditProfile = ({userId}) => {
         }
     };
 
+    function formatDate(inputDate) {
+        const date = new Date(inputDate)
+        const day = String(date.getDate()).padStart(2, '0')
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const year = date.getFullYear()
+        return `${year}-${month}-${day}`
+    }
+
     const handleBack = () => {
         // console.log(profileData.career_path)
         if (currentStep > 0) {
@@ -337,7 +345,7 @@ const EditProfile = ({userId}) => {
                                           setValue={setProfileData} col={'3'}/>
                                     <Text name={'Last Name'} value={profileData.last_name} disp='last_name'
                                           setValue={setProfileData} col={'3'}/>
-                                    <Text name={'Date of birth'} value={profileData.date_of_birth.slice(0, 10)}
+                                    <Text name={'Date of birth'} value={formatDate(profileData.date_of_birth)}
                                           isRequired={true}
                                           disp='date_of_birth'
                                           setValue={setProfileData} type={'date'} col={'3'}/>
@@ -414,10 +422,10 @@ const EditProfile = ({userId}) => {
                                             options={["Computer Science", "Electrical Engineering", "Civil Engineering", "Mechanical", "Electronics", "Aerospace", "Chemical", "Production and Industrial", "Metallurgy", "Hydrology", "Earthquake", "IT", "Nuclear", "Biotech", "Environmental", "Petroleum", "Automobile"]}/>
 
                                     {/* MM YYYY ONLY */}
-                                    <Text name={'Start Date'} value={profileData.course_started.slice(0, 10)}
+                                    <Text name={'Start Date'} value={formatDate(profileData.course_started)}
                                           isRequired={true} disp='course_started'
                                           setValue={setProfileData} type={'date'} col={'3'}/>
-                                    <Text name={'End Date'} value={profileData.expected_graduation.slice(0, 10)}
+                                    <Text name={'End Date'} value={formatDate(profileData.expected_graduation)}
                                           isRequired={true}
                                           disp='expected_graduation' setValue={setProfileData}
                                           type={'date'} col={'3'}/>

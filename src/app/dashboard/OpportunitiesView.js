@@ -84,7 +84,7 @@ const OpportunitiesView = () => {
 
     const fetchCompany = async (recruiterId) => {
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, { user_id: recruiterId });
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, { user_id: recruiterId }).then((res)=>console.log(res.data));
             console.log("li", response.data)
             setCompany(response.data || 'Company Name');
         } catch (error) {

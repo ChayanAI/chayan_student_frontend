@@ -27,9 +27,7 @@ const Dashboard = () => {
         { title: 'Projects', filled: false },
         { title: 'Volunteer work', filled: false },
         { title: 'Extra-curricular activities', filled: false },
-        { title: 'Certifications', filled: false },
-        { title: 'Awards and Recognition', filled: false },
-        { title: 'Any Other Distinction', filled: false },
+
     ]);
     const [selectedSection, setSelectedSection] = useState('exploreOpportunities');
     const [loader, setLoader] = useState(false)
