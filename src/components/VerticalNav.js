@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, GraduationCap, Goal, Dumbbell, BriefcaseBusiness, Handshake, FolderGit2, Pickaxe } from "lucide-react";
+import { User, GraduationCap, Goal, Dumbbell, BriefcaseBusiness, Handshake, FolderGit2, Pickaxe, FileBadge, Trophy, Medal } from "lucide-react";
 
 const navigation = [
   { name: 'Personal Information', icon: User, step: 0 },
@@ -10,6 +10,9 @@ const navigation = [
   { name: 'Projects', icon: FolderGit2, step: 5 },
   { name: 'Volunteer Experience', icon: Handshake, step: 6 },
   { name: 'Extra-Curricular Activities', icon: Pickaxe, step: 7 },
+  { name: 'Certificates', icon: FileBadge, step: 8 },
+  { name: 'Awards & Recognitions', icon: Trophy, step: 9 },
+  { name: 'Distinctions', icon: Medal, step: 10 },
 ];
 
 function classNames(...classes) {
