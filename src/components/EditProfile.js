@@ -716,7 +716,7 @@ const EditProfile = ({userId}) => {
                                                            disp='description'
                                                            index={index} list='internships'
                                                            setValue={setProfileData}
-                                                           col={' col-span full'} rows={3}/>
+                                                           col={' col-span-full'} rows={3}/>
                                                     <Text name={'Achievements'}
                                                           value={profileData.internships[index].summary}
                                                           disp='summary' index={index} list='internships'
@@ -795,7 +795,7 @@ const EditProfile = ({userId}) => {
                                                    disp='description'
                                                    index={index} list='projects'
                                                    setValue={setProfileData}
-                                                   col={' col-span full'} rows={3}/>
+                                                   col={' col-span-full'} rows={3}/>
                                             <Text name={'Achievements'}
                                                   value={profileData.projects[index].summary}
                                                   disp='summary' index={index} list='projects'
@@ -873,7 +873,7 @@ const EditProfile = ({userId}) => {
                                                    disp='description'
                                                    index={index} list='volunteers'
                                                    setValue={setProfileData}
-                                                   col={' col-span full'} rows={3}/>
+                                                   col={' col-span-full'} rows={3}/>
                                             <Text name={'Achievements'}
                                                   value={profileData.volunteers[index].summary}
                                                   disp='summary' index={index} list='volunteers'
@@ -953,7 +953,7 @@ const EditProfile = ({userId}) => {
                                                    disp='description'
                                                    index={index} list='extra_curriculars'
                                                    setValue={setProfileData}
-                                                   col={' col-span full'} rows={3}/>
+                                                   col={' col-span-full'} rows={3}/>
                                             <Text name={'Achievements'}
                                                   value={profileData.extra_curriculars[index].summary}
                                                   disp='summary' index={index} list='extra_curriculars'
