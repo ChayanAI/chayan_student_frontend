@@ -10,7 +10,7 @@ import ResumeBuilderView from './ResumeBuilderView';
 import MockInterviewsView from './MockInterviewsView';
 import { useNavigate } from 'react-router-dom';
 import Link from 'next/link';
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 
 const Dashboard = () => {
@@ -52,29 +52,29 @@ const Dashboard = () => {
         const startDate = new Date(startDateString);
         const now = new Date();
         let yearDifference = now.getFullYear() - startDate.getFullYear();
-    
-        if (now.getMonth() < startDate.getMonth() || 
+
+        if (now.getMonth() < startDate.getMonth() ||
             (now.getMonth() === startDate.getMonth() && now.getDate() < startDate.getDate())) {
             yearDifference -= 1;
         }
-    
+
         let studyYear = yearDifference + 1;
         let suffix = 'th';
-    
+
         if (studyYear % 10 === 1 && studyYear % 100 !== 11) suffix = 'st';
         else if (studyYear % 10 === 2 && studyYear % 100 !== 12) suffix = 'nd';
         else if (studyYear % 10 === 3 && studyYear % 100 !== 13) suffix = 'rd';
-    
+
         return `${studyYear}${suffix} Year`;
     }
-    
+
     // Example usage
     const courseStartDate = "2022-05-31T18:30:00.000Z";
     console.log(calculateYearOfStudy(courseStartDate));
-    
 
-    const handlelogout=async()=>{
-        await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentauth/clear`).then(()=>{
+
+    const handlelogout = async () => {
+        await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentauth/clear`).then(() => {
             router.push('/login')
         })
 
@@ -96,7 +96,7 @@ const Dashboard = () => {
                     {/* Left container */}
                     <div className="w-1/5 pr-8">
                         {/* Profile Card */}
-                        <div className=" p-4 w-60 bg-white rounded-lg shadow-md flex flex-col items-center absolute border-2 border-blue-600" style={{ zIndex: 1, top: '20%' }}>
+                        <div className=" p-4 w-60 bg-white rounded-lg shadow-md flex flex-col items-center absolute border-2 border-blue-600" style={{ zIndex: 1, top: '21%' }}>
                             <img
                                 src="/media/images/300-1.jpg" // Replace with actual image source
                                 alt="Profile"
@@ -119,7 +119,7 @@ const Dashboard = () => {
                         </div>
 
                         {/* Profile Completion Section */}
-                        <div className=" p-6 pt-4 w-60 mt-44 bg-white rounded-lg shadow-md mb-4 border-2 border-blue-600 text-sm" style={{ width: '' }}>
+                        <div className=" p-6 pt-4 w-60 mt-40 bg-white rounded-lg shadow-md mb-4 border-2 border-blue-600 text-sm" style={{ width: '' }}>
                             <h2 className="text-lg font-semibold mb-2">My CHAYAN Profile</h2>
                             <div className="mb-4 text-sm">
                                 <p className="mb-2">Profile Completion: {progress}%</p>
