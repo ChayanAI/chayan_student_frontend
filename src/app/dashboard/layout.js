@@ -27,6 +27,8 @@ export default function dashboardLayout({ children , params,}) {
       const {data} = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/auth/verify`)
       // console.log(data)
 
+
+
       return{
         user: data,
         error: null

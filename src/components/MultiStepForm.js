@@ -297,7 +297,7 @@ const MultiStepForm = ({userId}) => {
                                                   setValue={setProfileData} type='tel' col={' w-full relative'} />
                                                 <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Validate'} yellow={true} />
                                             </div>
-                                            
+
                                             <div className="w-full flex justify-between col-span-full mt-4">
                                                 <div></div>
                                                 <button type='submit'
