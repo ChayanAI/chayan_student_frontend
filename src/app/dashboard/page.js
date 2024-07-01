@@ -27,6 +27,9 @@ const Dashboard = () => {
         {title: 'Projects', filled: false},
         {title: 'Volunteer work', filled: false},
         {title: 'Extra-curricular activities', filled: false},
+        {title: 'Certificates', filled: false},
+        {title: 'Awards & Distinctions', filled: false},
+        {title: 'Distinctions', filled: false},
 
     ]);
     const [exp, setExp] = useState()

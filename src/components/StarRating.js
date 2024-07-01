@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 
-const StarRating = ({ starWidth = 1.5, onRatingChange }) => {
+const StarRating = ({ starWidth = 1.5, onRatingChange, readOnly = false }) => {
   const [rating, setRating] = useState(0);
   const [uniqueId, setUniqueId] = useState('');
   const starContainerRef = useRef(null);
@@ -13,13 +13,15 @@ const StarRating = ({ starWidth = 1.5, onRatingChange }) => {
   }, []);
 
   const handleMouseDown = (event) => {
-    handleMouseMove(event);
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
+    if (!readOnly) {
+      handleMouseMove(event);
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
   };
 
   const handleMouseMove = (event) => {
-    if (starContainerRef.current) {
+    if (!readOnly && starContainerRef.current) {
       const { left, width } = starContainerRef.current.getBoundingClientRect();
       const clickX = event.clientX - left;
       const newRating = Math.min(totalStars, Math.max(0, (clickX / width) * totalStars));
@@ -32,15 +34,17 @@ const StarRating = ({ starWidth = 1.5, onRatingChange }) => {
   };
 
   const handleMouseUp = () => {
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
+    if (!readOnly) {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    }
   };
 
   return (
     <div className="flex flex-col items-center select-none">
       <div
         id={`star-rating-${uniqueId}`}
-        className="flex cursor-pointer"
+        className={`flex ${readOnly ? '' : 'cursor-pointer'}`}
         ref={starContainerRef}
         onMouseDown={handleMouseDown}
         style={{ width: `${starWidth * totalStars}rem` }}
@@ -59,7 +63,7 @@ const StarRating = ({ starWidth = 1.5, onRatingChange }) => {
               {rating >= halfStarValue && rating < starValue && (
                 <span
                   className="absolute left-0 top-0 overflow-hidden text-yellow-500"
-                  style={{ paddingLeft:`${starWidth/10}rem` , width: '50%', fontSize: `${starWidth}rem` }}
+                  style={{ paddingLeft: `${starWidth / 10}rem`, width: '50%', fontSize: `${starWidth}rem` }}
                 >
                   ★
                 </span>
@@ -75,6 +79,7 @@ const StarRating = ({ starWidth = 1.5, onRatingChange }) => {
 StarRating.propTypes = {
   starWidth: PropTypes.number.isRequired,
   onRatingChange: PropTypes.func,
+  readOnly: PropTypes.bool,
 };
 
 export default StarRating;
