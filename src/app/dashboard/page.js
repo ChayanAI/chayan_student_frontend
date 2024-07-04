@@ -163,9 +163,9 @@ const Dashboard = () => {
                             <div className="w-full" style={{marginTop: '-10px',}}>
                                 <h2 className="text-lg font-semibold mt-1 text-left">Career Objectives</h2>
                                 <ul className="list-disc list-inside text-sm">
-                                    <li className=" ">Software Developer</li>
-                                    <li className=" ">Data Scientist</li>
-                                    <li className=" ">Product Manager</li>
+                                    {profile.career_path.map((path)=>{
+                                        return(<li className=" ">{path}</li>)
+                                    })}
                                 </ul>
                             </div>
                         </div>
@@ -224,9 +224,9 @@ const Dashboard = () => {
                                     <h2 className={`text-2xl text-center font-semibold ${selectedSection === 'exploreOpportunities' ? 'text-white' : 'text-black opacity-50'}`}>
                                         Explore Opportunities
                                     </h2>
-                                    <p className={`text-base text-center ${selectedSection === 'exploreOpportunities' ? 'text-white' : 'text-black opacity-50'}`}>
-                                        Liked: 10 | Applied: 3
-                                    </p>
+                                    {/*<p className={`text-base text-center ${selectedSection === 'exploreOpportunities' ? 'text-white' : 'text-black opacity-50'}`}>*/}
+                                    {/*    Liked: 10 | Applied: 3*/}
+                                    {/*</p>*/}
                                     {selectedSection === 'exploreOpportunities' &&
                                         <div className="absolute bottom-0 left-0 right-0 mx-auto w-0 h-0" style={{
                                             borderBottom: '10px solid transparent',
@@ -281,9 +281,9 @@ const Dashboard = () => {
                                     <h2 className={`text-2xl text-center pl-2 font-semibold ${selectedSection === 'mockInterviews' ? 'text-white' : 'text-black opacity-50'}`}>
                                         AI - Mock Interviews
                                     </h2>
-                                    <p className={`text-base text-center ${selectedSection === 'mockInterviews' ? 'text-white' : 'text-black opacity-50'}`}>
-                                        2/6 interviews practiced
-                                    </p>
+                                    {/*<p className={`text-base text-center ${selectedSection === 'mockInterviews' ? 'text-white' : 'text-black opacity-50'}`}>*/}
+                                    {/*    2/6 interviews practiced*/}
+                                    {/*</p>*/}
                                     {selectedSection === 'mockInterviews' &&
                                         <div className="absolute bottom-0 left-0 right-0 mx-auto w-0 h-0" style={{
                                             borderBottom: '10px solid transparent',

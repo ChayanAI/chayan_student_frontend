@@ -1,16 +1,29 @@
 "use client";
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import axios from "axios";
 
 const PdfViewer = dynamic(() => import('../../components/PdfViewer'), { ssr: false });
 
 const ResumeBuilderView = () => {
+    const [careerPath, setCareerPath] = useState([])
+    const [loader, setLoader] = useState(false)
+    useEffect(()=>{
+        (async () => {
+            await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/auth/verify`).then(async (res) => {
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, {user_id: res.data.id}).then((res) => {
+                    setCareerPath(res.data.career_path)
+                })
+            })
 
+            setLoader(true)
+        })()
+    },[])
 
     const [selectedView, setSelectedView] = useState('build'); // State to track selected view (build, customize, upload)
     const [selectedTemplate, setSelectedTemplate] = useState(1); // State to track selected template
-    const [selectedPath, setSelectedPath] = useState(0) // State to chose career path
+    const [selectedPath, setSelectedPath] = useState() // State to chose career path
 
     // Sample data for resume templates (replace with actual data or fetch dynamically)
     const templates = [
@@ -38,8 +51,11 @@ const ResumeBuilderView = () => {
     const handleTemplateSelect = (templateId) => {
         setSelectedTemplate(templateId); // Update selected template
     };
-
-    return (
+    if(!loader){
+        return(<></>)
+    }
+    else{
+        return (
         <div className="bg-white shadow-md border-2 border-blue-500 h-fit w-full rounded-b-lg" style={{ maxHeight: '42.8rem' }}>
             {/* View selector buttons at the top */}
             <div className="flex justify-between mb-4 border-b-2 border-b-blue-600">
@@ -67,24 +83,32 @@ const ResumeBuilderView = () => {
                 <>
                     {/* Centered option buttons */}
                     <div className="flex justify-evenly mb-4 border-dashed">
-                        <button className={`w-60 py-2 text-lg border rounded ${selectedPath == 0 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
-                            onClick={() => setSelectedPath(0)}
+                        {careerPath.map((path)=>{
+                            return(<button className={`w-60 py-2 text-lg border rounded ${selectedPath == path ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`}
+                            onClick={() => setSelectedPath(path)}
                             style={{
-                                backgroundImage: selectedPath === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                backgroundImage: selectedPath === path ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                             }}
-                            >Software Developer</button>
-                        <button className={`w-60 py-2 text-lg border rounded ${selectedPath == 1 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
-                            onClick={() => setSelectedPath(1)}
-                            style={{
-                                backgroundImage: selectedPath === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
-                            }}
-                            >Data Scientist</button>
-                        <button className={`w-60 py-2 text-lg border rounded ${selectedPath == 2 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
-                            onClick={() => setSelectedPath(2)}
-                            style={{
-                                backgroundImage: selectedPath === 2 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
-                            }}
-                            >Product Manager</button>
+                            >{path}</button>)
+                        })}
+                        {/*<button className={`w-60 py-2 text-lg border rounded ${selectedPath == 0 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`}*/}
+                        {/*    onClick={() => setSelectedPath(0)}*/}
+                        {/*    style={{*/}
+                        {/*        backgroundImage: selectedPath === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'*/}
+                        {/*    }}*/}
+                        {/*    >Software Developer</button>*/}
+                        {/*<button className={`w-60 py-2 text-lg border rounded ${selectedPath == 1 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`}*/}
+                        {/*    onClick={() => setSelectedPath(1)}*/}
+                        {/*    style={{*/}
+                        {/*        backgroundImage: selectedPath === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'*/}
+                        {/*    }}*/}
+                        {/*    >Data Scientist</button>*/}
+                        {/*<button className={`w-60 py-2 text-lg border rounded ${selectedPath == 2 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`}*/}
+                        {/*    onClick={() => setSelectedPath(2)}*/}
+                        {/*    style={{*/}
+                        {/*        backgroundImage: selectedPath === 2 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'*/}
+                        {/*    }}*/}
+                        {/*    >Product Manager</button>*/}
                     </div>
 
                     <div className="flex border-t-2 border-dashed relative h-fit">
@@ -114,7 +138,7 @@ const ResumeBuilderView = () => {
                                 {selectedTemplate ? (
                                     <div className="rounded border-2 border-black mb-4 h-96">
                                         <PdfViewer pdfUrl="/templates.pdf" />
-                                    </div>                                    
+                                    </div>
                                 ) : (
                                     <p>Please select a template from the left.</p>
                                 )}
@@ -152,24 +176,14 @@ const ResumeBuilderView = () => {
                 <>
                     {/* Centered option buttons */}
                     <div className="flex justify-evenly mb-4 border-dashed">
-                        <button className={`w-60 py-2 text-lg border rounded ${selectedPath == 0 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
-                            onClick={() => setSelectedPath(0)}
+                        {careerPath.map((path)=>{
+                            return(<button className={`w-60 py-2 text-lg border rounded ${selectedPath == path ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`}
+                            onClick={() => setSelectedPath(path)}
                             style={{
-                                backgroundImage: selectedPath === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                backgroundImage: selectedPath === path ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                             }}
-                            >Full-Stack Developer</button>
-                        <button className={`w-60 py-2 text-lg border rounded ${selectedPath == 1 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
-                            onClick={() => setSelectedPath(1)}
-                            style={{
-                                backgroundImage: selectedPath === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
-                            }}
-                            >Data Scientist</button>
-                        <button className={`w-60 py-2 text-lg border rounded ${selectedPath == 2 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
-                            onClick={() => setSelectedPath(2)}
-                            style={{
-                                backgroundImage: selectedPath === 2 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
-                            }}
-                            >Product Designer</button>
+                            >{path}</button>)
+                        })}
                     </div>
 
                     <div className="flex border-t-2 border-dashed relative h-fit">
@@ -199,7 +213,7 @@ const ResumeBuilderView = () => {
                                 {selectedTemplate ? (
                                     <div className="rounded border-2 border-black mb-4 h-96">
                                         <PdfViewer pdfUrl="/templates.pdf" />
-                                    </div>                                    
+                                    </div>
                                 ) : (
                                     <p>Please select a template from the left.</p>
                                 )}
@@ -237,19 +251,19 @@ const ResumeBuilderView = () => {
                 <>
                     {/* Centered option buttons */}
                     <div className="flex justify-evenly mb-4 border-dashed">
-                        <button className={`px-16 py-2 text-lg border rounded ${selectedPath == 0 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
+                        <button className={`px-16 py-2 text-lg border rounded ${selectedPath == 0 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`}
                             onClick={() => setSelectedPath(0)}
                             style={{
                                 backgroundImage: selectedPath === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                             }}
                             >JD 1</button>
-                        <button className={`px-16 py-2 text-lg border rounded ${selectedPath == 1 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`} 
+                        <button className={`px-16 py-2 text-lg border rounded ${selectedPath == 1 ? 'bg-yellow-400 text-black font-bold' : 'bg-gray-300 text-gray-500 font-semibold'}`}
                             onClick={() => setSelectedPath(1)}
                             style={{
                                 backgroundImage: selectedPath === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                             }}
                             >JD 2</button>
-                        <button className={`px-8 py-2 text-lg border-2 border-dashed border-[#48749c] rounded bg-gray-300 text-blue-600 font-semibold`} 
+                        <button className={`px-8 py-2 text-lg border-2 border-dashed border-[#48749c] rounded bg-gray-300 text-blue-600 font-semibold`}
                             onClick={() => setSelectedPath(2)}
                             ><span className='mr-2'>+ Upload New JD</span></button>
                     </div>
@@ -282,7 +296,7 @@ const ResumeBuilderView = () => {
                                     <div className="rounded border-2 border-black mb-4 h-96">
                                         {/* <ZoomableIframe url={'/test_resume.html'} idealWidth = {1160} idealHeight = {768} /> */}
                                         <PdfViewer pdfUrl="/templates.pdf" />
-                                    </div>                                    
+                                    </div>
                                 ) : (
                                     <p>Please select a template from the left.</p>
                                 )}
@@ -317,6 +331,9 @@ const ResumeBuilderView = () => {
             )}
         </div>
     );
+    }
+
+
 };
 
 export default ResumeBuilderView;
