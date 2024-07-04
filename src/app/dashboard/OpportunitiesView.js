@@ -118,7 +118,6 @@ const OpportunitiesView = () => {
                             />
                             <div>
                                 <h3 className="text-lg font-semibold">{job.title}</h3>
-                                <p className="text-sm text-gray-600 mb-1">Location: {job.location}</p>
                                 <p className="text-sm text-gray-600 mb-1">CTC - {job.salary}</p>
                                 <p className="text-sm text-gray-600 mb-1">Last Date - {new Date(job.last_date).toLocaleDateString()}</p>
                                 <p className="text-sm text-gray-600 mb-1">Branch - {job.branch_required}</p>
@@ -127,13 +126,13 @@ const OpportunitiesView = () => {
                         </div>
                         <div className="flex items-center justify-between mt-2">
                             <div className="flex flex-col items-center cursor-pointer" onClick={() => handleLike(job.id)}>
-                                <span className={`text-lg ${likedJobs.has(job.id) ? 'text-blue-500' : 'text-green-500'}`}>{likedJobs.has(job.id) ? 'Liked' : 'Like'}</span>
-                                <span className={`text-sm ${likedJobs.has(job.id) ? 'text-blue-500' : 'text-gray-600'}`}>{likes[job.id] || 0} {likedJobs.has(job.id) ? ' Students Liked' : 'Students Liked'}</span>
+                                <span className={`text-lg select-none ${likedJobs.has(job.id) ? 'text-blue-500' : 'text-green-500'}`}>{likedJobs.has(job.id) ? 'Liked' : 'Like'}</span>
+                                {/*<span className={`text-sm ${likedJobs.has(job.id) ? 'text-blue-500' : 'text-gray-600'}`}>{likes[job.id] || 0} {likedJobs.has(job.id) ? ' Students Liked' : 'Students Liked'}</span>*/}
                             </div>
-                            <div className="flex flex-col items-center cursor-pointer" onClick={() => handleApply(job.id)}>
-                                <span className={`text-lg ${appliedJobs.has(job.id) ? 'text-blue-500' : 'text-green-500'}`}>{appliedJobs.has(job.id) ? 'Applied' : 'Apply'}</span>
-                                <span className={`text-sm ${appliedJobs.has(job.id) ? 'text-blue-500' : 'text-gray-600'}`}>{applications} {appliedJobs.has(job.id) ? 'Students Applied' : 'Students Applied'}</span>
-                            </div>
+                            {/*<div className="flex flex-col items-center cursor-pointer" onClick={() => handleApply(job.id)}>*/}
+                            {/*    <span className={`text-lg ${appliedJobs.has(job.id) ? 'text-blue-500' : 'text-green-500'}`}>{appliedJobs.has(job.id) ? 'Applied' : 'Apply'}</span>*/}
+                            {/*    <span className={`text-sm ${appliedJobs.has(job.id) ? 'text-blue-500' : 'text-gray-600'}`}>{applications} {appliedJobs.has(job.id) ? 'Students Applied' : 'Students Applied'}</span>*/}
+                            {/*</div>*/}
                         </div>
                     </div>
                 ))}
@@ -158,14 +157,14 @@ const OpportunitiesView = () => {
                                 <p className="text-gray-800 text-sm"> {company.employee_count} Employees</p>
                                 <p className="text-gray-800 text-sm">MNC - {company.is_mnc ? 'Yes' : 'No'}</p>
                             </div>
-                            <div className="flex mb-2 pb-2 space-x-32 border-b border-dotted border-gray-300">
-                                <p className="text-gray-800 text-sm">  Head office - {company.office_address} </p>
-                            </div>
+                            {/*<div className="flex mb-2 pb-2 space-x-32 border-b border-dotted border-gray-300">*/}
+                            {/*    <p className="text-gray-800 text-sm">  Head office - {company.office_address} </p>*/}
+                            {/*</div>*/}
 
                             {/* Job Role Information */}
                             <div className="mb-2">
                                 <h2 className="text-lg font-semibold mb-1">{selectedJob.title}</h2>
-                                <p className="text-gray-800 text-sm mb-2">{selectedJob.department || Department} | Location - {selectedJob.location || 'N/A'}</p>
+                                <p className="text-gray-800 text-sm mb-2">{selectedJob.department || Department} | Location - {company.office_address || 'N/A'}</p>
                                 <div className="grid grid-cols-3 gap-1 text-sm text-gray-800 border border-gray-300">
                                     {/* Header Row */}
                                     <div className="col-span-1 bg-blue-600 text-white text-center p-2"><strong></strong></div>

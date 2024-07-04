@@ -124,7 +124,7 @@ const MultiStepForm = ({userId}) => {
 
     const handleNext = (e) => {
         e.preventDefault()
-        console.log(profileData)
+        // console.log(profileData.career_path)
         if (currentStep < steps.length - 1) {
             setCurrentStep(currentStep + 1);
         }
@@ -165,7 +165,8 @@ const MultiStepForm = ({userId}) => {
                 projects: profileData.projects,
                 volunteers: profileData.volunteers,
                 extra_curriculars: profileData.extra_curriculars,
-                college_name: profileData.college_name
+                college_name: profileData.college_name,
+                career_path: profileData.career_path
             }).then((res)=>console.log(res))
         } catch (err) {
             alert(err)

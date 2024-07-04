@@ -1,14 +1,29 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from "axios";
 
 const MockInterviewsView = () => {
     const router = useRouter();
 
+    const [careerPath, setCareerPath] = useState([])
+    const [loader, setLoader] = useState(false)
+    useEffect(()=>{
+        (async () => {
+            await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/auth/verify`).then(async (res) => {
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, {user_id: res.data.id}).then((res) => {
+                    setCareerPath(res.data.career_path)
+                })
+            })
+
+            setLoader(true)
+        })()
+    },[])
+
     const [isInstructionsRead, setIsInstructionsRead] = useState(false);
     const [activeView, setActiveView] = useState('practice');
     const [selectedInterview, setSelectedInterview] = useState(1);
-    const [selectedRole, setSelectedRole] = useState(0);
+    const [selectedRole, setSelectedRole] = useState();
     const [selectedRoleSelect, setSelectedRoleSelect] = useState(0);
     const [selectedFormat, setSelectedFormat] = useState(0);
     const [selectedTimeLength, setSelectedTimeLength] = useState('15 min');
@@ -73,8 +88,11 @@ const MockInterviewsView = () => {
     const handleInterviewClick = (index) => {
         setSelectedInterview(index);
     };
-
-    return (
+    if(!loader){
+        return(<></>)
+    }
+    else{
+        return (
         <div className="bg-white shadow-md border-2 border-blue-500 h-fit w-full rounded-b-lg min-h-[35rem]">
             {/* Header with two view options */}
             <div className="flex justify-between mb-6 border-b-2 border-blue-500">
@@ -106,13 +124,14 @@ const MockInterviewsView = () => {
                                         <span className="underline underline-offset-2 font-bold text-center">Select Role</span>
                                     </div>
                                     <div className="flex flex-col gap-2 w-fit mr-2">
-                                        <button className={`px-4 py-2 text-md border rounded font-semibold font-poppins shadow-md ${selectedRoleSelect === 0 ? 'bg-slate-700 text-white' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+
+                                        <button className={`px-4 py-2 text-md border rounded font-semibold font-poppins shadow-md ${selectedRoleSelect === 0 ? 'bg-slate-700 text-white' : 'bg-gray-300 border-gray-300 text-gray-500'}`}
                                             onClick={() => setSelectedRoleSelect(0)}
                                             style={{
                                                 // backgroundImage: selectedRoleSelect === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                                             }}
                                             >Career Path</button>
-                                        <button className={`px-4 py-2 text-md border rounded font-semibold font-poppins shadow-md ${selectedRoleSelect === 1 ? 'bg-slate-700 text-white' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                        <button className={`px-4 py-2 text-md border rounded font-semibold font-poppins shadow-md ${selectedRoleSelect === 1 ? 'bg-slate-700 text-white' : 'bg-gray-300 border-gray-300 text-gray-500'}`}
                                             onClick={() => setSelectedRoleSelect(1)}
                                             style={{
                                                 // backgroundImage: selectedRoleSelect === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
@@ -120,42 +139,54 @@ const MockInterviewsView = () => {
                                             >Jobs Liked/Applied</button>
                                     </div>
                                     <div className="flex-grow grid grid-cols-2 gap-2">
-                                        <button
-                                            className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRole === 0 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
-                                            onClick={() => setSelectedRole(0)}
+                                        {careerPath.map((path)=>{
+                                            return(<button
+                                            className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRole === path ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`}
+                                            onClick={() => setSelectedRole(path)}
                                             style={{
-                                                backgroundImage: selectedRole === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                                backgroundImage: selectedRole === path ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                                             }}
                                         >
-                                            Role 1
-                                        </button>
-                                        <button
-                                            className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRole === 1 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
-                                            onClick={() => setSelectedRole(1)}
-                                            style={{
-                                                backgroundImage: selectedRole === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
-                                            }}
-                                        >
-                                            Role 2
-                                        </button>
-                                        <button
-                                            className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRole === 2 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
-                                            onClick={() => setSelectedRole(2)}
-                                            style={{
-                                                backgroundImage: selectedRole === 2 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
-                                            }}
-                                        >
-                                            Role 3
-                                        </button>
-                                        <button
-                                            className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRole === 3 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
-                                            onClick={() => setSelectedRole(3)}
-                                            style={{
-                                                backgroundImage: selectedRole === 3 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
-                                            }}
-                                        >
-                                            Role 4
-                                        </button>
+                                                {path}
+                                        </button>)
+                                        })}
+
+                                        {/*<button*/}
+                                        {/*    className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRole === 0 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`}*/}
+                                        {/*    onClick={() => setSelectedRole(0)}*/}
+                                        {/*    style={{*/}
+                                        {/*        backgroundImage: selectedRole === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'*/}
+                                        {/*    }}*/}
+                                        {/*>*/}
+                                        {/*    Role 1*/}
+                                        {/*</button>*/}
+                                        {/*<button*/}
+                                        {/*    className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRole === 1 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`}*/}
+                                        {/*    onClick={() => setSelectedRole(1)}*/}
+                                        {/*    style={{*/}
+                                        {/*        backgroundImage: selectedRole === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'*/}
+                                        {/*    }}*/}
+                                        {/*>*/}
+                                        {/*    Role 2*/}
+                                        {/*</button>*/}
+                                        {/*<button*/}
+                                        {/*    className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRole === 2 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`}*/}
+                                        {/*    onClick={() => setSelectedRole(2)}*/}
+                                        {/*    style={{*/}
+                                        {/*        backgroundImage: selectedRole === 2 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'*/}
+                                        {/*    }}*/}
+                                        {/*>*/}
+                                        {/*    Role 3*/}
+                                        {/*</button>*/}
+                                        {/*<button*/}
+                                        {/*    className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedRole === 3 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`}*/}
+                                        {/*    onClick={() => setSelectedRole(3)}*/}
+                                        {/*    style={{*/}
+                                        {/*        backgroundImage: selectedRole === 3 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'*/}
+                                        {/*    }}*/}
+                                        {/*>*/}
+                                        {/*    Role 4*/}
+                                        {/*</button>*/}
                                     </div>
                                 </div>
                             </div>
@@ -171,7 +202,7 @@ const MockInterviewsView = () => {
                                     <div className="flex-grow flex flex-wrap gap-4">
                                         <div className="flex flex-col w-[30%] items-center">
                                             <button
-                                                className={`px-4 py-2 w-full text-md border rounded font-medium shadow-md ${selectedFormat === 0 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                                className={`px-4 py-2 w-full text-md border rounded font-medium shadow-md ${selectedFormat === 0 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`}
                                                 onClick={() => setSelectedFormat(0)}
                                                 style={{
                                                     backgroundImage: selectedFormat === 0 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
@@ -183,7 +214,7 @@ const MockInterviewsView = () => {
                                         </div>
                                         <div className="flex flex-col w-[30%] items-center">
                                             <button
-                                                className={`px-4 py-2 w-full text-md border rounded font-medium shadow-md ${selectedFormat === 1 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                                className={`px-4 py-2 w-full text-md border rounded font-medium shadow-md ${selectedFormat === 1 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`}
                                                 onClick={() => setSelectedFormat(1)}
                                                 style={{
                                                     backgroundImage: selectedFormat === 1 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
@@ -195,7 +226,7 @@ const MockInterviewsView = () => {
                                         </div>
                                         <div className="flex flex-col w-[30%] items-center">
                                             <button
-                                                className={`px-4 py-2 w-full text-md border rounded font-medium shadow-md ${selectedFormat === 2 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                                className={`px-4 py-2 w-full text-md border rounded font-medium shadow-md ${selectedFormat === 2 ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`}
                                                 onClick={() => setSelectedFormat(2)}
                                                 style={{
                                                     backgroundImage: selectedFormat === 2 ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
@@ -219,7 +250,7 @@ const MockInterviewsView = () => {
                                     </div>
                                     <div className="flex-grow flex gap-4">
                                         <button
-                                            className={`px-8 py-2 w-[30%] text-md border rounded font-medium shadow-md ${selectedTimeLength === '15 min' ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                            className={`px-8 py-2 w-[30%] text-md border rounded font-medium shadow-md ${selectedTimeLength === '15 min' ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`}
                                             onClick={() => setSelectedTimeLength('15 min')}
                                             style={{
                                                 backgroundImage: selectedTimeLength === '15 min' ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
@@ -228,7 +259,7 @@ const MockInterviewsView = () => {
                                             15 min
                                         </button>
                                         <button
-                                            className={`px-8 py-2 w-[30%] text-md border rounded font-medium shadow-md ${selectedTimeLength === '20 min' ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                            className={`px-8 py-2 w-[30%] text-md border rounded font-medium shadow-md ${selectedTimeLength === '20 min' ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`}
                                             onClick={() => setSelectedTimeLength('20 min')}
                                             style={{
                                                 backgroundImage: selectedTimeLength === '20 min' ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
@@ -287,7 +318,7 @@ const MockInterviewsView = () => {
                                     <div className="w-2/5 flex flex-col gap-y-6 my-8">
                                         {mockInterviews.map((interview) => (
                                             <button
-                                                className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedInterview === interview.id ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`} 
+                                                className={`px-4 py-2 text-md border rounded font-medium shadow-md ${selectedInterview === interview.id ? 'bg-yellow-400 text-black' : 'bg-gray-300 border-gray-300 text-gray-500'}`}
                                                 onClick={() => setSelectedInterview(interview.id)}
                                                 style={{
                                                     backgroundImage: selectedInterview === interview.id ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
@@ -322,6 +353,8 @@ const MockInterviewsView = () => {
             )}
         </div>
     );
+    }
+
 };
 
 export default MockInterviewsView;

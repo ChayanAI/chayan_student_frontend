@@ -239,7 +239,8 @@ const EditProfile = ({userId}) => {
                 projects: profileData.projects,
                 volunteers: profileData.volunteers,
                 extra_curriculars: profileData.extra_curriculars,
-                college_name: profileData.college_name
+                college_name: profileData.college_name,
+                career_path: profileData.career_path
             }).then((res) => console.log(res))
         } catch (err) {
             alert(err.response.data)
@@ -550,17 +551,8 @@ const EditProfile = ({userId}) => {
                         {/* Professional Goals */}
                         {currentStep === 2 && (
                             <form onSubmit={handleNext}>
-                                <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 mb-4">
-                                    <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
-                                    <button type="button" onClick={handlecancel}
-                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
-                                    </button>
-                                    <button type="button" onClick={handleSubmit}
-                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Save
-                                    </button>
-                                </div>
                                 <div
-                                    className="rounded-lg p-10 mb-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 lg:w-[75%] lg:min-w-[580px]">
+                                    className="rounded-lg p-10 mb-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 lg:w-[75%] lg:min-w-[580px] bg-gray-200">
                                     <ButtonRow type='multi' value={profileData.career_path} disp='career_path'
                                                setValue={setProfileData} label={'Career Objectives'}
                                                col={' col-span-full'} buttonsPerRow={4}
@@ -568,21 +560,20 @@ const EditProfile = ({userId}) => {
                                     {/* Yaha par atleast ek jab select karo tab niche ke options dikhane hain dhruv. */}
                                     <SkillRating careers={profileData.career_path}
                                                  label='Rate Yourself in each skill for your desired objective:'/>
+                                    <div className="w-full flex justify-between px-2 col-span-full mt-4">
+                                        <button type="button" onClick={handleBack}
+                                                className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
+                                        </button>
+                                        <button type="submit"
+                                                className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
+                                        </button>
+                                    </div>
                                 </div>
                             </form>
                         )}
                         {/* Skill Verification */}
                         {currentStep === 3 && (
                             <form onSubmit={handleNext}>
-                                <div className="grid grid-cols-7 grid-rows-1 space-x-4 px-10 pt-10 mb-4">
-                                    <h2 className="col-span-5 text-2xl font-semibold tracking-wide">{steps[currentStep]}</h2>
-                                    <button type="button" onClick={handlecancel}
-                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-slate-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Cancel
-                                    </button>
-                                    <button type="button" onClick={handleSubmit}
-                                            className="col-span-1 w-fit h-fit px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Save
-                                    </button>
-                                </div>
                                 <div
                                     className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-7 lg:w-[80%] lg:min-w-[580px]">
 
