@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {FaStar} from 'react-icons/fa';
 import axios from "axios";
+import SkillRating from "../../components/SkillRating";
+import StarRating from "../../components/StarRating";
 
 const LearningPathView = () => {
     const [careerPath, setCareerPath] = useState([])
@@ -9,6 +11,8 @@ const LearningPathView = () => {
     const [selectedCareer, setSelectedCareer] = useState(null); // State to track selected career (default to first career)
     const [selectedOpportunity, setSelectedOpportunity] = useState(1); // State to track selected opportunity (default to first opportunity)
     const [loader, setLoader] = useState(false)
+    const [CareerJobs, setCareerJobs] = useState()
+    const [ratingData, setRatingData] = useState({})
     useEffect(() => {
         (async () => {
             await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/auth/verify`).then(async (res) => {
@@ -23,15 +27,48 @@ const LearningPathView = () => {
                     let a = new Set(f)
                     let x = Array.from(a)
                     let w = []
+                    let q = {}
                     // console.log(x)
                     x.map(async(item)=>{
                       await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentjob/jobs/${item}`).then((res)=>{
                           w.push(res.data)
+                          // console.log(res.data.skills_required)
+                          if(res.data.skills_required.includes(',')){
+                              setCareerJobs((prev)=>({...prev,[res.data.title]: res.data.skills_required.split(', ')}))
+                              // q={...q,[res.data.title]: res.data.skills_required.split(', ')}
+                              // console.log(q)
+                          }
+                          else{
+                              setCareerJobs((prev)=>({...prev,[res.data.title]: [res.data.skills_required]}))
+                              // console.log(q)
+                          }
+
                           // console.log(res.data)
                       })
+
+
                     })
+
+                    // w.map((item)=>{
+                    //     console.log('title', item.title)
+                    //     console.log('skills', item.skills_required.split(", "))
+                    //     q={...q, [item.title]: item.skills_required.split(", ")}
+                    // })
+                    // setCareerJobs(q)
                     setLikedJobs(w)
 
+                })
+
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getrating`, {user_id: res.data.id}).then((res) => {
+                    // console.log(res.data)
+                    res.data.map(async (item) => {
+                        await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getskillname`, {skill_id: item.skill_id}).then((res) => {
+                            // console.log(res.data)
+                            setRatingData((prev) => {
+                                return ({...prev, [res.data.name]: item.rating})
+                            })
+                        })
+                    })
                 })
 
             })
@@ -150,7 +187,7 @@ const LearningPathView = () => {
     const handleCareerSelect = (option) => {
         setSelectedCareer(option);
     };
-    const CareerJobs = {
+    const CareerJobs1 = {
         ["Software Developer"]: [
             "Data Structure",
             "C++",
@@ -262,7 +299,7 @@ const LearningPathView = () => {
                     <div className="w-4/5 pl-4 flex flex-col justify-between">
                         <h3 className="text-center text-lg border-2 rounded-md border-blue-500 font-semibold mb-6 p-4">Skills
                             for the Selected Career Path</h3>
-                        {selectedCareer && CareerJobs[selectedCareer] ? (
+                        {selectedCareer && CareerJobs1[selectedCareer] ? (
                             <div className="overflow-x-auto h-full">
                                 <table className="min-w-full bg-white table-auto">
                                     <thead>
@@ -274,7 +311,7 @@ const LearningPathView = () => {
                                     </tr>
                                     </thead>
                                     <tbody className="gap-y-16">
-                                    {CareerJobs[selectedCareer].map((skill, index) => (
+                                    {CareerJobs1[selectedCareer].map((skill, index) => (
                                         <tr key={index} className="mb-4">
                                             <td className="px-4 py-4 text-center">
                                                 <div
@@ -283,13 +320,15 @@ const LearningPathView = () => {
                                                 </div>
                                             </td>
                                             <td className="px-4 py-4 text-center">
-                                                {[...Array(5)].map((_, i) => (
-                                                    <FaStar
-                                                        key={i}
-                                                        className={`inline-block w-4 h-4 mx-1 cursor-pointer  ${i < skill? 'text-yellow-500' : 'text-gray-300'}`}
-                                                        // onClick={() => handleStarClick(index, i + 1)}
-                                                    />
-                                                ))}
+                                                {/*{[...Array(5)].map((_, i) => (*/}
+                                                {/*    // <FaStar*/}
+                                                {/*    //     key={i}*/}
+                                                {/*    //     className={`inline-block w-4 h-4 mx-1 cursor-pointer  ${i < skill? 'text-yellow-500' : 'text-gray-300'}`}*/}
+                                                {/*    //     // onClick={() => handleStarClick(index, i + 1)}*/}
+                                                {/*    // />*/}
+                                                {/*    */}
+                                                {/*))}*/}
+                                                <StarRating rating={ratingData[CareerJobs1[selectedCareer][index]]}/>
                                             </td>
                                             <td className="px-4 py-4 text-center">
                                                 {/*<div*/}
@@ -337,10 +376,13 @@ const LearningPathView = () => {
                             {likedJobs.map(job => (
                                 <div className="text-center mb-6" key={job.id}>
                                     <div
-                                        className={`border text-lg rounded-lg p-2 mb-1 cursor-pointer font-poppins ${selectedCareer === job.id ? 'bg-yellow-400' : ''}`}
-                                        onClick={() => handleCareerSelect(job.id)}
+                                        className={`border text-lg rounded-lg p-2 mb-1 cursor-pointer font-poppins ${selectedCareer === job.title ? 'bg-yellow-400' : ''}`}
+                                        onClick={() => {
+                                            handleCareerSelect(job.title)
+                                            console.log(CareerJobs)
+                                        }}
                                         style={{
-                                            backgroundImage: selectedCareer === job.id ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
+                                            backgroundImage: selectedCareer === job.title ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
                                         }}
                                     >
                                         <div className="text-center">{job.title}</div>
@@ -369,7 +411,7 @@ const LearningPathView = () => {
                         <div className="w-4/5 pl-4 flex flex-col justify-between">
                             <h3 className="text-center text-lg border-2 rounded-md border-blue-500 font-semibold mb-6 p-4">Skills
                                 for the Selected Opportunities of your Interest</h3>
-                            {selectedCareer && skillsData[selectedCareer] ? (
+                            {selectedCareer && CareerJobs[selectedCareer] ? (
                                 <div className="overflow-x-auto h-full">
                                     <table className="min-w-full bg-white table-auto">
                                         <thead>
@@ -381,38 +423,43 @@ const LearningPathView = () => {
                                         </tr>
                                         </thead>
                                         <tbody className="gap-y-16">
-                                        {skillsData[selectedCareer].map((skill, index) => (
+                                        {CareerJobs[selectedCareer].map((skill, index) => (
                                             <tr key={index} className="mb-4">
                                                 <td className="px-4 py-4 text-center">
                                                     <div className="border font-roboto p-2 rounded-md bg-yellow-400">
-                                                        {skill.skill}
+                                                        {skill}
                                                     </div>
                                                 </td>
                                                 <td className="px-4 py-4 text-center">
                                                     {[...Array(5)].map((_, i) => (
                                                         <FaStar
                                                             key={i}
-                                                            className={`inline-block w-4 h-4 mx-1 cursor-pointer  ${i < skill.selfRating ? 'text-yellow-500' : 'text-gray-300'}`}
+                                                            className={`inline-block w-4 h-4 mx-1 cursor-pointer  ${i < 0 ? 'text-yellow-500' : 'text-gray-300'}`}
                                                             onClick={() => handleStarClick(index, i + 1)}
                                                         />
                                                     ))}
                                                 </td>
                                                 <td className="px-4 py-4 text-center">
+                                                    {/*<div*/}
+                                                    {/*    className={`${skill.assessment.includes('Pending') ? 'text-red-500' : skill.assessment.includes('Average') ? 'text-green-500' : 'text-yellow-500'}`}>*/}
+                                                    {/*    {skill.assessment}*/}
+                                                    {/*</div>*/}
                                                     <div
-                                                        className={`${skill.assessment.includes('Pending') ? 'text-red-500' : skill.assessment.includes('Average') ? 'text-green-500' : 'text-yellow-500'}`}>
-                                                        {skill.assessment}
+                                                        className='text-red-500'>
+                                                        Pending
                                                     </div>
-                                                    {skill.completedDate && (
-                                                        <div className="text-gray-500">
-                                                            Completed on {skill.completedDate}
-                                                        </div>
-                                                    )}
+                                                    {/*{skill.completedDate && (*/}
+                                                    {/*    <div className="text-gray-500">*/}
+                                                    {/*        Completed on {skill.completedDate}*/}
+                                                    {/*    </div>*/}
+                                                    {/*)}*/}
                                                 </td>
-                                                {/*<td className="px-4 py-4 text-center">*/}
-                                                {/*    {skill.learningPath.map((course, idx) => (*/}
-                                                {/*        <div key={idx} className="text-blue-500">{course}</div>*/}
-                                                {/*    ))}*/}
-                                                {/*</td>*/}
+                                                <td className="px-4 py-4 text-center">
+                                                    {/*{skill.learningPath.map((course, idx) => (*/}
+                                                    {/*    <div key={idx} className="text-blue-500">{course}</div>*/}
+                                                    {/*))}*/}
+                                                    -
+                                                </td>
                                             </tr>
                                         ))}
                                         </tbody>

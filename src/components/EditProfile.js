@@ -98,6 +98,7 @@ const EditProfile = ({userId}) => {
     const router = useRouter();
     const [loader, setLoader] = useState(true)
     const [currentStep, setCurrentStep] = useState(0);
+    const [ratingData, setRatingData] = useState({})
     useEffect(() => {
         (async () => {
             try {
@@ -120,42 +121,56 @@ const EditProfile = ({userId}) => {
                     setProfileData((prev) => ({
                         ...prev,
                         internships: (res.data.internships.length === 0) ? ([{
-                title: null,
-                company_name: null,
-                location: null,
-                start_date: null,
-                end_date: null,
-                description: null,
-                summary: null
-            }]) : (res.data.internships),
+                            title: null,
+                            company_name: null,
+                            location: null,
+                            start_date: null,
+                            end_date: null,
+                            description: null,
+                            summary: null
+                        }]) : (res.data.internships),
                         projects: (res.data.projects.length === 0) ? ([{
-                title: null,
-                company_name: null,
-                location: null,
-                start_date: null,
-                end_date: null,
-                description: null,
-                summary: null
-            }]) : (res.data.projects),
+                            title: null,
+                            company_name: null,
+                            location: null,
+                            start_date: null,
+                            end_date: null,
+                            description: null,
+                            summary: null
+                        }]) : (res.data.projects),
                         volunteers: (res.data.volunteers.length === 0) ? ([{
-                title: null,
-                company_name: null,
-                location: null,
-                start_date: null,
-                end_date: null,
-                description: null,
-                summary: null
-            }]) : (res.data.volunteers),
+                            title: null,
+                            company_name: null,
+                            location: null,
+                            start_date: null,
+                            end_date: null,
+                            description: null,
+                            summary: null
+                        }]) : (res.data.volunteers),
                         extra_curriculars: (res.data.extra_curriculars.length === 0) ? ([{
-                title: null,
-                company_name: null,
-                location: null,
-                start_date: null,
-                end_date: null,
-                description: null,
-                summary: null
-            }]) : (res.data.extra_curriculars)
+                            title: null,
+                            company_name: null,
+                            location: null,
+                            start_date: null,
+                            end_date: null,
+                            description: null,
+                            summary: null
+                        }]) : (res.data.extra_curriculars)
                     }))
+                })
+
+
+
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getrating`, {user_id: userId}).then((res) => {
+                    // console.log(res.data)
+                    res.data.map(async (item) => {
+                        await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getskillname`, {skill_id: item.skill_id}).then((res) => {
+                            // console.log(res.data)
+                            setRatingData((prev) => {
+                                return ({...prev, [res.data.name]: item.rating})
+                            })
+                        })
+                    })
                 })
 
             } catch (err) {
@@ -210,7 +225,7 @@ const EditProfile = ({userId}) => {
         setCurrentStep(index);
     };
     const [selectedCareer, setselectedCareer] = useState()
-    const handlecancel=async()=>{
+    const handlecancel = async () => {
         await router.push('/dashboard')
     }
 
@@ -325,7 +340,8 @@ const EditProfile = ({userId}) => {
                                     className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-6 lg:w-[75%] ">
                                     <div className="col-span-full">
                                         <div className="mt-2 -ml-2 flex items-center gap-x-3">
-                                            <img src='/media/images/300-1.jpg' alt='profile' className='h-24 w-24 ml-2 border-2 border-gray-400 rounded-[50%]' />
+                                            <img src='/media/images/300-1.jpg' alt='profile'
+                                                 className='h-24 w-24 ml-2 border-2 border-gray-400 rounded-[50%]'/>
                                             {/* <UserCircleIcon className="h-24 w-24 text-gray-300" aria-hidden="true"/> */}
                                             <button
                                                 type="button"
@@ -351,9 +367,9 @@ const EditProfile = ({userId}) => {
                                           disp='date_of_birth'
                                           setValue={setProfileData} type={'date'} col={'3'}/>
                                     <ComboBox name={'Hometown'} value={profileData.city} disp='city'
-                                            setValue={setProfileData} col={'3'} isRequired={true}
-                                            options={["Mumbai, Maharashtra", "Delhi, Delhi", "Bengaluru, Karnataka", "Ahmedabad, Gujarat", "Hyderabad, Telangana", "Chennai, Tamil Nadu", "Kolkata, West Bengal", "Pune, Maharashtra", "Jaipur, Rajasthan", "Surat, Gujarat", "Lucknow, Uttar Pradesh", "Kanpur, Uttar Pradesh", "Nagpur, Maharashtra", "Patna, Bihar", "Indore, Madhya Pradesh", "Thane, Maharashtra", "Bhopal, Madhya Pradesh", "Visakhapatnam, Andhra Pradesh", "Vadodara, Gujarat", "Firozabad, Uttar Pradesh", "Ludhiana, Punjab", "Rajkot, Gujarat", "Agra, Uttar Pradesh", "Siliguri, West Bengal", "Nashik, Maharashtra", "Faridabad, Haryana", "Patiala, Punjab", "Meerut, Uttar Pradesh", "Kalyan-Dombivali, Maharashtra", "Vasai-Virar, Maharashtra", "Varanasi, Uttar Pradesh", "Srinagar, Jammu and Kashmir", "Dhanbad, Jharkhand", "Jodhpur, Rajasthan", "Amritsar, Punjab", "Raipur, Chhattisgarh", "Allahabad, Uttar Pradesh", "Coimbatore, Tamil Nadu", "Jabalpur, Madhya Pradesh", "Gwalior, Madhya Pradesh", "Vijayawada, Andhra Pradesh", "Madurai, Tamil Nadu", "Guwahati, Assam", "Chandigarh, Chandigarh", "Hubli-Dharwad, Karnataka", "Amroha, Uttar Pradesh", "Moradabad, Uttar Pradesh", "Gurgaon, Haryana", "Aligarh, Uttar Pradesh", "Solapur, Maharashtra", "Ranchi, Jharkhand", "Jalandhar, Punjab", "Tiruchirappalli, Tamil Nadu", "Bhubaneswar, Odisha", "Salem, Tamil Nadu", "Warangal, Telangana", "Mira-Bhayandar, Maharashtra", "Thiruvananthapuram, Kerala", "Bhiwandi, Maharashtra", "Saharanpur, Uttar Pradesh", "Guntur, Andhra Pradesh", "Amravati, Maharashtra", "Bikaner, Rajasthan", "Noida, Uttar Pradesh", "Jamshedpur, Jharkhand", "Bhilai Nagar, Chhattisgarh", "Cuttack, Odisha", "Kochi, Kerala", "Udaipur, Rajasthan", "Bhavnagar, Gujarat", "Dehradun, Uttarakhand", "Asansol, West Bengal", "Nanded-Waghala, Maharashtra", "Ajmer, Rajasthan", "Jamnagar, Gujarat", "Ujjain, Madhya Pradesh", "Sangli, Maharashtra", "Loni, Uttar Pradesh", "Jhansi, Uttar Pradesh", "Pondicherry, Puducherry", "Nellore, Andhra Pradesh", "Jammu, Jammu and Kashmir", "Belagavi, Karnataka", "Raurkela, Odisha", "Mangaluru, Karnataka", "Tirunelveli, Tamil Nadu", "Malegaon, Maharashtra", "Gaya, Bihar", "Tiruppur, Tamil Nadu", "Davanagere, Karnataka", "Kozhikode, Kerala", "Akola, Maharashtra", "Kurnool, Andhra Pradesh", "Bokaro Steel City, Jharkhand", "Rajahmundry, Andhra Pradesh", "Ballari, Karnataka", "Agartala, Tripura", "Bhagalpur, Bihar", "Latur, Maharashtra", "Dhule, Maharashtra", "Korba, Chhattisgarh", "Bhilwara, Rajasthan", "Brahmapur, Odisha", "Mysore, Karnataka", "Muzaffarpur, Bihar", "Ahmednagar, Maharashtra", "Kollam, Kerala", "Raghunathganj, West Bengal", "Bilaspur, Chhattisgarh", "Shahjahanpur, Uttar Pradesh", "Thrissur, Kerala", "Alwar, Rajasthan", "Kakinada, Andhra Pradesh", "Nizamabad, Telangana", "Sagar, Madhya Pradesh", "Tumkur, Karnataka", "Hisar, Haryana", "Rohtak, Haryana", "Panipat, Haryana", "Darbhanga, Bihar", "Kharagpur, West Bengal", "Aizawl, Mizoram", "Ichalkaranji, Maharashtra", "Tirupati, Andhra Pradesh", "Karnal, Haryana", "Bathinda, Punjab", "Rampur, Uttar Pradesh", "Shivamogga, Karnataka", "Ratlam, Madhya Pradesh", "Modinagar, Uttar Pradesh", "Durg, Chhattisgarh", "Shillong, Meghalaya", "Imphal, Manipur", "Hapur, Uttar Pradesh", "Ranipet, Tamil Nadu", "Anantapur, Andhra Pradesh", "Arrah, Bihar", "Karimnagar, Telangana", "Parbhani, Maharashtra", "Etawah, Uttar Pradesh", "Bharatpur, Rajasthan", "Begusarai, Bihar", "New Delhi, Delhi", "Chhapra, Bihar", "Kadapa, Andhra Pradesh", "Ramagundam, Telangana", "Pali, Rajasthan", "Satna, Madhya Pradesh", "Vizianagaram, Andhra Pradesh", "Katihar, Bihar", "Hardwar, Uttarakhand", "Sonipat, Haryana", "Nagercoil, Tamil Nadu", "Thanjavur, Tamil Nadu", "Murwara (Katni), Madhya Pradesh", "Naihati, West Bengal", "Sambhal, Uttar Pradesh", "Nadiad, Gujarat", "Yamunanagar, Haryana", "English Bazar, West Bengal", "Eluru, Andhra Pradesh", "Munger, Bihar", "Panchkula, Haryana", "Raayachuru, Karnataka", "Panvel, Maharashtra", "Deoghar, Jharkhand", "Ongole, Andhra Pradesh", "Nandyal, Andhra Pradesh", "Morena, Madhya Pradesh", "Bhiwani, Haryana", "Porbandar, Gujarat", "Palakkad, Kerala", "Anand, Gujarat", "Purnia, Bihar", "Baharampur, West Bengal", "Barmer, Rajasthan", "Morvi, Gujarat", "Orai, Uttar Pradesh", "Bahraich, Uttar Pradesh", "Sikar, Rajasthan", "Vellore, Tamil Nadu", "Singrauli, Madhya Pradesh", "Khammam, Telangana", "Mahesana, Gujarat", "Silchar, Assam", "Sambalpur, Odisha", "Rewa, Madhya Pradesh", "Unnao, Uttar Pradesh", "Hugli-Chinsurah, West Bengal", "Raiganj, West Bengal", "Phusro, Jharkhand", "Adityapur, Jharkhand", "Alappuzha, Kerala", "Bahadurgarh, Haryana", "Machilipatnam, Andhra Pradesh", "Rae Bareli, Uttar Pradesh", "Jalpaiguri, West Bengal", "Bharuch, Gujarat", "Pathankot, Punjab", "Hoshiarpur, Punjab", "Baramula, Jammu and Kashmir", "Adoni, Andhra Pradesh", "Jind, Haryana", "Tonk, Rajasthan", "Tenali, Andhra Pradesh", "Kancheepuram, Tamil Nadu", "Vapi, Gujarat", "Sirsa, Haryana", "Navsari, Gujarat", "Mahbubnagar, Telangana", "Puri, Odisha", "Robertson Pet, Karnataka", "Erode, Tamil Nadu", "Batala, Punjab", "Haldwani-cum-Kathgodam, Uttarakhand", "Vidisha, Madhya Pradesh", "Saharsa, Bihar", "Thanesar, Haryana", "Chittoor, Andhra Pradesh", "Veraval, Gujarat", "Lakhimpur, Uttar Pradesh", "Sitapur, Uttar Pradesh", "Hindupur, Andhra Pradesh", "Santipur, West Bengal", "Balurghat, West Bengal", "Ganjbasoda, Madhya Pradesh", "Moga, Punjab", "Proddatur, Andhra Pradesh", "Srinagar, Uttarakhand", "Medinipur, West Bengal", "Habra, West Bengal", "Sasaram, Bihar", "Hajipur, Bihar", "Bhuj, Gujarat", "Shivpuri, Madhya Pradesh", "Ranaghat, West Bengal", "Shimla, Himachal Pradesh", "Tiruvannamalai, Tamil Nadu", "Kaithal, Haryana", "Rajnandgaon, Chhattisgarh", "Godhra, Gujarat", "Hazaribag, Jharkhand", "Bhimavaram, Andhra Pradesh", "Mandsaur, Madhya Pradesh", "Dibrugarh, Assam", "Kolar, Karnataka", "Bankura, West Bengal", "Mandya, Karnataka", "Dehri-on-Sone, Bihar", "Madanapalle, Andhra Pradesh", "Malerkotla, Punjab", "Lalitpur, Uttar Pradesh", "Bettiah, Bihar", "Pollachi, Tamil Nadu", "Khanna, Punjab", "Neemuch, Madhya Pradesh", "Palwal, Haryana", "Palanpur, Gujarat", "Guntakal, Andhra Pradesh", "Nabadwip, West Bengal", "Udupi, Karnataka", "Jagdalpur, Chhattisgarh", "Motihari, Bihar", "Pilibhit, Uttar Pradesh", "Dimapur, Nagaland", "Mohali, Punjab", "Sadulpur, Rajasthan", "Rajapalayam, Tamil Nadu", "Dharmavaram, Andhra Pradesh", "Kashipur, Uttarakhand", "Sivakasi, Tamil Nadu", "Darjiling, West Bengal", "Chikkamagaluru, Karnataka", "Gudivada, Andhra Pradesh", "Baleshwar Town, Odisha", "Mancherial, Telangana", "Srikakulam, Andhra Pradesh", "Adilabad, Telangana", "Yavatmal, Maharashtra", "Barnala, Punjab", "Nagaon, Assam", "Narasaraopet, Andhra Pradesh", "Raigarh, Chhattisgarh", "Roorkee, Uttarakhand", "Valsad, Gujarat", "Ambikapur, Chhattisgarh", "Giridih, Jharkhand", "Chandausi, Uttar Pradesh", "Purulia, West Bengal", "Patan, Gujarat", "Bagaha, Bihar", "Hardoi, Uttar Pradesh", "Achalpur, Maharashtra", "Osmanabad, Maharashtra", "Deesa, Gujarat", "Nandurbar, Maharashtra", "Azamgarh, Uttar Pradesh", "Ramgarh, Jharkhand", "Firozpur, Punjab", "Baripada Town, Odisha", "Karwar, Karnataka", "Siwan, Bihar", "Rajampet, Andhra Pradesh", "Pudukkottai, Tamil Nadu", "Anantnag, Jammu and Kashmir", "Tadpatri, Andhra Pradesh", "Satara, Maharashtra", "Bhadrak, Odisha", "Kishanganj, Bihar", "Suryapet, Telangana", "Wardha, Maharashtra", "Ranibennur, Karnataka", "Amreli, Gujarat", "Neyveli (TS), Tamil Nadu", "Jamalpur, Bihar", "Marmagao, Goa", "Udgir, Maharashtra", "Tadepalligudem, Andhra Pradesh", "Nagapattinam, Tamil Nadu", "Buxar, Bihar", "Aurangabad, Bihar", "Jehanabad, Bihar", "Phagwara, Punjab", "Khair, Uttar Pradesh", "Sawai Madhopur, Rajasthan", "Kapurthala, Punjab", "Chilakaluripet, Andhra Pradesh", "Aurangabad, Maharashtra", "Malappuram, Kerala", "Rewari, Haryana", "Nagaur, Rajasthan", "Sultanpur, Uttar Pradesh", "Nagda, Madhya Pradesh", "Port Blair, Andaman and Nicobar Islands", "Lakhisarai, Bihar", "Panaji, Goa", "Tinsukia, Assam", "Itarsi, Madhya Pradesh", "Kohima, Nagaland", "Balangir, Odisha", "Nawada, Bihar", "Jharsuguda, Odisha", "Jagtial, Telangana", "Viluppuram, Tamil Nadu", "Amalner, Maharashtra", "Zirakpur, Punjab", "Tanda, Uttar Pradesh", "Tiruchengode, Tamil Nadu", "Nagina, Uttar Pradesh", "Yemmiganur, Andhra Pradesh", "Vaniyambadi, Tamil Nadu", "Sarni, Madhya Pradesh", "Theni Allinagaram, Tamil Nadu", "Margao, Goa", "Akot, Maharashtra", "Sehore, Madhya Pradesh", "Mhow Cantonment, Madhya Pradesh", "Kot Kapura, Punjab", "Makrana, Rajasthan", "Pandharpur, Maharashtra", "Miryalaguda, Telangana", "Shamli, Uttar Pradesh", "Seoni, Madhya Pradesh", "Ranibandh, West Bengal", "Rishikesh, Uttarakhand", "Shahdol, Madhya Pradesh", "Medininagar (Daltonganj), Jharkhand", "Arakkonam, Tamil Nadu", "Washim, Maharashtra", "Sangrur, Punjab", "Bodhan, Telangana", "Fazilka, Punjab", "Palacole, Andhra Pradesh", "Keshod, Gujarat", "Sullurpeta, Andhra Pradesh", "Wadhwan, Gujarat", "Gurdaspur, Punjab", "Vatakara, Kerala", "Tura, Meghalaya", "Narnaul, Haryana", "Kharar, Punjab", "Yadgir, Karnataka", "Ambejogai, Maharashtra", "Ankleshwar, Gujarat", "Savarkundla, Gujarat", "Paradip, Odisha", "Virudhachalam, Tamil Nadu", "Kanhangad, Kerala", "Kadi, Gujarat", "Srivilliputhur, Tamil Nadu", "Gobindgarh, Punjab", "Tindivanam, Tamil Nadu", "Mansa, Punjab", "Taliparamba, Kerala", "Manmad, Maharashtra", "Tanuku, Andhra Pradesh", "Rayachoti, Andhra Pradesh", "Virudhunagar, Tamil Nadu", "Koyilandy, Kerala", "Jorhat, Assam", "Karjat, Maharashtra", "Kavali, Andhra Pradesh", "Mandapeta, Andhra Pradesh", "Srikalahasti, Andhra Pradesh", "Nellikuppam, Tamil Nadu", "Ramnagar, Uttarakhand", "Sihor, Gujarat", "Nellikuppam, Tamil Nadu", "Ramnagar, Uttarakhand", "Sihor, Gujarat", "Nellikuppam, Tamil Nadu", "Ramnagar, Uttarakhand", "Sihor, Gujarat"]}
-                                            />
+                                              setValue={setProfileData} col={'3'} isRequired={true}
+                                              options={["Mumbai, Maharashtra", "Delhi, Delhi", "Bengaluru, Karnataka", "Ahmedabad, Gujarat", "Hyderabad, Telangana", "Chennai, Tamil Nadu", "Kolkata, West Bengal", "Pune, Maharashtra", "Jaipur, Rajasthan", "Surat, Gujarat", "Lucknow, Uttar Pradesh", "Kanpur, Uttar Pradesh", "Nagpur, Maharashtra", "Patna, Bihar", "Indore, Madhya Pradesh", "Thane, Maharashtra", "Bhopal, Madhya Pradesh", "Visakhapatnam, Andhra Pradesh", "Vadodara, Gujarat", "Firozabad, Uttar Pradesh", "Ludhiana, Punjab", "Rajkot, Gujarat", "Agra, Uttar Pradesh", "Siliguri, West Bengal", "Nashik, Maharashtra", "Faridabad, Haryana", "Patiala, Punjab", "Meerut, Uttar Pradesh", "Kalyan-Dombivali, Maharashtra", "Vasai-Virar, Maharashtra", "Varanasi, Uttar Pradesh", "Srinagar, Jammu and Kashmir", "Dhanbad, Jharkhand", "Jodhpur, Rajasthan", "Amritsar, Punjab", "Raipur, Chhattisgarh", "Allahabad, Uttar Pradesh", "Coimbatore, Tamil Nadu", "Jabalpur, Madhya Pradesh", "Gwalior, Madhya Pradesh", "Vijayawada, Andhra Pradesh", "Madurai, Tamil Nadu", "Guwahati, Assam", "Chandigarh, Chandigarh", "Hubli-Dharwad, Karnataka", "Amroha, Uttar Pradesh", "Moradabad, Uttar Pradesh", "Gurgaon, Haryana", "Aligarh, Uttar Pradesh", "Solapur, Maharashtra", "Ranchi, Jharkhand", "Jalandhar, Punjab", "Tiruchirappalli, Tamil Nadu", "Bhubaneswar, Odisha", "Salem, Tamil Nadu", "Warangal, Telangana", "Mira-Bhayandar, Maharashtra", "Thiruvananthapuram, Kerala", "Bhiwandi, Maharashtra", "Saharanpur, Uttar Pradesh", "Guntur, Andhra Pradesh", "Amravati, Maharashtra", "Bikaner, Rajasthan", "Noida, Uttar Pradesh", "Jamshedpur, Jharkhand", "Bhilai Nagar, Chhattisgarh", "Cuttack, Odisha", "Kochi, Kerala", "Udaipur, Rajasthan", "Bhavnagar, Gujarat", "Dehradun, Uttarakhand", "Asansol, West Bengal", "Nanded-Waghala, Maharashtra", "Ajmer, Rajasthan", "Jamnagar, Gujarat", "Ujjain, Madhya Pradesh", "Sangli, Maharashtra", "Loni, Uttar Pradesh", "Jhansi, Uttar Pradesh", "Pondicherry, Puducherry", "Nellore, Andhra Pradesh", "Jammu, Jammu and Kashmir", "Belagavi, Karnataka", "Raurkela, Odisha", "Mangaluru, Karnataka", "Tirunelveli, Tamil Nadu", "Malegaon, Maharashtra", "Gaya, Bihar", "Tiruppur, Tamil Nadu", "Davanagere, Karnataka", "Kozhikode, Kerala", "Akola, Maharashtra", "Kurnool, Andhra Pradesh", "Bokaro Steel City, Jharkhand", "Rajahmundry, Andhra Pradesh", "Ballari, Karnataka", "Agartala, Tripura", "Bhagalpur, Bihar", "Latur, Maharashtra", "Dhule, Maharashtra", "Korba, Chhattisgarh", "Bhilwara, Rajasthan", "Brahmapur, Odisha", "Mysore, Karnataka", "Muzaffarpur, Bihar", "Ahmednagar, Maharashtra", "Kollam, Kerala", "Raghunathganj, West Bengal", "Bilaspur, Chhattisgarh", "Shahjahanpur, Uttar Pradesh", "Thrissur, Kerala", "Alwar, Rajasthan", "Kakinada, Andhra Pradesh", "Nizamabad, Telangana", "Sagar, Madhya Pradesh", "Tumkur, Karnataka", "Hisar, Haryana", "Rohtak, Haryana", "Panipat, Haryana", "Darbhanga, Bihar", "Kharagpur, West Bengal", "Aizawl, Mizoram", "Ichalkaranji, Maharashtra", "Tirupati, Andhra Pradesh", "Karnal, Haryana", "Bathinda, Punjab", "Rampur, Uttar Pradesh", "Shivamogga, Karnataka", "Ratlam, Madhya Pradesh", "Modinagar, Uttar Pradesh", "Durg, Chhattisgarh", "Shillong, Meghalaya", "Imphal, Manipur", "Hapur, Uttar Pradesh", "Ranipet, Tamil Nadu", "Anantapur, Andhra Pradesh", "Arrah, Bihar", "Karimnagar, Telangana", "Parbhani, Maharashtra", "Etawah, Uttar Pradesh", "Bharatpur, Rajasthan", "Begusarai, Bihar", "New Delhi, Delhi", "Chhapra, Bihar", "Kadapa, Andhra Pradesh", "Ramagundam, Telangana", "Pali, Rajasthan", "Satna, Madhya Pradesh", "Vizianagaram, Andhra Pradesh", "Katihar, Bihar", "Hardwar, Uttarakhand", "Sonipat, Haryana", "Nagercoil, Tamil Nadu", "Thanjavur, Tamil Nadu", "Murwara (Katni), Madhya Pradesh", "Naihati, West Bengal", "Sambhal, Uttar Pradesh", "Nadiad, Gujarat", "Yamunanagar, Haryana", "English Bazar, West Bengal", "Eluru, Andhra Pradesh", "Munger, Bihar", "Panchkula, Haryana", "Raayachuru, Karnataka", "Panvel, Maharashtra", "Deoghar, Jharkhand", "Ongole, Andhra Pradesh", "Nandyal, Andhra Pradesh", "Morena, Madhya Pradesh", "Bhiwani, Haryana", "Porbandar, Gujarat", "Palakkad, Kerala", "Anand, Gujarat", "Purnia, Bihar", "Baharampur, West Bengal", "Barmer, Rajasthan", "Morvi, Gujarat", "Orai, Uttar Pradesh", "Bahraich, Uttar Pradesh", "Sikar, Rajasthan", "Vellore, Tamil Nadu", "Singrauli, Madhya Pradesh", "Khammam, Telangana", "Mahesana, Gujarat", "Silchar, Assam", "Sambalpur, Odisha", "Rewa, Madhya Pradesh", "Unnao, Uttar Pradesh", "Hugli-Chinsurah, West Bengal", "Raiganj, West Bengal", "Phusro, Jharkhand", "Adityapur, Jharkhand", "Alappuzha, Kerala", "Bahadurgarh, Haryana", "Machilipatnam, Andhra Pradesh", "Rae Bareli, Uttar Pradesh", "Jalpaiguri, West Bengal", "Bharuch, Gujarat", "Pathankot, Punjab", "Hoshiarpur, Punjab", "Baramula, Jammu and Kashmir", "Adoni, Andhra Pradesh", "Jind, Haryana", "Tonk, Rajasthan", "Tenali, Andhra Pradesh", "Kancheepuram, Tamil Nadu", "Vapi, Gujarat", "Sirsa, Haryana", "Navsari, Gujarat", "Mahbubnagar, Telangana", "Puri, Odisha", "Robertson Pet, Karnataka", "Erode, Tamil Nadu", "Batala, Punjab", "Haldwani-cum-Kathgodam, Uttarakhand", "Vidisha, Madhya Pradesh", "Saharsa, Bihar", "Thanesar, Haryana", "Chittoor, Andhra Pradesh", "Veraval, Gujarat", "Lakhimpur, Uttar Pradesh", "Sitapur, Uttar Pradesh", "Hindupur, Andhra Pradesh", "Santipur, West Bengal", "Balurghat, West Bengal", "Ganjbasoda, Madhya Pradesh", "Moga, Punjab", "Proddatur, Andhra Pradesh", "Srinagar, Uttarakhand", "Medinipur, West Bengal", "Habra, West Bengal", "Sasaram, Bihar", "Hajipur, Bihar", "Bhuj, Gujarat", "Shivpuri, Madhya Pradesh", "Ranaghat, West Bengal", "Shimla, Himachal Pradesh", "Tiruvannamalai, Tamil Nadu", "Kaithal, Haryana", "Rajnandgaon, Chhattisgarh", "Godhra, Gujarat", "Hazaribag, Jharkhand", "Bhimavaram, Andhra Pradesh", "Mandsaur, Madhya Pradesh", "Dibrugarh, Assam", "Kolar, Karnataka", "Bankura, West Bengal", "Mandya, Karnataka", "Dehri-on-Sone, Bihar", "Madanapalle, Andhra Pradesh", "Malerkotla, Punjab", "Lalitpur, Uttar Pradesh", "Bettiah, Bihar", "Pollachi, Tamil Nadu", "Khanna, Punjab", "Neemuch, Madhya Pradesh", "Palwal, Haryana", "Palanpur, Gujarat", "Guntakal, Andhra Pradesh", "Nabadwip, West Bengal", "Udupi, Karnataka", "Jagdalpur, Chhattisgarh", "Motihari, Bihar", "Pilibhit, Uttar Pradesh", "Dimapur, Nagaland", "Mohali, Punjab", "Sadulpur, Rajasthan", "Rajapalayam, Tamil Nadu", "Dharmavaram, Andhra Pradesh", "Kashipur, Uttarakhand", "Sivakasi, Tamil Nadu", "Darjiling, West Bengal", "Chikkamagaluru, Karnataka", "Gudivada, Andhra Pradesh", "Baleshwar Town, Odisha", "Mancherial, Telangana", "Srikakulam, Andhra Pradesh", "Adilabad, Telangana", "Yavatmal, Maharashtra", "Barnala, Punjab", "Nagaon, Assam", "Narasaraopet, Andhra Pradesh", "Raigarh, Chhattisgarh", "Roorkee, Uttarakhand", "Valsad, Gujarat", "Ambikapur, Chhattisgarh", "Giridih, Jharkhand", "Chandausi, Uttar Pradesh", "Purulia, West Bengal", "Patan, Gujarat", "Bagaha, Bihar", "Hardoi, Uttar Pradesh", "Achalpur, Maharashtra", "Osmanabad, Maharashtra", "Deesa, Gujarat", "Nandurbar, Maharashtra", "Azamgarh, Uttar Pradesh", "Ramgarh, Jharkhand", "Firozpur, Punjab", "Baripada Town, Odisha", "Karwar, Karnataka", "Siwan, Bihar", "Rajampet, Andhra Pradesh", "Pudukkottai, Tamil Nadu", "Anantnag, Jammu and Kashmir", "Tadpatri, Andhra Pradesh", "Satara, Maharashtra", "Bhadrak, Odisha", "Kishanganj, Bihar", "Suryapet, Telangana", "Wardha, Maharashtra", "Ranibennur, Karnataka", "Amreli, Gujarat", "Neyveli (TS), Tamil Nadu", "Jamalpur, Bihar", "Marmagao, Goa", "Udgir, Maharashtra", "Tadepalligudem, Andhra Pradesh", "Nagapattinam, Tamil Nadu", "Buxar, Bihar", "Aurangabad, Bihar", "Jehanabad, Bihar", "Phagwara, Punjab", "Khair, Uttar Pradesh", "Sawai Madhopur, Rajasthan", "Kapurthala, Punjab", "Chilakaluripet, Andhra Pradesh", "Aurangabad, Maharashtra", "Malappuram, Kerala", "Rewari, Haryana", "Nagaur, Rajasthan", "Sultanpur, Uttar Pradesh", "Nagda, Madhya Pradesh", "Port Blair, Andaman and Nicobar Islands", "Lakhisarai, Bihar", "Panaji, Goa", "Tinsukia, Assam", "Itarsi, Madhya Pradesh", "Kohima, Nagaland", "Balangir, Odisha", "Nawada, Bihar", "Jharsuguda, Odisha", "Jagtial, Telangana", "Viluppuram, Tamil Nadu", "Amalner, Maharashtra", "Zirakpur, Punjab", "Tanda, Uttar Pradesh", "Tiruchengode, Tamil Nadu", "Nagina, Uttar Pradesh", "Yemmiganur, Andhra Pradesh", "Vaniyambadi, Tamil Nadu", "Sarni, Madhya Pradesh", "Theni Allinagaram, Tamil Nadu", "Margao, Goa", "Akot, Maharashtra", "Sehore, Madhya Pradesh", "Mhow Cantonment, Madhya Pradesh", "Kot Kapura, Punjab", "Makrana, Rajasthan", "Pandharpur, Maharashtra", "Miryalaguda, Telangana", "Shamli, Uttar Pradesh", "Seoni, Madhya Pradesh", "Ranibandh, West Bengal", "Rishikesh, Uttarakhand", "Shahdol, Madhya Pradesh", "Medininagar (Daltonganj), Jharkhand", "Arakkonam, Tamil Nadu", "Washim, Maharashtra", "Sangrur, Punjab", "Bodhan, Telangana", "Fazilka, Punjab", "Palacole, Andhra Pradesh", "Keshod, Gujarat", "Sullurpeta, Andhra Pradesh", "Wadhwan, Gujarat", "Gurdaspur, Punjab", "Vatakara, Kerala", "Tura, Meghalaya", "Narnaul, Haryana", "Kharar, Punjab", "Yadgir, Karnataka", "Ambejogai, Maharashtra", "Ankleshwar, Gujarat", "Savarkundla, Gujarat", "Paradip, Odisha", "Virudhachalam, Tamil Nadu", "Kanhangad, Kerala", "Kadi, Gujarat", "Srivilliputhur, Tamil Nadu", "Gobindgarh, Punjab", "Tindivanam, Tamil Nadu", "Mansa, Punjab", "Taliparamba, Kerala", "Manmad, Maharashtra", "Tanuku, Andhra Pradesh", "Rayachoti, Andhra Pradesh", "Virudhunagar, Tamil Nadu", "Koyilandy, Kerala", "Jorhat, Assam", "Karjat, Maharashtra", "Kavali, Andhra Pradesh", "Mandapeta, Andhra Pradesh", "Srikalahasti, Andhra Pradesh", "Nellikuppam, Tamil Nadu", "Ramnagar, Uttarakhand", "Sihor, Gujarat", "Nellikuppam, Tamil Nadu", "Ramnagar, Uttarakhand", "Sihor, Gujarat", "Nellikuppam, Tamil Nadu", "Ramnagar, Uttarakhand", "Sihor, Gujarat"]}
+                                    />
                                     <ButtonRow label={'Gender'} value={profileData.gender} disp='gender'
                                                setValue={setProfileData} col={4} isRequired={true}
                                                buttonNames={['Male', 'Female', 'Others']}/>
@@ -558,7 +574,7 @@ const EditProfile = ({userId}) => {
                                                col={' col-span-full'} buttonsPerRow={4}
                                                buttonNames={['Software Developer', 'Data Scientist', 'Product Manager', "DevOps Engineer", "Cybersecurity Analyst", "AI/ML Engineer", "Consultant"]}/>
                                     {/* Yaha par atleast ek jab select karo tab niche ke options dikhane hain dhruv. */}
-                                    <SkillRating careers={profileData.career_path}
+                                    <SkillRating fetchdata={setRatingData} careers={profileData.career_path}
                                                  label='Rate Yourself in each skill for your desired objective:'/>
                                     <div className="w-full flex justify-between px-2 col-span-full mt-4">
                                         <button type="button" onClick={handleBack}
@@ -599,58 +615,22 @@ const EditProfile = ({userId}) => {
                                         className="col-span-2 lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-8">
 
                                         {selectedCareer ? (<>
-                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][0]}</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center mt-1">
-                                                    <button type='button'
-                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Assess Yourself
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][1]}</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center mt-1">
-                                                    <button type='button'
-                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Assess Yourself
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][2]}</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center mt-1">
-                                                    <button type='button'
-                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Assess Yourself
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][3]}</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center mt-1">
-                                                    <button type='button'
-                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Assess Yourself
-                                                    </button>
-                                                </div>
-                                            </div>
+                                            {CareerJobs[selectedCareer].map((item,index) => {
+                                                return (<div className="flex gap-4 px-auto mx-auto col-span-1">
+                                                    <div
+                                                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
+                                                        <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][index]}</p>
+                                                        <StarRating rating={ratingData[CareerJobs[selectedCareer][index]]}/>
+                                                    </div>
+                                                    <div className="text-center mt-1">
+                                                        <button type='button'
+                                                                className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
+                                                            Assess Yourself
+                                                        </button>
+                                                    </div>
+                                                </div>)
+                                            })}
+
                                         </>) : (<></>)}
 
 
@@ -692,11 +672,11 @@ const EditProfile = ({userId}) => {
                                                           setValue={setProfileData} col={2}/>
                                                     {/* USE MM YYYY ONLY */}
                                                     <Text name={'Start Date'}
-                                                          value={(profileData.internships[index].start_date)?(profileData.internships[index].start_date):(profileData.internships[index].start_year + "-" + (months.indexOf(profileData.internships[index].start_month) + 1).toString().padStart(2, '0') + "-01")}
+                                                          value={(profileData.internships[index].start_date) ? (profileData.internships[index].start_date) : (profileData.internships[index].start_year + "-" + (months.indexOf(profileData.internships[index].start_month) + 1).toString().padStart(2, '0') + "-01")}
                                                           disp='start_date' index={index} list='internships'
                                                           setValue={setProfileData} type={'date'} col={3}/>
                                                     <Text name={'End Date'}
-                                                          value={(profileData.internships[index].end_date)?(profileData.internships[index].end_date):(profileData.internships[index].end_year + "-" + (months.indexOf(profileData.internships[index].end_month) + 1).toString().padStart(2, '0') + "-01")}
+                                                          value={(profileData.internships[index].end_date) ? (profileData.internships[index].end_date) : (profileData.internships[index].end_year + "-" + (months.indexOf(profileData.internships[index].end_month) + 1).toString().padStart(2, '0') + "-01")}
                                                           disp='end_date' list='internships' index={index}
                                                           setValue={setProfileData} type={'date'} col={3}/>
                                                     <Block name={'Responsibilities'}
@@ -771,11 +751,11 @@ const EditProfile = ({userId}) => {
                                                   setValue={setProfileData} col={2}/>
                                             {/* USE MM YYYY ONLY */}
                                             <Text name={'Start Date'}
-                                                  value={(profileData.projects[index].start_date)?(profileData.projects[index].start_date):(profileData.projects[index].start_year + "-" + (months.indexOf(profileData.projects[index].start_month) + 1).toString().padStart(2, '0') + "-01")}
+                                                  value={(profileData.projects[index].start_date) ? (profileData.projects[index].start_date) : (profileData.projects[index].start_year + "-" + (months.indexOf(profileData.projects[index].start_month) + 1).toString().padStart(2, '0') + "-01")}
                                                   disp='start_date' index={index} list='projects'
                                                   setValue={setProfileData} type={'date'} col={3}/>
                                             <Text name={'End Date'}
-                                                  value={(profileData.projects[index].end_date)?(profileData.projects[index].end_date):(profileData.projects[index].end_year + "-" + (months.indexOf(profileData.projects[index].end_month) + 1).toString().padStart(2, '0') + "-01")}
+                                                  value={(profileData.projects[index].end_date) ? (profileData.projects[index].end_date) : (profileData.projects[index].end_year + "-" + (months.indexOf(profileData.projects[index].end_month) + 1).toString().padStart(2, '0') + "-01")}
                                                   disp='end_date' list='projects' index={index}
                                                   setValue={setProfileData} type={'date'} col={3}/>
                                             <Block name={'Responsibilities'}
@@ -849,11 +829,11 @@ const EditProfile = ({userId}) => {
                                                   setValue={setProfileData} col={2}/>
                                             {/* USE MM YYYY ONLY */}
                                             <Text name={'Start Date'}
-                                                  value={(profileData.volunteers[index].start_date)?(profileData.volunteers[index].start_date):(profileData.volunteers[index].start_year + "-" + (months.indexOf(profileData.volunteers[index].start_month) + 1).toString().padStart(2, '0') + "-01")}
+                                                  value={(profileData.volunteers[index].start_date) ? (profileData.volunteers[index].start_date) : (profileData.volunteers[index].start_year + "-" + (months.indexOf(profileData.volunteers[index].start_month) + 1).toString().padStart(2, '0') + "-01")}
                                                   disp='start_date' index={index} list='volunteers'
                                                   setValue={setProfileData} type={'date'} col={3}/>
                                             <Text name={'End Date'}
-                                                  value={(profileData.volunteers[index].end_date)?(profileData.volunteers[index].end_date):(profileData.volunteers[index].end_year + "-" + (months.indexOf(profileData.volunteers[index].end_month) + 1).toString().padStart(2, '0') + "-01")}
+                                                  value={(profileData.volunteers[index].end_date) ? (profileData.volunteers[index].end_date) : (profileData.volunteers[index].end_year + "-" + (months.indexOf(profileData.volunteers[index].end_month) + 1).toString().padStart(2, '0') + "-01")}
                                                   disp='end_date' list='volunteers' index={index}
                                                   setValue={setProfileData} type={'date'} col={3}/>
                                             <Block name={'Brief Description'}
@@ -928,12 +908,12 @@ const EditProfile = ({userId}) => {
                                                   setValue={setProfileData} col={2}/>
                                             {/* USE MM YYYY ONLY */}
                                             <Text name={'Start Date'}
-                                                  value={(profileData.extra_curriculars[index].start_date)?(profileData.extra_curriculars[index].start_date):(profileData.extra_curriculars[index].start_year + "-" + (months.indexOf(profileData.extra_curriculars[index].start_month) + 1).toString().padStart(2, '0') + "-01")}
+                                                  value={(profileData.extra_curriculars[index].start_date) ? (profileData.extra_curriculars[index].start_date) : (profileData.extra_curriculars[index].start_year + "-" + (months.indexOf(profileData.extra_curriculars[index].start_month) + 1).toString().padStart(2, '0') + "-01")}
                                                   disp='start_date' index={index}
                                                   list='extra_curriculars'
                                                   setValue={setProfileData} type={'date'} col={3}/>
                                             <Text name={'End Date'}
-                                                  value={(profileData.extra_curriculars[index].end_date)?(profileData.extra_curriculars[index].end_date):(profileData.extra_curriculars[index].end_year + "-" + (months.indexOf(profileData.extra_curriculars[index].end_month) + 1).toString().padStart(2, '0') + "-01")}
+                                                  value={(profileData.extra_curriculars[index].end_date) ? (profileData.extra_curriculars[index].end_date) : (profileData.extra_curriculars[index].end_year + "-" + (months.indexOf(profileData.extra_curriculars[index].end_month) + 1).toString().padStart(2, '0') + "-01")}
                                                   disp='end_date' list='extra_curriculars' index={index}
                                                   setValue={setProfileData} type={'date'} col={3}/>
                                             <Block name={'Contribution'}
