@@ -122,11 +122,6 @@ const Dashboard = () => {
         return `${studyYear}${suffix} Year`;
     }
 
-    // Example usage
-    const courseStartDate = "2022-05-31T18:30:00.000Z";
-    console.log(calculateYearOfStudy(courseStartDate));
-
-
     const handlelogout = async () => {
         await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentauth/clear`).then(() => {
             router.push('/login')

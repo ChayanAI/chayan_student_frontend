@@ -177,8 +177,19 @@ const InterviewPage = () => {
     resetSilenceTimeout();
   };
 
-  recognition.onerror = (event) => {
-    alert('Error occurred in speech recognition: ' + event.error);
+  recognition.onerror = function(event) {
+    if (event.error === 'network') {
+      console.error('Network error occurred during speech recognition:', event);
+      alert('Network error occurred. Please check your connection and try again.');
+      // Optionally retry after a delay
+      setTimeout(() => recognition.start(), 5000);
+    } else if (event.error === 'not-allowed' || event.error === 'permission-denied') {
+      console.error('Microphone access denied:', event);
+      alert('Microphone access denied. Please allow microphone access and try again.');
+    } else {
+      console.error('Error occurred in speech recognition:', event);
+      alert(`Error occurred: ${event.error}`);
+    }
   };
 
   recognition.onend = () => {
