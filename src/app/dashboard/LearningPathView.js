@@ -13,6 +13,7 @@ const LearningPathView = () => {
     const [loader, setLoader] = useState(false)
     const [CareerJobs, setCareerJobs] = useState()
     const [ratingData, setRatingData] = useState({})
+
     useEffect(() => {
         (async () => {
             await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/auth/verify`).then(async (res) => {
@@ -431,13 +432,7 @@ const LearningPathView = () => {
                                                     </div>
                                                 </td>
                                                 <td className="px-4 py-4 text-center">
-                                                    {[...Array(5)].map((_, i) => (
-                                                        <FaStar
-                                                            key={i}
-                                                            className={`inline-block w-4 h-4 mx-1 cursor-pointer  ${i < 0 ? 'text-yellow-500' : 'text-gray-300'}`}
-                                                            onClick={() => handleStarClick(index, i + 1)}
-                                                        />
-                                                    ))}
+                                                    <StarRating/>
                                                 </td>
                                                 <td className="px-4 py-4 text-center">
                                                     {/*<div*/}
