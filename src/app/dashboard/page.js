@@ -27,6 +27,9 @@ const Dashboard = () => {
         {title: 'Projects', filled: false},
         {title: 'Volunteer work', filled: false},
         {title: 'Extra-curricular activities', filled: false},
+        {title: 'Certificates', filled: false},
+        {title: 'Awards & Distinctions', filled: false},
+        {title: 'Distinctions', filled: false},
 
     ]);
     const [exp, setExp] = useState()
@@ -118,11 +121,6 @@ const Dashboard = () => {
 
         return `${studyYear}${suffix} Year`;
     }
-
-    // Example usage
-    const courseStartDate = "2022-05-31T18:30:00.000Z";
-    console.log(calculateYearOfStudy(courseStartDate));
-
 
     const handlelogout = async () => {
         await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentauth/clear`).then(() => {
