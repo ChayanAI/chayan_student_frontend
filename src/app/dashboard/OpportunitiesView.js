@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import { FaHeart, FaStar } from 'react-icons/fa';
+import {FaHeart, FaStar} from 'react-icons/fa';
 
 const OpportunitiesView = () => {
     const [jobs, setJobs] = useState([]);
@@ -8,10 +8,28 @@ const OpportunitiesView = () => {
     const [likes, setLikes] = useState(20);
     const [likedJobs, setLikedJobs] = useState(new Set());
     const [applications, setApplications] = useState(20);
-    const [skillRatings, setSkillRatings] = useState({ mustHave: [], goodToHave: [] });
+    const [skillRatings, setSkillRatings] = useState({mustHave: [], goodToHave: []});
     const [appliedJobs, setAppliedJobs] = useState(new Set()); // Track applied jobs
     const [company, setCompany] = useState(''); // Store the company name
+    const [loader, setLoader] = useState(false)
 
+    useEffect(() => {
+        (async () => {
+            await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/auth/verify`).then(async (res) => {
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentjob/getlikesbyId`, {user_id: res.data.id}).then((res) => {
+                    let f = []
+                    res.data.map((item)=>{
+                        f.push(item.job_id)
+                    })
+                    setLikedJobs(new Set(f))
+                    // console.log(new Set(f))
+                })
+            })
+
+        setLoader(true)
+        })()
+
+    }, [])
 
     useEffect(() => {
         const fetchJobs = async () => {
@@ -35,24 +53,43 @@ const OpportunitiesView = () => {
         fetchCompany(job.recruiter_id);
     };
 
-    const handleLike = (jobId) => {
-        setLikedJobs((prevSet) => {
-            const newSet = new Set(prevSet);
-            if (newSet.has(jobId)) {
-                newSet.delete(jobId);
-                setLikes((prevLikes) => ({
-                    ...prevLikes,
-                    [jobId]: (prevLikes[jobId] || 1) - 1,
-                }));
-            } else {
-                newSet.add(jobId);
-                setLikes((prevLikes) => ({
-                    ...prevLikes,
-                    [jobId]: (prevLikes[jobId] || 0) + 1,
-                }));
-            }
-            return newSet;
-        });
+    const handleLike = async (jobId) => {
+        await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/auth/verify`).then(async (res) => {
+            setLikedJobs((prevSet) => {
+                const newSet = new Set(prevSet);
+                if (newSet.has(jobId)) {
+                    axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentjob/unlike`, {
+                        user_id: res.data.id,
+                        job_id: jobId
+                    }).then((res) => {
+                        newSet.delete(jobId);
+                        setLikes((prevLikes) => ({
+                            ...prevLikes,
+                            [jobId]: (prevLikes[jobId] || 1) - 1,
+                        }));
+                    })
+
+                } else {
+                    axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentjob/like`, {
+                        user_id: res.data.id,
+                        job_id: jobId
+                    }).then((res) => {
+                        newSet.add(jobId);
+                        setLikes((prevLikes) => ({
+                            ...prevLikes,
+                            [jobId]: (prevLikes[jobId] || 0) + 1,
+                        }));
+                    })
+
+                }
+                // console.log(newSet)
+                return newSet;
+            });
+
+        })
+
+        // console.log(likedJobs)
+
     };
 
     const handleApply = (jobId) => {
@@ -70,21 +107,21 @@ const OpportunitiesView = () => {
         // Handle mustHaveSkills
         let mustHaveSkills = [];
         if (job.skills_required && job.skills_required !== 'None') {
-            mustHaveSkills = job.skills_required.split(',').map(skill => ({ skill, rating: 0 }));
+            mustHaveSkills = job.skills_required.split(',').map(skill => ({skill, rating: 0}));
         }
 
         // Handle goodToHaveSkills
         let goodToHaveSkills = [];
         if (job.skills_preferred && job.skills_preferred !== 'None') {
-            goodToHaveSkills = job.skills_preferred.split(',').map(skill => ({ skill, rating: 0 }));
+            goodToHaveSkills = job.skills_preferred.split(',').map(skill => ({skill, rating: 0}));
         }
 
-        setSkillRatings({ mustHave: mustHaveSkills, goodToHave: goodToHaveSkills });
+        setSkillRatings({mustHave: mustHaveSkills, goodToHave: goodToHaveSkills});
     };
 
     const fetchCompany = async (recruiterId) => {
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, { user_id: recruiterId });
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, {user_id: recruiterId});
             // console.log("li", response.data)
             setCompany(response.data || 'Company Name');
         } catch (error) {
@@ -95,15 +132,21 @@ const OpportunitiesView = () => {
 
 
     const handleRatingChange = (type, index, rating) => {
-        const updatedRatings = { ...skillRatings };
+        const updatedRatings = {...skillRatings};
         updatedRatings[type][index].rating = rating;
         setSkillRatings(updatedRatings);
     };
 
-    return (
-        <div className="p-4 bg-white rounded-lg shadow-md flex transition-transform duration-300 overflow-y-auto border-2 border-blue-500" style={{ minHeight: '38rem', height: '39.8rem' }}>
+    if(!loader){
+        return(<></>)
+    }
+    else{
+        return (
+        <div
+            className="p-4 bg-white rounded-lg shadow-md flex transition-transform duration-300 overflow-y-auto border-2 border-blue-500"
+            style={{minHeight: '38rem', height: '39.8rem'}}>
             {/* Left Column: Job Cards */}
-            <div className="w-1/5 pr-4 overflow-y-auto" style={{ height: '100%', width: '27%' }}>
+            <div className="w-1/5 pr-4 overflow-y-auto" style={{height: '100%', width: '27%'}}>
                 {jobs.map((job, index) => (
                     <div
                         key={job.id}
@@ -114,19 +157,23 @@ const OpportunitiesView = () => {
                             <img
                                 src={job.companyLogo || '/media/images/amazon_PNG21.png'}
                                 alt={job.company_name}
-                                className="h-12 w-12 mr-3" style={{ marginTop: '-5rem' }}
+                                className="h-12 w-12 mr-3" style={{marginTop: '-5rem'}}
                             />
                             <div>
                                 <h3 className="text-lg font-semibold">{job.title}</h3>
                                 <p className="text-sm text-gray-600 mb-1">CTC - {job.salary}</p>
-                                <p className="text-sm text-gray-600 mb-1">Last Date - {new Date(job.last_date).toLocaleDateString()}</p>
+                                <p className="text-sm text-gray-600 mb-1">Last Date
+                                    - {new Date(job.last_date).toLocaleDateString()}</p>
                                 <p className="text-sm text-gray-600 mb-1">Branch - {job.branch_required}</p>
                                 <p className="text-sm text-gray-600 mb-1">CGPA - {job.cgpa_required} and above</p>
                             </div>
                         </div>
                         <div className="flex items-center justify-between mt-2">
-                            <div className="flex flex-col items-center cursor-pointer" onClick={() => handleLike(job.id)}>
-                                <span className={`text-lg select-none ${likedJobs.has(job.id) ? 'text-blue-500' : 'text-green-500'}`}>{likedJobs.has(job.id) ? 'Liked' : 'Like'}</span>
+                            <div className="flex flex-col items-center cursor-pointer" onClick={() => {
+                                handleLike(job.id)
+                            }}>
+                                <span
+                                    className={`text-lg select-none ${likedJobs.has(job.id) ? 'text-blue-500' : 'text-green-500'}`}>{likedJobs.has(job.id) ? 'Liked' : 'Like'}</span>
                                 {/*<span className={`text-sm ${likedJobs.has(job.id) ? 'text-blue-500' : 'text-gray-600'}`}>{likes[job.id] || 0} {likedJobs.has(job.id) ? ' Students Liked' : 'Students Liked'}</span>*/}
                             </div>
                             {/*<div className="flex flex-col items-center cursor-pointer" onClick={() => handleApply(job.id)}>*/}
@@ -139,10 +186,12 @@ const OpportunitiesView = () => {
             </div>
 
             {/* Right Column: Job Details and Claim Candidacy */}
-            <div className="w-4/5 pl-2 flex " style={{ height: '100%' }}>
+            <div className="w-4/5 pl-2 flex " style={{height: '100%'}}>
                 {selectedJob && (
                     <>
-                        <div className="w-2/3 p-4 pl-6 bg-white rounded-lg shadow-md h-auto mr-4 overflow-y-auto border-2 border-blue-600" style={{ height: '100%', width: '62%' }}>
+                        <div
+                            className="w-2/3 p-4 pl-6 bg-white rounded-lg shadow-md h-auto mr-4 overflow-y-auto border-2 border-blue-600"
+                            style={{height: '100%', width: '62%'}}>
                             {/* Company Details */}
                             <div className="flex items-left mb-2">
                                 <div>
@@ -164,17 +213,23 @@ const OpportunitiesView = () => {
                             {/* Job Role Information */}
                             <div className="mb-2">
                                 <h2 className="text-lg font-semibold mb-1">{selectedJob.title}</h2>
-                                <p className="text-gray-800 text-sm mb-2">{selectedJob.department || Department} | Location - {company.office_address || 'N/A'}</p>
+                                <p className="text-gray-800 text-sm mb-2">{selectedJob.department || Department} |
+                                    Location - {company.office_address || 'N/A'}</p>
                                 <div className="grid grid-cols-3 gap-1 text-sm text-gray-800 border border-gray-300">
                                     {/* Header Row */}
-                                    <div className="col-span-1 bg-blue-600 text-white text-center p-2"><strong></strong></div>
-                                    <div className="col-span-1 bg-blue-600 text-white text-center p-2"><strong>Must Have</strong></div>
-                                    <div className="col-span-1 bg-blue-600 text-white text-center p-2"><strong>Good to Have</strong></div>
+                                    <div className="col-span-1 bg-blue-600 text-white text-center p-2"><strong></strong>
+                                    </div>
+                                    <div className="col-span-1 bg-blue-600 text-white text-center p-2"><strong>Must
+                                        Have</strong></div>
+                                    <div className="col-span-1 bg-blue-600 text-white text-center p-2"><strong>Good to
+                                        Have</strong></div>
 
                                     {/* Row 1 */}
                                     <div className="p-2   bg-gray-300 border-gray-300">CGPA/Pct</div>
-                                    <div className="p-2  bg-gray-300 border-gray-300">{selectedJob.cgpa_required || 'None'}</div>
-                                    <div className="p-2   bg-gray-300 border-gray-300">{selectedJob.cgpa_preferred || 'None'}</div>
+                                    <div
+                                        className="p-2  bg-gray-300 border-gray-300">{selectedJob.cgpa_required || 'None'}</div>
+                                    <div
+                                        className="p-2   bg-gray-300 border-gray-300">{selectedJob.cgpa_preferred || 'None'}</div>
 
                                     {/* Row 2 */}
                                     <div className="p-2  border-gray-300">Branch</div>
@@ -183,8 +238,10 @@ const OpportunitiesView = () => {
 
                                     {/* Row 3 */}
                                     <div className="p-2  bg-gray-300 border-gray-300">Certification</div>
-                                    <div className="p-2  bg-gray-300 border-gray-300">{selectedJob.certification_required || 'None'}</div>
-                                    <div className="p-2  bg-gray-300 border-gray-300">{selectedJob.certification_preferred || 'None'}</div>
+                                    <div
+                                        className="p-2  bg-gray-300 border-gray-300">{selectedJob.certification_required || 'None'}</div>
+                                    <div
+                                        className="p-2  bg-gray-300 border-gray-300">{selectedJob.certification_preferred || 'None'}</div>
 
                                     {/* Row 4 */}
                                     <div className="p-2  border-gray-300">Skills</div>
@@ -211,7 +268,8 @@ const OpportunitiesView = () => {
                         </div>
 
                         {/* Claim Your Candidacy */}
-                        <div className=" p-2 bg-white rounded-lg shadow-md h-auto overflow-y-auto" style={{ maxWidth: '100%' }}>
+                        <div className=" p-2 bg-white rounded-lg shadow-md h-auto overflow-y-auto"
+                             style={{maxWidth: '100%'}}>
                             <h2 className="text-lg pt-2 text-center font-semibold mb-4">Claim Your Candidacy</h2>
 
                             {/* Must Have Skills */}
@@ -220,30 +278,31 @@ const OpportunitiesView = () => {
                                     <h3 className="text-lg pl-2 font-semibold mb-2">Must Have Skills</h3>
                                     <table className="min-w-full divide-y divide-gray-200 mb-6">
                                         <thead className="bg-gray-50">
-                                            <tr>
-                                                <th className="px-3 py-3 text-left text-xs font-medium  tracking-wider"></th>
-                                                <th className="px-3 py-3 text-left text-sm font-medium text-gray-900 tracking-wider">Self Rating <span className="text-red-500 text-xl">*</span></th>
-                                                <th className="px-3 py-3 text-left text-sm font-medium text-gray-900 tracking-wider">Assessment</th>
-                                            </tr>
+                                        <tr>
+                                            <th className="px-3 py-3 text-left text-xs font-medium  tracking-wider"></th>
+                                            <th className="px-3 py-3 text-left text-sm font-medium text-gray-900 tracking-wider">Self
+                                                Rating <span className="text-red-500 text-xl">*</span></th>
+                                            <th className="px-3 py-3 text-left text-sm font-medium text-gray-900 tracking-wider">Assessment</th>
+                                        </tr>
                                         </thead>
                                         <tbody className="bg-white divide-y divide-gray-200">
-                                            {skillRatings.mustHave.map((skill, index) => (
-                                                <tr key={index}>
-                                                    <td className="px-3 py-3 whitespace-normal text-sm font-medium text-gray-900 w-32 break-words">{skill.skill}</td>
-                                                    <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
-                                                        <div className="flex">
-                                                            {[...Array(5)].map((_, i) => (
-                                                                <FaStar
-                                                                    key={i}
-                                                                    className={`cursor-pointer text-xl ${i < skill.rating ? 'text-yellow-400' : 'text-gray-300'}`}
-                                                                    onClick={() => handleRatingChange('mustHave', index, i + 1)}
-                                                                />
-                                                            ))}
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-2 whitespace-nowrap text-sm text-red-500">Pending</td>
-                                                </tr>
-                                            ))}
+                                        {skillRatings.mustHave.map((skill, index) => (
+                                            <tr key={index}>
+                                                <td className="px-3 py-3 whitespace-normal text-sm font-medium text-gray-900 w-32 break-words">{skill.skill}</td>
+                                                <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
+                                                    <div className="flex">
+                                                        {[...Array(5)].map((_, i) => (
+                                                            <FaStar
+                                                                key={i}
+                                                                className={`cursor-pointer text-xl ${i < skill.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                                                                onClick={() => handleRatingChange('mustHave', index, i + 1)}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-2 whitespace-nowrap text-sm text-red-500">Pending</td>
+                                            </tr>
+                                        ))}
                                         </tbody>
                                     </table>
                                 </>
@@ -262,30 +321,31 @@ const OpportunitiesView = () => {
                                     <h3 className="text-lg pl-2 font-semibold mb-2">Good to Have Skills</h3>
                                     <table className="min-w-full divide-y divide-gray-200 mb-6">
                                         <thead className="bg-gray-50">
-                                            <tr>
-                                                <th className="px-3 py-3 text-left text-xs font-medium text-gray-900  tracking-wider"></th>
-                                                <th className="px-3 py-3 text-left text-sm font-medium text-gray-900  tracking-wider">Self Rating <span className="text-red-500 text-xl">*</span></th>
-                                                <th className="px-3 py-3 text-left text-sm font-medium text-gray-900  tracking-wider">Assessment</th>
-                                            </tr>
+                                        <tr>
+                                            <th className="px-3 py-3 text-left text-xs font-medium text-gray-900  tracking-wider"></th>
+                                            <th className="px-3 py-3 text-left text-sm font-medium text-gray-900  tracking-wider">Self
+                                                Rating <span className="text-red-500 text-xl">*</span></th>
+                                            <th className="px-3 py-3 text-left text-sm font-medium text-gray-900  tracking-wider">Assessment</th>
+                                        </tr>
                                         </thead>
                                         <tbody className="bg-white divide-y divide-gray-200">
-                                            {skillRatings.goodToHave.map((skill, index) => (
-                                                <tr key={index}>
-                                                    <td className="px-3 py-3 whitespace-normal text-sm font-medium text-gray-900 w-32 break-words">{skill.skill}</td>
-                                                    <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
-                                                        <div className="flex">
-                                                            {[...Array(5)].map((_, i) => (
-                                                                <FaStar
-                                                                    key={i}
-                                                                    className={`cursor-pointer text-xl ${i < skill.rating ? 'text-red-500' : 'text-gray-300'}`}
-                                                                    onClick={() => handleRatingChange('goodToHave', index, i + 1)}
-                                                                />
-                                                            ))}
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-2 whitespace-nowrap text-sm text-red-500">Pending</td>
-                                                </tr>
-                                            ))}
+                                        {skillRatings.goodToHave.map((skill, index) => (
+                                            <tr key={index}>
+                                                <td className="px-3 py-3 whitespace-normal text-sm font-medium text-gray-900 w-32 break-words">{skill.skill}</td>
+                                                <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
+                                                    <div className="flex">
+                                                        {[...Array(5)].map((_, i) => (
+                                                            <FaStar
+                                                                key={i}
+                                                                className={`cursor-pointer text-xl ${i < skill.rating ? 'text-red-500' : 'text-gray-300'}`}
+                                                                onClick={() => handleRatingChange('goodToHave', index, i + 1)}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-2 whitespace-nowrap text-sm text-red-500">Pending</td>
+                                            </tr>
+                                        ))}
                                         </tbody>
                                     </table>
                                 </>
@@ -298,8 +358,9 @@ const OpportunitiesView = () => {
                             )}
 
                             {/* Apply Button */}
-                            <div className="flex justify-center mt-4 mb-4" style={{ marginTop: '-4px' }}>
-                                <button className="bg-blue-600 hover:bg-blue-800 text-white py-3 px-6 rounded transition-transform duration-300 hover:scale-105 ">
+                            <div className="flex justify-center mt-4 mb-4" style={{marginTop: '-4px'}}>
+                                <button
+                                    className="bg-blue-600 hover:bg-blue-800 text-white py-3 px-6 rounded transition-transform duration-300 hover:scale-105 ">
                                     Apply
                                 </button>
                             </div>
@@ -308,8 +369,11 @@ const OpportunitiesView = () => {
                 )}
             </div>
 
-        </div >
+        </div>
     )
+    }
+
+
 }
 
 export default OpportunitiesView;
