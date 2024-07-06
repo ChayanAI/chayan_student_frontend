@@ -376,7 +376,8 @@ const OpportunitiesView = () => {
                                                 <tr key={index}>
                                                     <td className="px-3 py-3 whitespace-normal text-sm font-medium text-gray-900 w-32 break-words">{skill.skill}</td>
                                                     <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
-                                                        <div className="flex"><StarRating/></div>
+
+                                                            <StarRating  name={skill.skill} setRating={setRating} rating={ratingData[skill.skill]} onRatingChange={handleRatingChange}/>
 
 
                                                     </td>

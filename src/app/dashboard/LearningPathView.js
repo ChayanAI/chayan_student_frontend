@@ -33,8 +33,9 @@ const LearningPathView = () => {
                     x.map(async(item)=>{
                       await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentjob/jobs/${item}`).then((res)=>{
                           w.push(res.data)
-                          // console.log(res.data.skills_required)
-                          if(res.data.skills_required.includes(',')){
+                          // console.log(res.data)
+                          if(res.data.skills_required){
+                              if(res.data.skills_required.includes(',')){
                               setCareerJobs((prev)=>({...prev,[res.data.title]: res.data.skills_required.split(', ')}))
                               // q={...q,[res.data.title]: res.data.skills_required.split(', ')}
                               // console.log(q)
@@ -42,6 +43,8 @@ const LearningPathView = () => {
                           else{
                               setCareerJobs((prev)=>({...prev,[res.data.title]: [res.data.skills_required]}))
                               // console.log(q)
+                          }
+
                           }
 
                           // console.log(res.data)
@@ -380,7 +383,7 @@ const LearningPathView = () => {
                                         className={`border text-lg rounded-lg p-2 mb-1 cursor-pointer font-poppins ${selectedCareer === job.title ? 'bg-yellow-400' : ''}`}
                                         onClick={() => {
                                             handleCareerSelect(job.title)
-                                            console.log(CareerJobs)
+                                            // console.log(CareerJobs)
                                         }}
                                         style={{
                                             backgroundImage: selectedCareer === job.title ? 'radial-gradient(closest-side, #FAF9F6, #FFBF00)' : 'radial-gradient(closest-side, #FAF9F6, #D3D3D3)'
@@ -432,7 +435,7 @@ const LearningPathView = () => {
                                                     </div>
                                                 </td>
                                                 <td className="px-4 py-4 text-center">
-                                                    <StarRating/>
+                                                    <StarRating rating={ratingData[skill]}/>
                                                 </td>
                                                 <td className="px-4 py-4 text-center">
                                                     {/*<div*/}
