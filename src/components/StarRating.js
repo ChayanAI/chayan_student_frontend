@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 
-const StarRating = ({rating, setRating, name, starWidth = 1.5, onRatingChange }) => {
+const StarRating = ({rating, setRating, name, starWidth = 1.2, onRatingChange }) => {
 
   const [uniqueId, setUniqueId] = useState('');
   const starContainerRef = useRef(null);
@@ -52,28 +52,23 @@ const StarRating = ({rating, setRating, name, starWidth = 1.5, onRatingChange })
         onMouseDown={handleMouseDown}
         style={{ width: `${starWidth * totalStars}rem` }}
       >
-        {Array.from({ length: totalStars }, (_, index) => {
-          const starValue = index + 1;
-          const halfStarValue = index + 0.5;
-          return (
-            <div key={index} className="relative inline-block" style={{ width: `${starWidth}rem`, height: `${starWidth}rem` }}>
-              <span
-                className={`text-gray-400 ${rating >= starValue ? 'text-yellow-500' : ''}`}
-                style={{ fontSize: `${starWidth}rem` }}
-              >
-                ★
-              </span>
-              {rating >= halfStarValue && rating < starValue && (
-                <span
-                  className="absolute left-0 top-0 overflow-hidden text-yellow-500"
-                  style={{ paddingLeft: `${starWidth / 10}rem`, width: '50%', fontSize: `${starWidth}rem` }}
-                >
-                  ★
-                </span>
-              )}
-            </div>
-          );
-        })}
+        {Array.from({ length: totalStars }, (_, index) => (
+          <div key={index} className="relative inline-block" style={{ width: `${starWidth}rem`, height: `${starWidth}rem` }}>
+            <svg
+              stroke="currentColor"
+              fill={rating > index ? "#facc15" : "#d1d5db"}
+              strokeWidth="0"
+              viewBox="0 0 576 512"
+              className="cursor-pointer text-xl"
+              height="1em"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ fontSize: `${starWidth}rem`, color: rating > index ? "#facc15" : "#d1d5db" }}
+            >
+              <path d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path>
+            </svg>
+          </div>
+        ))}
       </div>
     </div>
   );
