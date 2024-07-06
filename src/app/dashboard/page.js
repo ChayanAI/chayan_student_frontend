@@ -172,10 +172,10 @@ const Dashboard = () => {
                         <div className=" p-6 pt-4 w-60 mt-40 bg-white rounded-lg shadow-md mb-4 border-2 border-blue-600 text-sm" style={{ width: '' }}>
                             <h2 className="text-lg font-semibold mb-2">My CHAYAN Profile</h2>
                             <div className="mb-4 text-sm">
-                                <p className="mb-2">Profile Completion: {c * 100 / 8}%</p>
+                                <p className="mb-2">Profile Completion: {parseInt(c * 100 / 11)}%</p>
                                 <div className="w-full bg-gray-200 h-2 rounded-full">
                                     <div className="bg-gradient-to-r from-green-400 to-blue-500 h-2 rounded-full"
-                                         style={{width: `${c * 100 / 8}%`}}></div>
+                                         style={{width: `${c * 100 / 11}%`}}></div>
                                 </div>
                             </div>
                             {profileSections.map((section, index) => (
