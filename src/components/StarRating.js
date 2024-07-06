@@ -14,15 +14,15 @@ const StarRating = ({rating, setRating, name, starWidth = 1.5, onRatingChange })
   }, []);
 
   const handleMouseDown = (event) => {
-    if (!readOnly) {
+
       handleMouseMove(event);
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
-    }
+
   };
 
   const handleMouseMove = (event) => {
-    if (!readOnly && starContainerRef.current) {
+    if ( starContainerRef.current) {
       const { left, width } = starContainerRef.current.getBoundingClientRect();
       const clickX = event.clientX - left;
       const newRating = Math.min(totalStars, Math.max(0, (clickX / width) * totalStars));
@@ -37,17 +37,17 @@ const StarRating = ({rating, setRating, name, starWidth = 1.5, onRatingChange })
   };
 
   const handleMouseUp = () => {
-    if (!readOnly) {
+
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
-    }
+
   };
 
   return (
     <div className="flex flex-col items-center select-none">
       <div
         id={`star-rating-${uniqueId}`}
-        className={`flex ${readOnly ? '' : 'cursor-pointer'}`}
+        className={'cursor-pointer'}
         ref={starContainerRef}
         onMouseDown={handleMouseDown}
         style={{ width: `${starWidth * totalStars}rem` }}
