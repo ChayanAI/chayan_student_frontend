@@ -2,14 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 
-const StarRating = ({ starWidth = 1.5, onRatingChange, readOnly = false }) => {
-  const [rating, setRating] = useState(0);
+const StarRating = ({rating, setRating, name, starWidth = 1.5, onRatingChange }) => {
+
   const [uniqueId, setUniqueId] = useState('');
   const starContainerRef = useRef(null);
   const totalStars = 5;
 
   useEffect(() => {
     setUniqueId(uuidv4());
+    // setRating(ratingpassed)
   }, []);
 
   const handleMouseDown = (event) => {
@@ -26,9 +27,11 @@ const StarRating = ({ starWidth = 1.5, onRatingChange, readOnly = false }) => {
       const clickX = event.clientX - left;
       const newRating = Math.min(totalStars, Math.max(0, (clickX / width) * totalStars));
       const roundedRating = Math.round(newRating * 2) / 2;
-      setRating(roundedRating);
+      if(setRating){
+        setRating(roundedRating);
+      }
       if (onRatingChange) {
-        onRatingChange(roundedRating);
+        onRatingChange(name, roundedRating);
       }
     }
   };
