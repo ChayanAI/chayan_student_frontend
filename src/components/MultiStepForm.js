@@ -93,18 +93,36 @@ const MultiStepForm = ({userId}) => {
     const router = useRouter();
     const [loader, setLoader] = useState(true)
     const [currentStep, setCurrentStep] = useState(0);
+    const [ratingData, setRatingData] = useState({})
     useEffect(() => {
-        try {
-            axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/get/findbyId`, {userId: userId}).then((res) => {
+        (async()=>{
+            try {
+
+            await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/get/findbyId`, {userId: userId}).then((res) => {
 
                 setProfileData((prev) => ({...prev, email: res.data.email, phone_number: res.data.phone_number}))
             })
+
+
+            await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getrating`, {user_id: userId}).then((res) => {
+                    // console.log(res.data)
+                    res.data.map(async (item) => {
+                        await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getskillname`, {skill_id: item.skill_id}).then((res) => {
+                            // console.log(res.data)
+                            setRatingData((prev) => {
+                                return ({...prev, [res.data.name]: item.rating})
+                            })
+                        })
+                    })
+                })
         } catch (err) {
             alert(err.response.data)
         }
 
 
         setLoader(false)
+        })()
+
     }, [])
     const handleRatingChange = (rating) => {
         console.log('Selected rating:', rating);
@@ -479,7 +497,7 @@ const MultiStepForm = ({userId}) => {
                                                col={' col-span-full'} buttonsPerRow={4}
                                                buttonNames={['Software Developer', 'Data Scientist', 'Product Manager', "DevOps Engineer", "Cybersecurity Analyst", "AI/ML Engineer", "Consultant"]}/>
                                     {/* Yaha par atleast ek jab select karo tab niche ke options dikhane hain dhruv. */}
-                                    <SkillRating careers={profileData.career_path}
+                                    <SkillRating fetchdata={setRatingData} careers={profileData.career_path}
                                                  label='Rate Yourself in each skill for your desired objective:'/>
                                     <div className="w-full flex justify-between px-2 col-span-full mt-4">
                                         <button type="button" onClick={handleBack}
@@ -520,58 +538,22 @@ const MultiStepForm = ({userId}) => {
                                         className="col-span-2 lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-8">
 
                                         {selectedCareer ? (<>
-                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][0]}</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center mt-1">
-                                                    <button type='button'
-                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Assess Yourself
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][1]}</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center mt-1">
-                                                    <button type='button'
-                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Assess Yourself
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][2]}</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center mt-1">
-                                                    <button type='button'
-                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Assess Yourself
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4 px-auto mx-auto col-span-1">
-                                                <div
-                                                    className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
-                                                    <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][3]}</p>
-                                                    <StarRating onRatingChange={handleRatingChange}/>
-                                                </div>
-                                                <div className="text-center mt-1">
-                                                    <button type='button'
-                                                            className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
-                                                        Assess Yourself
-                                                    </button>
-                                                </div>
-                                            </div>
+                                            {CareerJobs[selectedCareer].map((item,index) => {
+                                                return (<div className="flex gap-4 px-auto mx-auto col-span-1">
+                                                    <div
+                                                        className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
+                                                        <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][index]}</p>
+                                                        <StarRating rating={ratingData[CareerJobs[selectedCareer][index]]}/>
+                                                    </div>
+                                                    <div className="text-center mt-1">
+                                                        <button type='button'
+                                                                className="text-blue-600 rounded-md hover:bg-white focus:outline-none focus:bg-blue-500 focus:text-white">
+                                                            Assess Yourself
+                                                        </button>
+                                                    </div>
+                                                </div>)
+                                            })}
+
                                         </>) : (<></>)}
 
 
