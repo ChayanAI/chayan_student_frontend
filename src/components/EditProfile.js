@@ -257,7 +257,6 @@ const EditProfile = ({userId}) => {
         } catch (err) {
             alert(err.response.data);
         }
-        router.push('/dashboard');
     };
 
     const CareerJobs = {
@@ -321,6 +320,7 @@ const EditProfile = ({userId}) => {
                     </div>
                     <div className="w-3/4 px-8 pt-8">
                         <form className="space-y-8 divide-y divide-gray-200">
+                        {console.log("Rendering step:", currentStep)}
                             {currentStep === 0 && <PersonalInformation profileData={profileData} setProfileData={setProfileData} />}
                             {currentStep === 1 && <Academics profileData={profileData} setProfileData={setProfileData} />}
                             {currentStep === 2 && <ProfessionalGoals profileData={profileData} setProfileData={setProfileData} setRatingData={setRatingData} />}

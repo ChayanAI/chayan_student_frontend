@@ -123,6 +123,7 @@ const Dashboard = () => {
 
     const handleSectionClick = (step) => {
         router.push(`/editprofile?step=${step}`);
+        console.log("Current step from URL:", step);
     };
 
     const handlelogout = async () => {
