@@ -12,7 +12,6 @@ const navigation = [
   { name: 'Extra-Curricular Activities', icon: Pickaxe, step: 7 },
   { name: 'Certificates', icon: FileBadge, step: 8 },
   { name: 'Awards & Recognitions', icon: Trophy, step: 9 },
-  { name: 'Distinctions', icon: Medal, step: 10 },
 ];
 
 function classNames(...classes) {
