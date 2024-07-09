@@ -18,20 +18,19 @@ const Dashboard = () => {
     const [userData, setUserdata] = useState(null)
     const [profile, setProfile] = useState(null);
     const [progress, setProgress] = useState(36.3); // Example progress, you can fetch actual completion progress
+    const [currentStep, setCurrentStep] = useState(0);
     const [profileSections, setProfileSections] = useState([
-        {title: 'Personal Information', filled: false},
-        {title: 'Academics', filled: false}, // Example, replace with actual logic
-        {title: 'Career Objectives', filled: true},
-        {title: 'Skills Assessment', filled: true}, // Example, replace with actual logic
-        {title: 'Internships', filled: false},
-        {title: 'Projects', filled: false},
-        {title: 'Volunteer work', filled: false},
-        {title: 'Extra-curricular activities', filled: false},
-        {title: 'Certificates', filled: false},
-        {title: 'Awards & Distinctions', filled: false},
-        {title: 'Distinctions', filled: false},
-
-    ]);
+      { title: 'Personal Information', filled: false, step: 0 },
+      { title: 'Academics', filled: false, step: 1 },
+      { title: 'Career Objectives', filled: true, step: 2 },
+      { title: 'Skills Assessment', filled: true, step: 3 },
+      { title: 'Internships', filled: false, step: 4 },
+      { title: 'Projects', filled: false, step: 5 },
+      { title: 'Volunteer work', filled: false, step: 6 },
+      { title: 'Extra-curricular activities', filled: false, step: 7 },
+      { title: 'Certificates', filled: false, step: 8 },
+      { title: 'Awards & Distinctions', filled: false, step: 9 },
+    ]);   
     const [exp, setExp] = useState()
     const [selectedSection, setSelectedSection] = useState('exploreOpportunities');
     const [loader, setLoader] = useState(false)
@@ -122,6 +121,10 @@ const Dashboard = () => {
         return `${studyYear}${suffix} Year`;
     }
 
+    const handleSectionClick = (step) => {
+        router.push(`/editprofile?step=${step}`);
+    };
+
     const handlelogout = async () => {
         await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentauth/clear`).then(() => {
             router.push('/login')
@@ -157,6 +160,7 @@ const Dashboard = () => {
                                 <h2 className="text-lg  font-semibold">{profile.first_name} {profile.last_name}</h2>
                                 <p className="text-sm ">{profile.degree} - {profile.branch} | {calculateYearOfStudy(profile.course_started)}</p>
                                 <p className="text-sm ">CGPA : {profile.cgpa} | Personality: INTJ</p>
+                                <p className="text-sm ">{profile.college_name}</p>
                             </div>
                             <div className="w-full" style={{marginTop: '-10px',}}>
                                 <h2 className="text-lg font-semibold mt-1 text-left">Career Objectives</h2>
@@ -169,27 +173,27 @@ const Dashboard = () => {
                         </div>
 
                         {/* Profile Completion Section */}
-                        <div className=" p-6 pt-4 w-60 mt-40 bg-white rounded-lg shadow-md mb-4 border-2 border-blue-600 text-sm" style={{ width: '' }}>
-                            <h2 className="text-lg font-semibold mb-2">My CHAYAN Profile</h2>
-                            <div className="mb-4 text-sm">
-                                <p className="mb-2">Profile Completion: {parseInt(c * 100 / 11)}%</p>
-                                <div className="w-full bg-gray-200 h-2 rounded-full">
-                                    <div className="bg-gradient-to-r from-green-400 to-blue-500 h-2 rounded-full"
-                                         style={{width: `${c * 100 / 11}%`}}></div>
-                                </div>
+                        <div className="p-6 pt-4 w-60 mt-40 bg-white rounded-lg shadow-md mb-4 border-2 border-blue-600 text-sm" style={{ width: '' }}>
+                          <h2 className="text-lg font-semibold mb-2">My CHAYAN Profile</h2>
+                          <div className="mb-4 text-sm">
+                            <p className="mb-2">Profile Completion: {parseInt(profileSections.filter(section => section.filled).length * 100 / profileSections.length)}%</p>
+                            <div className="w-full bg-gray-200 h-2 rounded-full">
+                              <div className="bg-gradient-to-r from-green-400 to-blue-500 h-2 rounded-full"
+                                   style={{ width: `${profileSections.filter(section => section.filled).length * 100 / profileSections.length}%` }}></div>
                             </div>
-                            {profileSections.map((section, index) => (
-                                <div key={index}
-                                     onClick={()=>router.push('/editprofile')}
-                                     className="flex cursor-pointer justify-between items-left mb-2 border-b border-dotted border-gray-300 pb-1">
-                                    <p>{section.title}</p>
-                                    {section.filled ? (
-                                        <CircleCheck className="h-4 w-4 rounded-full text-green-600 bg-green-100 mt-1"/>
-                                    ) : (
-                                        <CircleStop className="h-4 w-4 rounded-full text-red-600 bg-red-100 mt-1"/>
-                                    )}
-                                </div>
-                            ))}
+                          </div>
+                          {profileSections.map((section, index) => (
+                            <div key={index}
+                                 onClick={() => handleSectionClick(section.step)}
+                                 className="flex cursor-pointer justify-between items-left mb-2 border-b border-dotted border-gray-300 pb-1">
+                              <p>{section.title}</p>
+                              {section.filled ? (
+                                <CircleCheck className="h-4 w-4 rounded-full text-green-600 bg-green-100 mt-1" />
+                              ) : (
+                                <CircleStop className="h-4 w-4 rounded-full text-red-600 bg-red-100 mt-1" />
+                              )}
+                            </div>
+                          ))}
                         </div>
 
                         {/* Settings and Logout Buttons */}
