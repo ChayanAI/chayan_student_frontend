@@ -11,10 +11,11 @@ import {ToggleButton, ButtonRow, ClickyButton} from './ToggleButton';
 import {CircleCheckBig, CirclePlus} from 'lucide-react';
 import axios from "axios";
 import {useParams} from "next/navigation";
-import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import {PhotoIcon, UserCircleIcon} from '@heroicons/react/24/solid'
 
 const MultiStepForm = ({userId}) => {
     const params = useParams()
+    const [pfp, setPfp] = useState('/media/images/300-1.jpg')
 
 
     const [profileData, setProfileData] = useState({
@@ -95,16 +96,16 @@ const MultiStepForm = ({userId}) => {
     const [currentStep, setCurrentStep] = useState(0);
     const [ratingData, setRatingData] = useState({})
     useEffect(() => {
-        (async()=>{
+        (async () => {
             try {
 
-            await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/get/findbyId`, {userId: userId}).then((res) => {
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/get/findbyId`, {userId: userId}).then((res) => {
 
-                setProfileData((prev) => ({...prev, email: res.data.email, phone_number: res.data.phone_number}))
-            })
+                    setProfileData((prev) => ({...prev, email: res.data.email, phone_number: res.data.phone_number}))
+                })
 
 
-            await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getrating`, {user_id: userId}).then((res) => {
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getrating`, {user_id: userId}).then((res) => {
                     // console.log(res.data)
                     res.data.map(async (item) => {
                         await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getskillname`, {skill_id: item.skill_id}).then((res) => {
@@ -115,12 +116,12 @@ const MultiStepForm = ({userId}) => {
                         })
                     })
                 })
-        } catch (err) {
-            alert(err.response.data)
-        }
+            } catch (err) {
+                alert(err.response.data)
+            }
 
 
-        setLoader(false)
+            setLoader(false)
         })()
 
     }, [])
@@ -176,7 +177,7 @@ const MultiStepForm = ({userId}) => {
                 branch: profileData.branch,
                 minor_branch: profileData.minor_branch,
                 cgpa: profileData.cgpa,
-                sgpa:profileData.sgpa,
+                sgpa: profileData.sgpa,
                 class_12_board: profileData.class_12_board,
                 class_12_percentage: profileData.class_12_percentage,
                 internships: profileData.internships,
@@ -185,7 +186,7 @@ const MultiStepForm = ({userId}) => {
                 extra_curriculars: profileData.extra_curriculars,
                 college_name: profileData.college_name,
                 career_path: profileData.career_path
-            }).then((res)=>console.log(res))
+            }).then((res) => console.log(res))
         } catch (err) {
             alert(err)
         }
@@ -236,6 +237,36 @@ const MultiStepForm = ({userId}) => {
             "Communication"
         ]
     }
+
+    async function handlepfpdelete() {
+        await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/pfp/deletepfp`, {userId}).then(() => {
+            setPfp('/media/images/300-1.jpg')
+        })
+    }
+
+    async function handlepfpchange(e) {
+        let postid = userId
+        let file = e.target.files[0]
+        let blob = file.slice(0, file.size, "image/jpeg, image/png");
+        let newFile = new File([blob], `${postid}.jpeg`, {type: "image/jpeg, image/png"});
+        let formData = new FormData();
+        formData.append("imgfile", newFile);
+        await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/pfp/upload`, formData).then((res) => {
+            // console.log(res)
+        }).then(async () => {
+            await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/pfp/getpfp`, formData)
+                .then((x) => {
+                    for (let y = 0; y < x.data[0].length; y++) {
+                        // console.log(x.data[0][y]);
+                        setPfp("https://storage.googleapis.com/chayan-profile-picture/" + x.data[0][y].id)
+                        // console.log("https://storage.googleapis.com/chayan-profile-picture/" + x.data[0][y].id)
+                    }
+                });
+        })
+
+    }
+
+
     if (loader) {
         return (<></>)
     } else {
@@ -249,108 +280,117 @@ const MultiStepForm = ({userId}) => {
                     <div className="w-3/4 p-8">
                         {/* Personal Information */}
                         {currentStep === 0 && (
-                                <form onSubmit={handleNext}>
-                                    <div>
-                                        <div
-                                            className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-6 border-b lg:w-[75%] ">
-                                            {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
-                                            <div className="col-span-full">
-                                              <label htmlFor="photo" className="block text-sm font-medium leading-6 text-gray-900">
+                            <form onSubmit={handleNext}>
+                                <div>
+                                    <div
+                                        className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-6 border-b lg:w-[75%] ">
+                                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
+                                        <div className="col-span-full">
+                                            <label htmlFor="photo"
+                                                   className="block text-sm font-medium leading-6 text-gray-900">
                                                 Profile Photo
-                                              </label>
-                                              <div className="mt-2 flex items-center gap-x-3">
-                                                <UserCircleIcon className="h-20 w-20 text-gray-300" aria-hidden="true" />
+                                            </label>
+                                            <div className="mt-2 flex items-center gap-x-3">
+                                                <img src={pfp ? (pfp) : ('/media/images/300-1.jpg')} alt='profile'
+                                                     className='w-24 h-24 object-cover ml-2 border-2 border-gray-400 rounded-[50%]'/>
+                                                <input onChange={(e) => handlepfpchange(e)} type="file" name="imgfile"
+                                                       accept="image/jpeg, image/png" id="imgfile"/>
                                                 <button
-                                                  type="button"
-                                                  className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                                    type="button"
+                                                    className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                                 >
-                                                  Change
+                                                    Change
                                                 </button>
                                                 <button
-                                                  type="button"
-                                                  className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                                    type="button"
+                                                    className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                                 >
-                                                  Delete
-                                                </button>
-                                              </div>
-                                            </div>
-                                            <Text name={'First Name'} value={profileData.first_name} isRequired={true}
-                                                  disp='first_name'
-                                                  setValue={setProfileData} col={'3'} />
-                                            <Text name={'Last Name'} value={profileData.last_name} disp='last_name'
-                                                  setValue={setProfileData} col={'3'}/>
-                                            <Text name={'Date of birth'} value={profileData.date_of_birth}
-                                                  isRequired={true}
-                                                  disp='date_of_birth'
-                                                  setValue={setProfileData} type={'date'} col={'3'}/>
-                                            <ComboBox name={'Hometown'} value={profileData.city} disp='city'
-                                                  setValue={setProfileData} col={'3'} isRequired={true}
-                                                  options={["Mumbai, Maharashtra", "Delhi, Delhi", "Bengaluru, Karnataka", "Ahmedabad, Gujarat", "Hyderabad, Telangana", "Chennai, Tamil Nadu", "Kolkata, West Bengal", "Pune, Maharashtra", "Jaipur, Rajasthan", "Surat, Gujarat", "Lucknow, Uttar Pradesh", "Kanpur, Uttar Pradesh", "Nagpur, Maharashtra", "Patna, Bihar", "Indore, Madhya Pradesh", "Thane, Maharashtra", "Bhopal, Madhya Pradesh", "Visakhapatnam, Andhra Pradesh", "Vadodara, Gujarat", "Firozabad, Uttar Pradesh", "Ludhiana, Punjab", "Rajkot, Gujarat", "Agra, Uttar Pradesh", "Siliguri, West Bengal", "Nashik, Maharashtra", "Faridabad, Haryana", "Patiala, Punjab", "Meerut, Uttar Pradesh", "Kalyan-Dombivali, Maharashtra", "Vasai-Virar, Maharashtra", "Varanasi, Uttar Pradesh", "Srinagar, Jammu and Kashmir", "Dhanbad, Jharkhand", "Jodhpur, Rajasthan", "Amritsar, Punjab", "Raipur, Chhattisgarh", "Allahabad, Uttar Pradesh", "Coimbatore, Tamil Nadu", "Jabalpur, Madhya Pradesh", "Gwalior, Madhya Pradesh", "Vijayawada, Andhra Pradesh", "Madurai, Tamil Nadu", "Guwahati, Assam", "Chandigarh, Chandigarh", "Hubli-Dharwad, Karnataka", "Amroha, Uttar Pradesh", "Moradabad, Uttar Pradesh", "Gurgaon, Haryana", "Aligarh, Uttar Pradesh", "Solapur, Maharashtra", "Ranchi, Jharkhand", "Jalandhar, Punjab", "Tiruchirappalli, Tamil Nadu", "Bhubaneswar, Odisha", "Salem, Tamil Nadu", "Warangal, Telangana", "Mira-Bhayandar, Maharashtra", "Thiruvananthapuram, Kerala", "Bhiwandi, Maharashtra", "Saharanpur, Uttar Pradesh", "Guntur, Andhra Pradesh", "Amravati, Maharashtra", "Bikaner, Rajasthan", "Noida, Uttar Pradesh", "Jamshedpur, Jharkhand", "Bhilai Nagar, Chhattisgarh", "Cuttack, Odisha", "Kochi, Kerala", "Udaipur, Rajasthan", "Bhavnagar, Gujarat", "Dehradun, Uttarakhand", "Asansol, West Bengal", "Nanded-Waghala, Maharashtra", "Ajmer, Rajasthan", "Jamnagar, Gujarat", "Ujjain, Madhya Pradesh", "Sangli, Maharashtra", "Loni, Uttar Pradesh", "Jhansi, Uttar Pradesh", "Pondicherry, Puducherry", "Nellore, Andhra Pradesh", "Jammu, Jammu and Kashmir", "Belagavi, Karnataka", "Raurkela, Odisha", "Mangaluru, Karnataka", "Tirunelveli, Tamil Nadu", "Malegaon, Maharashtra", "Gaya, Bihar", "Tiruppur, Tamil Nadu", "Davanagere, Karnataka", "Kozhikode, Kerala", "Akola, Maharashtra", "Kurnool, Andhra Pradesh", "Bokaro Steel City, Jharkhand", "Rajahmundry, Andhra Pradesh", "Ballari, Karnataka", "Agartala, Tripura", "Bhagalpur, Bihar", "Latur, Maharashtra", "Dhule, Maharashtra", "Korba, Chhattisgarh", "Bhilwara, Rajasthan", "Brahmapur, Odisha", "Mysore, Karnataka", "Muzaffarpur, Bihar", "Ahmednagar, Maharashtra", "Kollam, Kerala", "Raghunathganj, West Bengal", "Bilaspur, Chhattisgarh", "Shahjahanpur, Uttar Pradesh", "Thrissur, Kerala", "Alwar, Rajasthan", "Kakinada, Andhra Pradesh", "Nizamabad, Telangana", "Sagar, Madhya Pradesh", "Tumkur, Karnataka", "Hisar, Haryana", "Rohtak, Haryana", "Panipat, Haryana", "Darbhanga, Bihar", "Kharagpur, West Bengal", "Aizawl, Mizoram", "Ichalkaranji, Maharashtra", "Tirupati, Andhra Pradesh", "Karnal, Haryana", "Bathinda, Punjab", "Rampur, Uttar Pradesh", "Shivamogga, Karnataka", "Ratlam, Madhya Pradesh", "Modinagar, Uttar Pradesh", "Durg, Chhattisgarh", "Shillong, Meghalaya", "Imphal, Manipur", "Hapur, Uttar Pradesh", "Ranipet, Tamil Nadu", "Anantapur, Andhra Pradesh", "Arrah, Bihar", "Karimnagar, Telangana", "Parbhani, Maharashtra", "Etawah, Uttar Pradesh", "Bharatpur, Rajasthan", "Begusarai, Bihar", "New Delhi, Delhi", "Chhapra, Bihar", "Kadapa, Andhra Pradesh", "Ramagundam, Telangana", "Pali, Rajasthan", "Satna, Madhya Pradesh", "Vizianagaram, Andhra Pradesh", "Katihar, Bihar", "Hardwar, Uttarakhand", "Sonipat, Haryana", "Nagercoil, Tamil Nadu", "Thanjavur, Tamil Nadu", "Murwara (Katni), Madhya Pradesh", "Naihati, West Bengal", "Sambhal, Uttar Pradesh", "Nadiad, Gujarat", "Yamunanagar, Haryana", "English Bazar, West Bengal", "Eluru, Andhra Pradesh", "Munger, Bihar", "Panchkula, Haryana", "Raayachuru, Karnataka", "Panvel, Maharashtra", "Deoghar, Jharkhand", "Ongole, Andhra Pradesh", "Nandyal, Andhra Pradesh", "Morena, Madhya Pradesh", "Bhiwani, Haryana", "Porbandar, Gujarat", "Palakkad, Kerala", "Anand, Gujarat", "Purnia, Bihar", "Baharampur, West Bengal", "Barmer, Rajasthan", "Morvi, Gujarat", "Orai, Uttar Pradesh", "Bahraich, Uttar Pradesh", "Sikar, Rajasthan", "Vellore, Tamil Nadu", "Singrauli, Madhya Pradesh", "Khammam, Telangana", "Mahesana, Gujarat", "Silchar, Assam", "Sambalpur, Odisha", "Rewa, Madhya Pradesh", "Unnao, Uttar Pradesh", "Hugli-Chinsurah, West Bengal", "Raiganj, West Bengal", "Phusro, Jharkhand", "Adityapur, Jharkhand", "Alappuzha, Kerala", "Bahadurgarh, Haryana", "Machilipatnam, Andhra Pradesh", "Rae Bareli, Uttar Pradesh", "Jalpaiguri, West Bengal", "Bharuch, Gujarat", "Pathankot, Punjab", "Hoshiarpur, Punjab", "Baramula, Jammu and Kashmir", "Adoni, Andhra Pradesh", "Jind, Haryana", "Tonk, Rajasthan", "Tenali, Andhra Pradesh", "Kancheepuram, Tamil Nadu", "Vapi, Gujarat", "Sirsa, Haryana", "Navsari, Gujarat", "Mahbubnagar, Telangana", "Puri, Odisha", "Robertson Pet, Karnataka", "Erode, Tamil Nadu", "Batala, Punjab", "Haldwani-cum-Kathgodam, Uttarakhand", "Vidisha, Madhya Pradesh", "Saharsa, Bihar", "Thanesar, Haryana", "Chittoor, Andhra Pradesh", "Veraval, Gujarat", "Lakhimpur, Uttar Pradesh", "Sitapur, Uttar Pradesh", "Hindupur, Andhra Pradesh", "Santipur, West Bengal", "Balurghat, West Bengal", "Ganjbasoda, Madhya Pradesh", "Moga, Punjab", "Proddatur, Andhra Pradesh", "Srinagar, Uttarakhand", "Medinipur, West Bengal", "Habra, West Bengal", "Sasaram, Bihar", "Hajipur, Bihar", "Bhuj, Gujarat", "Shivpuri, Madhya Pradesh", "Ranaghat, West Bengal", "Shimla, Himachal Pradesh", "Tiruvannamalai, Tamil Nadu", "Kaithal, Haryana", "Rajnandgaon, Chhattisgarh", "Godhra, Gujarat", "Hazaribag, Jharkhand", "Bhimavaram, Andhra Pradesh", "Mandsaur, Madhya Pradesh", "Dibrugarh, Assam", "Kolar, Karnataka", "Bankura, West Bengal", "Mandya, Karnataka", "Dehri-on-Sone, Bihar", "Madanapalle, Andhra Pradesh", "Malerkotla, Punjab", "Lalitpur, Uttar Pradesh", "Bettiah, Bihar", "Pollachi, Tamil Nadu", "Khanna, Punjab", "Neemuch, Madhya Pradesh", "Palwal, Haryana", "Palanpur, Gujarat", "Guntakal, Andhra Pradesh", "Nabadwip, West Bengal", "Udupi, Karnataka", "Jagdalpur, Chhattisgarh", "Motihari, Bihar", "Pilibhit, Uttar Pradesh", "Dimapur, Nagaland", "Mohali, Punjab", "Sadulpur, Rajasthan", "Rajapalayam, Tamil Nadu", "Dharmavaram, Andhra Pradesh", "Kashipur, Uttarakhand", "Sivakasi, Tamil Nadu", "Darjiling, West Bengal", "Chikkamagaluru, Karnataka", "Gudivada, Andhra Pradesh", "Baleshwar Town, Odisha", "Mancherial, Telangana", "Srikakulam, Andhra Pradesh", "Adilabad, Telangana", "Yavatmal, Maharashtra", "Barnala, Punjab", "Nagaon, Assam", "Narasaraopet, Andhra Pradesh", "Raigarh, Chhattisgarh", "Roorkee, Uttarakhand", "Valsad, Gujarat", "Ambikapur, Chhattisgarh", "Giridih, Jharkhand", "Chandausi, Uttar Pradesh", "Purulia, West Bengal", "Patan, Gujarat", "Bagaha, Bihar", "Hardoi, Uttar Pradesh", "Achalpur, Maharashtra", "Osmanabad, Maharashtra", "Deesa, Gujarat", "Nandurbar, Maharashtra", "Azamgarh, Uttar Pradesh", "Ramgarh, Jharkhand", "Firozpur, Punjab", "Baripada Town, Odisha", "Karwar, Karnataka", "Siwan, Bihar", "Rajampet, Andhra Pradesh", "Pudukkottai, Tamil Nadu", "Anantnag, Jammu and Kashmir", "Tadpatri, Andhra Pradesh", "Satara, Maharashtra", "Bhadrak, Odisha", "Kishanganj, Bihar", "Suryapet, Telangana", "Wardha, Maharashtra", "Ranibennur, Karnataka", "Amreli, Gujarat", "Neyveli (TS), Tamil Nadu", "Jamalpur, Bihar", "Marmagao, Goa", "Udgir, Maharashtra", "Tadepalligudem, Andhra Pradesh", "Nagapattinam, Tamil Nadu", "Buxar, Bihar", "Aurangabad, Bihar", "Jehanabad, Bihar", "Phagwara, Punjab", "Khair, Uttar Pradesh", "Sawai Madhopur, Rajasthan", "Kapurthala, Punjab", "Chilakaluripet, Andhra Pradesh", "Aurangabad, Maharashtra", "Malappuram, Kerala", "Rewari, Haryana", "Nagaur, Rajasthan", "Sultanpur, Uttar Pradesh", "Nagda, Madhya Pradesh", "Port Blair, Andaman and Nicobar Islands", "Lakhisarai, Bihar", "Panaji, Goa", "Tinsukia, Assam", "Itarsi, Madhya Pradesh", "Kohima, Nagaland", "Balangir, Odisha", "Nawada, Bihar", "Jharsuguda, Odisha", "Jagtial, Telangana", "Viluppuram, Tamil Nadu", "Amalner, Maharashtra", "Zirakpur, Punjab", "Tanda, Uttar Pradesh", "Tiruchengode, Tamil Nadu", "Nagina, Uttar Pradesh", "Yemmiganur, Andhra Pradesh", "Vaniyambadi, Tamil Nadu", "Sarni, Madhya Pradesh", "Theni Allinagaram, Tamil Nadu", "Margao, Goa", "Akot, Maharashtra", "Sehore, Madhya Pradesh", "Mhow Cantonment, Madhya Pradesh", "Kot Kapura, Punjab", "Makrana, Rajasthan", "Pandharpur, Maharashtra", "Miryalaguda, Telangana", "Shamli, Uttar Pradesh", "Seoni, Madhya Pradesh", "Ranibandh, West Bengal", "Rishikesh, Uttarakhand", "Shahdol, Madhya Pradesh", "Medininagar (Daltonganj), Jharkhand", "Arakkonam, Tamil Nadu", "Washim, Maharashtra", "Sangrur, Punjab", "Bodhan, Telangana", "Fazilka, Punjab", "Palacole, Andhra Pradesh", "Keshod, Gujarat", "Sullurpeta, Andhra Pradesh", "Wadhwan, Gujarat", "Gurdaspur, Punjab", "Vatakara, Kerala", "Tura, Meghalaya", "Narnaul, Haryana", "Kharar, Punjab", "Yadgir, Karnataka", "Ambejogai, Maharashtra", "Ankleshwar, Gujarat", "Savarkundla, Gujarat", "Paradip, Odisha", "Virudhachalam, Tamil Nadu", "Kanhangad, Kerala", "Kadi, Gujarat", "Srivilliputhur, Tamil Nadu", "Gobindgarh, Punjab", "Tindivanam, Tamil Nadu", "Mansa, Punjab", "Taliparamba, Kerala", "Manmad, Maharashtra", "Tanuku, Andhra Pradesh", "Rayachoti, Andhra Pradesh", "Virudhunagar, Tamil Nadu", "Koyilandy, Kerala", "Jorhat, Assam", "Karjat, Maharashtra", "Kavali, Andhra Pradesh", "Mandapeta, Andhra Pradesh", "Srikalahasti, Andhra Pradesh", "Nellikuppam, Tamil Nadu", "Ramnagar, Uttarakhand", "Sihor, Gujarat", "Nellikuppam, Tamil Nadu", "Ramnagar, Uttarakhand", "Sihor, Gujarat", "Nellikuppam, Tamil Nadu", "Ramnagar, Uttarakhand", "Sihor, Gujarat"]}
-                                                  />
-                                            <ButtonRow label={'Gender'} value={profileData.gender} disp='gender'
-                                                       setValue={setProfileData} col={4} isRequired={true}
-                                                       buttonNames={['Male', 'Female', 'Others']}/>
-
-                                            <div className="flex col-span-3 relative">
-                                                <Text name={'Phone Number'} isRequired={true}
-                                                  value={profileData.phone_number}
-                                                  disp='phone_number'
-                                                  setValue={setProfileData} type='tel' col={' w-full'}/>
-                                                <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Get OTP'} yellow={true} />
-                                            </div>
-                                            <div className="flex col-span-3 relative grayscale opacity-80">
-                                                <Text name={'Enter OTP'}
-                                                  setValue={setProfileData} type='tel' col={' w-full relative'} />
-                                                <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Validate'} yellow={true} />
-                                            </div>
-
-                                            <div className='flex col-span-3 relative'>
-                                                <Text name={'Email'} isRequired={true}
-                                                  value={profileData.email}
-                                                  disp='email'
-                                                  setValue={setProfileData} type='email' col={' w-full'} />
-                                                <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Get OTP'} yellow={true} />
-                                            </div>
-                                            <div className="flex col-span-3 relative grayscale opacity-80">
-                                                <Text name={'Enter OTP'}
-                                                  setValue={setProfileData} type='tel' col={' w-full relative'} />
-                                                <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Validate'} yellow={true} />
-                                            </div>
-
-                                            <div className="w-full flex justify-between col-span-full mt-4">
-                                                <div></div>
-                                                <button type='submit'
-                                                        className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
-                                                    Next
+                                                    Delete
                                                 </button>
                                             </div>
                                         </div>
+                                        <Text name={'First Name'} value={profileData.first_name} isRequired={true}
+                                              disp='first_name'
+                                              setValue={setProfileData} col={'3'}/>
+                                        <Text name={'Last Name'} value={profileData.last_name} disp='last_name'
+                                              setValue={setProfileData} col={'3'}/>
+                                        <Text name={'Date of birth'} value={profileData.date_of_birth}
+                                              isRequired={true}
+                                              disp='date_of_birth'
+                                              setValue={setProfileData} type={'date'} col={'3'}/>
+                                        <ComboBox name={'Hometown'} value={profileData.city} disp='city'
+                                                  setValue={setProfileData} col={'3'} isRequired={true}
+                                                  options={["Mumbai, Maharashtra", "Delhi, Delhi", "Bengaluru, Karnataka", "Ahmedabad, Gujarat", "Hyderabad, Telangana", "Chennai, Tamil Nadu", "Kolkata, West Bengal", "Pune, Maharashtra", "Jaipur, Rajasthan", "Surat, Gujarat", "Lucknow, Uttar Pradesh", "Kanpur, Uttar Pradesh", "Nagpur, Maharashtra", "Patna, Bihar", "Indore, Madhya Pradesh", "Thane, Maharashtra", "Bhopal, Madhya Pradesh", "Visakhapatnam, Andhra Pradesh", "Vadodara, Gujarat", "Firozabad, Uttar Pradesh", "Ludhiana, Punjab", "Rajkot, Gujarat", "Agra, Uttar Pradesh", "Siliguri, West Bengal", "Nashik, Maharashtra", "Faridabad, Haryana", "Patiala, Punjab", "Meerut, Uttar Pradesh", "Kalyan-Dombivali, Maharashtra", "Vasai-Virar, Maharashtra", "Varanasi, Uttar Pradesh", "Srinagar, Jammu and Kashmir", "Dhanbad, Jharkhand", "Jodhpur, Rajasthan", "Amritsar, Punjab", "Raipur, Chhattisgarh", "Allahabad, Uttar Pradesh", "Coimbatore, Tamil Nadu", "Jabalpur, Madhya Pradesh", "Gwalior, Madhya Pradesh", "Vijayawada, Andhra Pradesh", "Madurai, Tamil Nadu", "Guwahati, Assam", "Chandigarh, Chandigarh", "Hubli-Dharwad, Karnataka", "Amroha, Uttar Pradesh", "Moradabad, Uttar Pradesh", "Gurgaon, Haryana", "Aligarh, Uttar Pradesh", "Solapur, Maharashtra", "Ranchi, Jharkhand", "Jalandhar, Punjab", "Tiruchirappalli, Tamil Nadu", "Bhubaneswar, Odisha", "Salem, Tamil Nadu", "Warangal, Telangana", "Mira-Bhayandar, Maharashtra", "Thiruvananthapuram, Kerala", "Bhiwandi, Maharashtra", "Saharanpur, Uttar Pradesh", "Guntur, Andhra Pradesh", "Amravati, Maharashtra", "Bikaner, Rajasthan", "Noida, Uttar Pradesh", "Jamshedpur, Jharkhand", "Bhilai Nagar, Chhattisgarh", "Cuttack, Odisha", "Kochi, Kerala", "Udaipur, Rajasthan", "Bhavnagar, Gujarat", "Dehradun, Uttarakhand", "Asansol, West Bengal", "Nanded-Waghala, Maharashtra", "Ajmer, Rajasthan", "Jamnagar, Gujarat", "Ujjain, Madhya Pradesh", "Sangli, Maharashtra", "Loni, Uttar Pradesh", "Jhansi, Uttar Pradesh", "Pondicherry, Puducherry", "Nellore, Andhra Pradesh", "Jammu, Jammu and Kashmir", "Belagavi, Karnataka", "Raurkela, Odisha", "Mangaluru, Karnataka", "Tirunelveli, Tamil Nadu", "Malegaon, Maharashtra", "Gaya, Bihar", "Tiruppur, Tamil Nadu", "Davanagere, Karnataka", "Kozhikode, Kerala", "Akola, Maharashtra", "Kurnool, Andhra Pradesh", "Bokaro Steel City, Jharkhand", "Rajahmundry, Andhra Pradesh", "Ballari, Karnataka", "Agartala, Tripura", "Bhagalpur, Bihar", "Latur, Maharashtra", "Dhule, Maharashtra", "Korba, Chhattisgarh", "Bhilwara, Rajasthan", "Brahmapur, Odisha", "Mysore, Karnataka", "Muzaffarpur, Bihar", "Ahmednagar, Maharashtra", "Kollam, Kerala", "Raghunathganj, West Bengal", "Bilaspur, Chhattisgarh", "Shahjahanpur, Uttar Pradesh", "Thrissur, Kerala", "Alwar, Rajasthan", "Kakinada, Andhra Pradesh", "Nizamabad, Telangana", "Sagar, Madhya Pradesh", "Tumkur, Karnataka", "Hisar, Haryana", "Rohtak, Haryana", "Panipat, Haryana", "Darbhanga, Bihar", "Kharagpur, West Bengal", "Aizawl, Mizoram", "Ichalkaranji, Maharashtra", "Tirupati, Andhra Pradesh", "Karnal, Haryana", "Bathinda, Punjab", "Rampur, Uttar Pradesh", "Shivamogga, Karnataka", "Ratlam, Madhya Pradesh", "Modinagar, Uttar Pradesh", "Durg, Chhattisgarh", "Shillong, Meghalaya", "Imphal, Manipur", "Hapur, Uttar Pradesh", "Ranipet, Tamil Nadu", "Anantapur, Andhra Pradesh", "Arrah, Bihar", "Karimnagar, Telangana", "Parbhani, Maharashtra", "Etawah, Uttar Pradesh", "Bharatpur, Rajasthan", "Begusarai, Bihar", "New Delhi, Delhi", "Chhapra, Bihar", "Kadapa, Andhra Pradesh", "Ramagundam, Telangana", "Pali, Rajasthan", "Satna, Madhya Pradesh", "Vizianagaram, Andhra Pradesh", "Katihar, Bihar", "Hardwar, Uttarakhand", "Sonipat, Haryana", "Nagercoil, Tamil Nadu", "Thanjavur, Tamil Nadu", "Murwara (Katni), Madhya Pradesh", "Naihati, West Bengal", "Sambhal, Uttar Pradesh", "Nadiad, Gujarat", "Yamunanagar, Haryana", "English Bazar, West Bengal", "Eluru, Andhra Pradesh", "Munger, Bihar", "Panchkula, Haryana", "Raayachuru, Karnataka", "Panvel, Maharashtra", "Deoghar, Jharkhand", "Ongole, Andhra Pradesh", "Nandyal, Andhra Pradesh", "Morena, Madhya Pradesh", "Bhiwani, Haryana", "Porbandar, Gujarat", "Palakkad, Kerala", "Anand, Gujarat", "Purnia, Bihar", "Baharampur, West Bengal", "Barmer, Rajasthan", "Morvi, Gujarat", "Orai, Uttar Pradesh", "Bahraich, Uttar Pradesh", "Sikar, Rajasthan", "Vellore, Tamil Nadu", "Singrauli, Madhya Pradesh", "Khammam, Telangana", "Mahesana, Gujarat", "Silchar, Assam", "Sambalpur, Odisha", "Rewa, Madhya Pradesh", "Unnao, Uttar Pradesh", "Hugli-Chinsurah, West Bengal", "Raiganj, West Bengal", "Phusro, Jharkhand", "Adityapur, Jharkhand", "Alappuzha, Kerala", "Bahadurgarh, Haryana", "Machilipatnam, Andhra Pradesh", "Rae Bareli, Uttar Pradesh", "Jalpaiguri, West Bengal", "Bharuch, Gujarat", "Pathankot, Punjab", "Hoshiarpur, Punjab", "Baramula, Jammu and Kashmir", "Adoni, Andhra Pradesh", "Jind, Haryana", "Tonk, Rajasthan", "Tenali, Andhra Pradesh", "Kancheepuram, Tamil Nadu", "Vapi, Gujarat", "Sirsa, Haryana", "Navsari, Gujarat", "Mahbubnagar, Telangana", "Puri, Odisha", "Robertson Pet, Karnataka", "Erode, Tamil Nadu", "Batala, Punjab", "Haldwani-cum-Kathgodam, Uttarakhand", "Vidisha, Madhya Pradesh", "Saharsa, Bihar", "Thanesar, Haryana", "Chittoor, Andhra Pradesh", "Veraval, Gujarat", "Lakhimpur, Uttar Pradesh", "Sitapur, Uttar Pradesh", "Hindupur, Andhra Pradesh", "Santipur, West Bengal", "Balurghat, West Bengal", "Ganjbasoda, Madhya Pradesh", "Moga, Punjab", "Proddatur, Andhra Pradesh", "Srinagar, Uttarakhand", "Medinipur, West Bengal", "Habra, West Bengal", "Sasaram, Bihar", "Hajipur, Bihar", "Bhuj, Gujarat", "Shivpuri, Madhya Pradesh", "Ranaghat, West Bengal", "Shimla, Himachal Pradesh", "Tiruvannamalai, Tamil Nadu", "Kaithal, Haryana", "Rajnandgaon, Chhattisgarh", "Godhra, Gujarat", "Hazaribag, Jharkhand", "Bhimavaram, Andhra Pradesh", "Mandsaur, Madhya Pradesh", "Dibrugarh, Assam", "Kolar, Karnataka", "Bankura, West Bengal", "Mandya, Karnataka", "Dehri-on-Sone, Bihar", "Madanapalle, Andhra Pradesh", "Malerkotla, Punjab", "Lalitpur, Uttar Pradesh", "Bettiah, Bihar", "Pollachi, Tamil Nadu", "Khanna, Punjab", "Neemuch, Madhya Pradesh", "Palwal, Haryana", "Palanpur, Gujarat", "Guntakal, Andhra Pradesh", "Nabadwip, West Bengal", "Udupi, Karnataka", "Jagdalpur, Chhattisgarh", "Motihari, Bihar", "Pilibhit, Uttar Pradesh", "Dimapur, Nagaland", "Mohali, Punjab", "Sadulpur, Rajasthan", "Rajapalayam, Tamil Nadu", "Dharmavaram, Andhra Pradesh", "Kashipur, Uttarakhand", "Sivakasi, Tamil Nadu", "Darjiling, West Bengal", "Chikkamagaluru, Karnataka", "Gudivada, Andhra Pradesh", "Baleshwar Town, Odisha", "Mancherial, Telangana", "Srikakulam, Andhra Pradesh", "Adilabad, Telangana", "Yavatmal, Maharashtra", "Barnala, Punjab", "Nagaon, Assam", "Narasaraopet, Andhra Pradesh", "Raigarh, Chhattisgarh", "Roorkee, Uttarakhand", "Valsad, Gujarat", "Ambikapur, Chhattisgarh", "Giridih, Jharkhand", "Chandausi, Uttar Pradesh", "Purulia, West Bengal", "Patan, Gujarat", "Bagaha, Bihar", "Hardoi, Uttar Pradesh", "Achalpur, Maharashtra", "Osmanabad, Maharashtra", "Deesa, Gujarat", "Nandurbar, Maharashtra", "Azamgarh, Uttar Pradesh", "Ramgarh, Jharkhand", "Firozpur, Punjab", "Baripada Town, Odisha", "Karwar, Karnataka", "Siwan, Bihar", "Rajampet, Andhra Pradesh", "Pudukkottai, Tamil Nadu", "Anantnag, Jammu and Kashmir", "Tadpatri, Andhra Pradesh", "Satara, Maharashtra", "Bhadrak, Odisha", "Kishanganj, Bihar", "Suryapet, Telangana", "Wardha, Maharashtra", "Ranibennur, Karnataka", "Amreli, Gujarat", "Neyveli (TS), Tamil Nadu", "Jamalpur, Bihar", "Marmagao, Goa", "Udgir, Maharashtra", "Tadepalligudem, Andhra Pradesh", "Nagapattinam, Tamil Nadu", "Buxar, Bihar", "Aurangabad, Bihar", "Jehanabad, Bihar", "Phagwara, Punjab", "Khair, Uttar Pradesh", "Sawai Madhopur, Rajasthan", "Kapurthala, Punjab", "Chilakaluripet, Andhra Pradesh", "Aurangabad, Maharashtra", "Malappuram, Kerala", "Rewari, Haryana", "Nagaur, Rajasthan", "Sultanpur, Uttar Pradesh", "Nagda, Madhya Pradesh", "Port Blair, Andaman and Nicobar Islands", "Lakhisarai, Bihar", "Panaji, Goa", "Tinsukia, Assam", "Itarsi, Madhya Pradesh", "Kohima, Nagaland", "Balangir, Odisha", "Nawada, Bihar", "Jharsuguda, Odisha", "Jagtial, Telangana", "Viluppuram, Tamil Nadu", "Amalner, Maharashtra", "Zirakpur, Punjab", "Tanda, Uttar Pradesh", "Tiruchengode, Tamil Nadu", "Nagina, Uttar Pradesh", "Yemmiganur, Andhra Pradesh", "Vaniyambadi, Tamil Nadu", "Sarni, Madhya Pradesh", "Theni Allinagaram, Tamil Nadu", "Margao, Goa", "Akot, Maharashtra", "Sehore, Madhya Pradesh", "Mhow Cantonment, Madhya Pradesh", "Kot Kapura, Punjab", "Makrana, Rajasthan", "Pandharpur, Maharashtra", "Miryalaguda, Telangana", "Shamli, Uttar Pradesh", "Seoni, Madhya Pradesh", "Ranibandh, West Bengal", "Rishikesh, Uttarakhand", "Shahdol, Madhya Pradesh", "Medininagar (Daltonganj), Jharkhand", "Arakkonam, Tamil Nadu", "Washim, Maharashtra", "Sangrur, Punjab", "Bodhan, Telangana", "Fazilka, Punjab", "Palacole, Andhra Pradesh", "Keshod, Gujarat", "Sullurpeta, Andhra Pradesh", "Wadhwan, Gujarat", "Gurdaspur, Punjab", "Vatakara, Kerala", "Tura, Meghalaya", "Narnaul, Haryana", "Kharar, Punjab", "Yadgir, Karnataka", "Ambejogai, Maharashtra", "Ankleshwar, Gujarat", "Savarkundla, Gujarat", "Paradip, Odisha", "Virudhachalam, Tamil Nadu", "Kanhangad, Kerala", "Kadi, Gujarat", "Srivilliputhur, Tamil Nadu", "Gobindgarh, Punjab", "Tindivanam, Tamil Nadu", "Mansa, Punjab", "Taliparamba, Kerala", "Manmad, Maharashtra", "Tanuku, Andhra Pradesh", "Rayachoti, Andhra Pradesh", "Virudhunagar, Tamil Nadu", "Koyilandy, Kerala", "Jorhat, Assam", "Karjat, Maharashtra", "Kavali, Andhra Pradesh", "Mandapeta, Andhra Pradesh", "Srikalahasti, Andhra Pradesh", "Nellikuppam, Tamil Nadu", "Ramnagar, Uttarakhand", "Sihor, Gujarat", "Nellikuppam, Tamil Nadu", "Ramnagar, Uttarakhand", "Sihor, Gujarat", "Nellikuppam, Tamil Nadu", "Ramnagar, Uttarakhand", "Sihor, Gujarat"]}
+                                        />
+                                        <ButtonRow label={'Gender'} value={profileData.gender} disp='gender'
+                                                   setValue={setProfileData} col={4} isRequired={true}
+                                                   buttonNames={['Male', 'Female', 'Others']}/>
+
+                                        <div className="flex col-span-3 relative">
+                                            <Text name={'Phone Number'} isRequired={true}
+                                                  value={profileData.phone_number}
+                                                  disp='phone_number'
+                                                  setValue={setProfileData} type='tel' col={' w-full'}/>
+                                            <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Get OTP'}
+                                                          yellow={true}/>
+                                        </div>
+                                        <div className="flex col-span-3 relative grayscale opacity-80">
+                                            <Text name={'Enter OTP'}
+                                                  setValue={setProfileData} type='tel' col={' w-full relative'}/>
+                                            <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Validate'}
+                                                          yellow={true}/>
+                                        </div>
+
+                                        <div className='flex col-span-3 relative'>
+                                            <Text name={'Email'} isRequired={true}
+                                                  value={profileData.email}
+                                                  disp='email'
+                                                  setValue={setProfileData} type='email' col={' w-full'}/>
+                                            <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Get OTP'}
+                                                          yellow={true}/>
+                                        </div>
+                                        <div className="flex col-span-3 relative grayscale opacity-80">
+                                            <Text name={'Enter OTP'}
+                                                  setValue={setProfileData} type='tel' col={' w-full relative'}/>
+                                            <ClickyButton classes={'h-fit absolute right-0 bottom-0'} name={'Validate'}
+                                                          yellow={true}/>
+                                        </div>
+
+                                        <div className="w-full flex justify-between col-span-full mt-4">
+                                            <div></div>
+                                            <button type='submit'
+                                                    className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
+                                                Next
+                                            </button>
+                                        </div>
                                     </div>
-                                </form>
+                                </div>
+                            </form>
                         )}
                         {/* Academics */}
                         {currentStep === 1 && (
-                                <form onSubmit={handleNext}>
+                            <form onSubmit={handleNext}>
                                 <div>
-                                    <div className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b lg:w-[75%] lg:min-w-[580px] ">
+                                    <div
+                                        className="bg-gray-200 rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b lg:w-[75%] lg:min-w-[580px] ">
                                         {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
                                         <ComboBox name={'College Name'} value={profileData.college_name}
-                                              isRequired={true} disp='college_name'
-                                              setValue={setProfileData}
-                                              col={' col-span-full'}
-                                              options={["IIT Roorkee", "IIT Bombay", "IIT Kanpur", "IIT Kharagpur", "IIT Madras", "IIT Delhi", "IIT Guwahati", "IIT Hyderabad", "IIT Ropar", "IIT Gandhinagar", "IIT Mandi", "IIT Indore", "IIT Kochi", "Amity Noida", "Amity Lucknow", "Amity Pune", "JSS Noida", "SRCC", "Hindu College", "Delhi University", "LSR", "Mumbai University"]}/>
+                                                  isRequired={true} disp='college_name'
+                                                  setValue={setProfileData}
+                                                  col={' col-span-full'}
+                                                  options={["IIT Roorkee", "IIT Bombay", "IIT Kanpur", "IIT Kharagpur", "IIT Madras", "IIT Delhi", "IIT Guwahati", "IIT Hyderabad", "IIT Ropar", "IIT Gandhinagar", "IIT Mandi", "IIT Indore", "IIT Kochi", "Amity Noida", "Amity Lucknow", "Amity Pune", "JSS Noida", "SRCC", "Hindu College", "Delhi University", "LSR", "Mumbai University"]}/>
                                         <Select name={'Degree'} isRequired={true} value={profileData.degree}
                                                 disp='degree'
                                                 setValue={setProfileData} col={'2'}
                                                 options={["B.Tech", "B.A", "B.Com", "B.Des", "B.Arch", "B.B.A", "B.C.A.", "LLB", "BFA", "BMM", "BJMC", "B.Sc", "B.Sc Agriculture"]}/>
                                         <Select name={'Branch / Discipline'} isRequired={true}
-                                              value={profileData.branch} disp='branch'
-                                              setValue={setProfileData} col={'2'}
-                                              options={["Computer Science", "Electrical Engineering", "Civil Engineering", "Mechanical", "Electronics", "Aerospace", "Chemical", "Production and Industrial", "Metallurgy", "Hydrology", "Earthquake", "IT", "Nuclear", "Biotech", "Environmental", "Petroleum", "Automobile"]}/>
+                                                value={profileData.branch} disp='branch'
+                                                setValue={setProfileData} col={'2'}
+                                                options={["Computer Science", "Electrical Engineering", "Civil Engineering", "Mechanical", "Electronics", "Aerospace", "Chemical", "Production and Industrial", "Metallurgy", "Hydrology", "Earthquake", "IT", "Nuclear", "Biotech", "Environmental", "Petroleum", "Automobile"]}/>
                                         <Select name={'Minor Branch'} value={profileData.minor_branch}
-                                              disp='minor_branch'
-                                              setValue={setProfileData} col={'2'}
-                                              options={["Computer Science", "Electrical Engineering", "Civil Engineering", "Mechanical", "Electronics", "Aerospace", "Chemical", "Production and Industrial", "Metallurgy", "Hydrology", "Earthquake", "IT", "Nuclear", "Biotech", "Environmental", "Petroleum", "Automobile"]}/>
+                                                disp='minor_branch'
+                                                setValue={setProfileData} col={'2'}
+                                                options={["Computer Science", "Electrical Engineering", "Civil Engineering", "Mechanical", "Electronics", "Aerospace", "Chemical", "Production and Industrial", "Metallurgy", "Hydrology", "Earthquake", "IT", "Nuclear", "Biotech", "Environmental", "Petroleum", "Automobile"]}/>
 
                                         {/* MM YYYY ONLY */}
                                         <Text name={'Start Date'} value={profileData.course_started}
@@ -485,7 +525,7 @@ const MultiStepForm = ({userId}) => {
                                         </div>
                                     </div>
                                 </div>
-                                </form>
+                            </form>
                         )}
                         {/* Professional Goals */}
                         {currentStep === 2 && (
@@ -538,12 +578,13 @@ const MultiStepForm = ({userId}) => {
                                         className="col-span-2 lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-8">
 
                                         {selectedCareer ? (<>
-                                            {CareerJobs[selectedCareer].map((item,index) => {
+                                            {CareerJobs[selectedCareer].map((item, index) => {
                                                 return (<div className="flex gap-4 px-auto mx-auto col-span-1">
                                                     <div
                                                         className="flex sm:flex-col gap-x-6 mb-2 md:justify-stretch text-center">
                                                         <p className="bg-yellow-400 rounded-md text-center sm:px-auto py-1">{CareerJobs[selectedCareer][index]}</p>
-                                                        <StarRating rating={ratingData[CareerJobs[selectedCareer][index]]}/>
+                                                        <StarRating
+                                                            rating={ratingData[CareerJobs[selectedCareer][index]]}/>
                                                     </div>
                                                     <div className="text-center mt-1">
                                                         <button type='button'
@@ -564,80 +605,80 @@ const MultiStepForm = ({userId}) => {
                         {/* Internships */}
                         {currentStep === 4 && (
                             <form onSubmit={handleNext}>
-                            <div>
-                                <div
-                                    className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
-                                    {profileData.internships.map((x, index) => {
-                                        return (<div
-                                            className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
-                                            <Text name={'Name of the Role'}
-                                                  value={profileData.internships[index].title}
-                                                  disp='title' list='internships' index={index}
-                                                  setValue={setProfileData} col={' col-span-full'}/>
-                                            <Text name={'Company Name'}
-                                                  value={profileData.internships[index].company_name}
-                                                  disp='company_name' list='internships' index={index}
-                                                  setValue={setProfileData} col={4}/>
-                                            <Text name={'Location'}
-                                                  value={profileData.internships[index].location}
-                                                  disp='location' list='internships' index={index}
-                                                  setValue={setProfileData} col={2}/>
-                                            {/* USE MM YYYY ONLY */}
-                                            <Text name={'Start Date'}
-                                                  value={profileData.internships[index].start_date}
-                                                  disp='start_date' index={index} list='internships'
-                                                  setValue={setProfileData} type={'date'} col={3}/>
-                                            <Text name={'End Date'}
-                                                  value={profileData.internships[index].end_date}
-                                                  disp='end_date' list='internships' index={index}
-                                                  setValue={setProfileData} type={'date'} col={3}/>
-                                            <Block name={'Responsibilities'}
-                                                   value={profileData.internships[index].description}
-                                                   disp='description'
-                                                   index={index} list='internships'
-                                                   setValue={setProfileData}
-                                                   col={' col-span-full'} rows={3}/>
-                                            <Text name={'Achievements'}
-                                                  value={profileData.internships[index].summary}
-                                                  disp='summary' index={index} list='internships'
-                                                  setValue={setProfileData} col={' col-span-full'}/>
+                                <div>
+                                    <div
+                                        className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 border-b">
+                                        {profileData.internships.map((x, index) => {
+                                            return (<div
+                                                className="grid grid-cols-6 rounded-md gap-x-2 gap-y-4 p-6 mb-6 bg-gray-200">
+                                                <Text name={'Name of the Role'}
+                                                      value={profileData.internships[index].title}
+                                                      disp='title' list='internships' index={index}
+                                                      setValue={setProfileData} col={' col-span-full'}/>
+                                                <Text name={'Company Name'}
+                                                      value={profileData.internships[index].company_name}
+                                                      disp='company_name' list='internships' index={index}
+                                                      setValue={setProfileData} col={4}/>
+                                                <Text name={'Location'}
+                                                      value={profileData.internships[index].location}
+                                                      disp='location' list='internships' index={index}
+                                                      setValue={setProfileData} col={2}/>
+                                                {/* USE MM YYYY ONLY */}
+                                                <Text name={'Start Date'}
+                                                      value={profileData.internships[index].start_date}
+                                                      disp='start_date' index={index} list='internships'
+                                                      setValue={setProfileData} type={'date'} col={3}/>
+                                                <Text name={'End Date'}
+                                                      value={profileData.internships[index].end_date}
+                                                      disp='end_date' list='internships' index={index}
+                                                      setValue={setProfileData} type={'date'} col={3}/>
+                                                <Block name={'Responsibilities'}
+                                                       value={profileData.internships[index].description}
+                                                       disp='description'
+                                                       index={index} list='internships'
+                                                       setValue={setProfileData}
+                                                       col={' col-span-full'} rows={3}/>
+                                                <Text name={'Achievements'}
+                                                      value={profileData.internships[index].summary}
+                                                      disp='summary' index={index} list='internships'
+                                                      setValue={setProfileData} col={' col-span-full'}/>
 
-                                            <ButtonRow label='Skills Displayed' col={' col-span-full'}
-                                                       buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4']}/>
-                                        </div>)
-                                    })}
-                                    {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
+                                                <ButtonRow label='Skills Displayed' col={' col-span-full'}
+                                                           buttonNames={['Option 1', 'Option 2', 'Option 3', 'Option 4']}/>
+                                            </div>)
+                                        })}
+                                        {/* <h2 className="text-2xl font-semibold mb-4 tracking-wide">{steps[currentStep]}</h2> */}
 
-                                    <div className="flex items-center justify-center rounded-md">
-                                        <div
-                                            onClick={() => {
-                                                setProfileData((prev) => ({
-                                                    ...prev, internships: [...prev.internships, {
-                                                        title: null,
-                                                        company_name: null,
-                                                        location: null,
-                                                        start_date: null,
-                                                        end_date: null,
-                                                        description: null,
-                                                        summary: null
-                                                    }]
-                                                }))
-                                            }}
-                                            className="bg-gray-100 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
-                                            <CirclePlus className='w-10 h-10 text-gray-600'/>
-                                            <p className="text-sm text-gray-600">Add Internship</p>
+                                        <div className="flex items-center justify-center rounded-md">
+                                            <div
+                                                onClick={() => {
+                                                    setProfileData((prev) => ({
+                                                        ...prev, internships: [...prev.internships, {
+                                                            title: null,
+                                                            company_name: null,
+                                                            location: null,
+                                                            start_date: null,
+                                                            end_date: null,
+                                                            description: null,
+                                                            summary: null
+                                                        }]
+                                                    }))
+                                                }}
+                                                className="bg-gray-100 flex flex-col gap-4 rounded-lg p-6 mb-6 justify-center items-center cursor-pointer border-2 border-gray-400 border-dashed hover:opacity-60">
+                                                <CirclePlus className='w-10 h-10 text-gray-600'/>
+                                                <p className="text-sm text-gray-600">Add Internship</p>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div className="w-full flex justify-between px-2">
+                                        <button type="button" onClick={handleBack}
+                                                className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
+                                        </button>
+                                        <button type="submit"
+                                                className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className="w-full flex justify-between px-2">
-                                    <button type="button" onClick={handleBack}
-                                            className="px-8 py-2 text-white bg-red-600 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Back
-                                    </button>
-                                    <button type="submit"
-                                            className="px-8 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-700">Next
-                                    </button>
-                                </div>
-                            </div>
                             </form>
                         )}
                         {/* Projects */}

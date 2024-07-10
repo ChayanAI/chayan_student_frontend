@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
     const router = useRouter()
+    const [pfp, setPfp] = useState('/media/images/300-1.jpg')
     const [userData, setUserdata] = useState(null)
     const [profile, setProfile] = useState(null);
     const [progress, setProgress] = useState(36.3); // Example progress, you can fetch actual completion progress
@@ -61,6 +62,13 @@ const Dashboard = () => {
 
 
                 })
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/pfp/getpfpbyId`, {userId: res.data.id})
+                .then((x) => {
+                    for (let y = 0; y < x.data[0].length; y++) {
+                        setPfp("https://storage.googleapis.com/chayan-profile-picture/" + x.data[0][y].id)
+                        // console.log("https://storage.googleapis.com/chayan-profile-picture/" + x.data[0][y].id)
+                    }
+                });
                 await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getinternbyId`, {userId: res.data.id}).then((res) => {
                     if (res.data.internships.length > 0) {
                         setProfileSections((prev) => ([...prev.slice(0, 4), {
@@ -93,6 +101,8 @@ const Dashboard = () => {
 
                 })
             })
+
+
             setC(q + 2)
 
             setLoader(true)
@@ -128,6 +138,7 @@ const Dashboard = () => {
         })
 
     }
+
     if (!loader) {
         return (<></>)
     } else {
@@ -148,9 +159,9 @@ const Dashboard = () => {
                         <div className=" p-4 w-60 bg-white rounded-lg shadow-md flex flex-col items-center absolute border-2 border-blue-600" style={{ zIndex: 1, top: '21%' }}>
 
                             <img
-                                src="/media/images/300-1.jpg" // Replace with actual image source
+                                src={pfp?(pfp):('/media/images/300-1.jpg')} // Replace with actual image source
                                 alt="Profile"
-                                className="h-28 w-28 rounded-full absolute border-4 border-white"
+                                className="h-28 w-28 object-cover rounded-full absolute border-4 border-white"
                                 style={{zIndex: 1, top: '-15%', left: '9%'}}
                             />
                             <div className="w-full mt-16 mb-4 text-left">
