@@ -103,18 +103,19 @@ const EditProfile = ({userId}) => {
 
     const [loader, setLoader] = useState(true);
     const [currentStep, setCurrentStep] = useState(0);
-    const [ratingData, setRatingData] = useState({});
-    const [selectedCareer, setselectedCareer] = useState();
-
-    useEffect(() => {
+      useEffect(() => {
         if (stepParam) {
             setCurrentStep(parseInt(stepParam));
         }
     }, [stepParam]);
 
+    const [ratingData, setRatingData] = useState({})
+    const [selectedCareer, setselectedCareer] = useState();
+
     useEffect(() => {
         (async () => {
             try {
+
                 await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, {user_id: userId}).then((res) => {
                     setProfileData((prev) => ({...prev, ...res.data}));
                 });
@@ -162,8 +163,11 @@ const EditProfile = ({userId}) => {
                             description: null,
                             summary: null
                         }]) : (res.data.extra_curriculars)
-                    }));
-                });
+
+                    }))
+                })
+
+
 
                 await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getrating`, {user_id: userId}).then((res) => {
                     res.data.map(async (item) => {
@@ -304,6 +308,7 @@ const EditProfile = ({userId}) => {
         ]
     };
 
+
     if (loader) {
         return (<></>);
     } else {
@@ -319,9 +324,10 @@ const EditProfile = ({userId}) => {
                         <VerticalNav currentStep={currentStep} setCurrentStep={setCurrentStep} />
                     </div>
                     <div className="w-3/4 px-8 pt-8">
+
                         <form className="space-y-8 divide-y divide-gray-200">
                         {console.log("Rendering step:", currentStep)}
-                            {currentStep === 0 && <PersonalInformation profileData={profileData} setProfileData={setProfileData} />}
+                            {currentStep === 0 && <PersonalInformation userId={userId} profileData={profileData} setProfileData={setProfileData} />}
                             {currentStep === 1 && <Academics profileData={profileData} setProfileData={setProfileData} />}
                             {currentStep === 2 && <ProfessionalGoals profileData={profileData} setProfileData={setProfileData} setRatingData={setRatingData} />}
                             {currentStep === 3 && <SkillsAssessment profileData={profileData} setProfileData={setProfileData} selectedCareer={selectedCareer} setselectedCareer={setselectedCareer} CareerJobs={CareerJobs} ratingData={ratingData} />}
@@ -337,6 +343,7 @@ const EditProfile = ({userId}) => {
                                 </button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
