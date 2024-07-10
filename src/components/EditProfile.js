@@ -111,17 +111,10 @@ const EditProfile = ({userId}) => {
 
     const [ratingData, setRatingData] = useState({})
     const [selectedCareer, setselectedCareer] = useState();
-    const [pfp, setPfp] = useState('/media/images/300-1.jpg')
+
     useEffect(() => {
         (async () => {
             try {
-                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/pfp/getpfpbyId`, {userId})
-                .then((x) => {
-                    for (let y = 0; y < x.data[0].length; y++) {
-                        setPfp("https://storage.googleapis.com/chayan-profile-picture/" + x.data[0][y].id)
-                        // console.log("https://storage.googleapis.com/chayan-profile-picture/" + x.data[0][y].id)
-                    }
-                });
 
                 await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, {user_id: userId}).then((res) => {
                     setProfileData((prev) => ({...prev, ...res.data}));
@@ -315,33 +308,6 @@ const EditProfile = ({userId}) => {
         ]
     };
 
-    async function handlepfpchange(e) {
-        let postid = userId
-        let file = e.target.files[0]
-        let blob = file.slice(0, file.size, "image/jpeg, image/png");
-        let newFile = new File([blob], `${postid}.jpeg`, {type: "image/jpeg, image/png"});
-        let formData = new FormData();
-        formData.append("imgfile", newFile);
-        await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/pfp/upload`, formData).then((res) => {
-            // console.log(res)
-        }).then(async() => {
-            await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/pfp/getpfp`,formData)
-                .then((x) => {
-                    for (let y = 0; y < x.data[0].length; y++) {
-                        // console.log(x.data[0][y]);
-                        setPfp("https://storage.googleapis.com/chayan-profile-picture/" + x.data[0][y].id)
-                        // console.log("https://storage.googleapis.com/chayan-profile-picture/" + x.data[0][y].id)
-                    }
-                });
-        })
-
-    }
-
-    async function handlepfpdelete() {
-        await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/pfp/deletepfp`,{userId}).then(()=>{
-            setPfp('/media/images/300-1.jpg')
-        })
-    }
 
     if (loader) {
         return (<></>);
@@ -361,7 +327,7 @@ const EditProfile = ({userId}) => {
 
                         <form className="space-y-8 divide-y divide-gray-200">
                         {console.log("Rendering step:", currentStep)}
-                            {currentStep === 0 && <PersonalInformation profileData={profileData} setProfileData={setProfileData} />}
+                            {currentStep === 0 && <PersonalInformation userId={userId} profileData={profileData} setProfileData={setProfileData} />}
                             {currentStep === 1 && <Academics profileData={profileData} setProfileData={setProfileData} />}
                             {currentStep === 2 && <ProfessionalGoals profileData={profileData} setProfileData={setProfileData} setRatingData={setRatingData} />}
                             {currentStep === 3 && <SkillsAssessment profileData={profileData} setProfileData={setProfileData} selectedCareer={selectedCareer} setselectedCareer={setselectedCareer} CareerJobs={CareerJobs} ratingData={ratingData} />}
