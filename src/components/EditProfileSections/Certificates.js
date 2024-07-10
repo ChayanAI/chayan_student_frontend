@@ -6,7 +6,7 @@ import {PhotoIcon, UserCircleIcon} from '@heroicons/react/24/solid'
 
 const Certificates = ({ profileData, setProfileData, months }) => {
     return (
-        <div className="rounded-lg px-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
+        <div className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
         {profileData.extra_curriculars.map((x, index) => {
             return (<div
                 className="grid grid-cols-6 relative rounded-md gap-x-6 gap-y-4 p-6 mb-6 bg-gray-300">

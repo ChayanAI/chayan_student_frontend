@@ -103,7 +103,7 @@ const EditProfile = ({userId}) => {
 
     const [loader, setLoader] = useState(true);
     const [currentStep, setCurrentStep] = useState(0);
-      useEffect(() => {
+    useEffect(() => {
         if (stepParam) {
             setCurrentStep(parseInt(stepParam));
         }
@@ -166,7 +166,6 @@ const EditProfile = ({userId}) => {
 
                     }))
                 })
-
 
 
                 await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getrating`, {user_id: userId}).then((res) => {
@@ -317,31 +316,50 @@ const EditProfile = ({userId}) => {
                 <div className="flex min-h-[calc(100vh-4rem)] gap-6 relative">
                     <div className="w-1/4 px-8 lg:px-16 dark:bg-[#1b1b21]">
                         <Link href={'/dashboard'} className="flex -ml-6 gap-2 pt-5 text-gray-500 font-semibold">
-                            <ChevronLeft />
+                            <ChevronLeft/>
                             Dashboard
                         </Link>
                         <h1 className="text-lg font-bold pt-8 pb-10">Edit your Profile</h1>
-                        <VerticalNav currentStep={currentStep} setCurrentStep={setCurrentStep} />
+                        <VerticalNav currentStep={currentStep} setCurrentStep={setCurrentStep}/>
                     </div>
                     <div className="w-3/4 px-8 pt-8">
 
-                        <form className="space-y-8 divide-y divide-gray-200">
-                        {console.log("Rendering step:", currentStep)}
-                            {currentStep === 0 && <PersonalInformation userId={userId} profileData={profileData} setProfileData={setProfileData} />}
-                            {currentStep === 1 && <Academics profileData={profileData} setProfileData={setProfileData} />}
-                            {currentStep === 2 && <ProfessionalGoals profileData={profileData} setProfileData={setProfileData} setRatingData={setRatingData} />}
-                            {currentStep === 3 && <SkillsAssessment profileData={profileData} setProfileData={setProfileData} selectedCareer={selectedCareer} setselectedCareer={setselectedCareer} CareerJobs={CareerJobs} ratingData={ratingData} />}
-                            {currentStep === 4 && <Internships profileData={profileData} setProfileData={setProfileData} months={months} />}
-                            {currentStep === 5 && <Projects profileData={profileData} setProfileData={setProfileData} months={months} />}
-                            {currentStep === 6 && <VolunteerExperiences profileData={profileData} setProfileData={setProfileData} months={months} />}
-                            {currentStep === 7 && <ExtraCurricularActivities profileData={profileData} setProfileData={setProfileData} months={months} />}
-                            {currentStep === 8 && <Certificates profileData={profileData} setProfileData={setProfileData} months={months} />}
-                            {currentStep === 9 && <AwardsDistinctions profileData={profileData} setProfileData={setProfileData} months={months} />}
+                        <form className=" divide-y divide-gray-200">
+                            {console.log("Rendering step:", currentStep)}
                             <div className="flex justify-end">
-                                <button type="button" onClick={handleSubmit} className="py-2 px-4 bg-green-600 text-white rounded-md">
+                                <button type="button" onClick={handleSubmit}
+                                        className="py-2 px-4 bg-green-600 text-white rounded-md">
                                     Submit
                                 </button>
                             </div>
+                            {currentStep === 0 && <PersonalInformation userId={userId} profileData={profileData}
+                                                                       setProfileData={setProfileData}/>}
+                            {currentStep === 1 &&
+                                <Academics profileData={profileData} setProfileData={setProfileData}/>}
+                            {currentStep === 2 &&
+                                <ProfessionalGoals profileData={profileData} setProfileData={setProfileData}
+                                                   setRatingData={setRatingData}/>}
+                            {currentStep === 3 &&
+                                <SkillsAssessment profileData={profileData} setProfileData={setProfileData}
+                                                  selectedCareer={selectedCareer} setselectedCareer={setselectedCareer}
+                                                  CareerJobs={CareerJobs} ratingData={ratingData}/>}
+                            {currentStep === 4 && <Internships profileData={profileData} setProfileData={setProfileData}
+                                                               months={months}/>}
+                            {currentStep === 5 &&
+                                <Projects profileData={profileData} setProfileData={setProfileData} months={months}/>}
+                            {currentStep === 6 &&
+                                <VolunteerExperiences profileData={profileData} setProfileData={setProfileData}
+                                                      months={months}/>}
+                            {currentStep === 7 &&
+                                <ExtraCurricularActivities profileData={profileData} setProfileData={setProfileData}
+                                                           months={months}/>}
+                            {currentStep === 8 &&
+                                <Certificates profileData={profileData} setProfileData={setProfileData}
+                                              months={months}/>}
+                            {currentStep === 9 &&
+                                <AwardsDistinctions profileData={profileData} setProfileData={setProfileData}
+                                                    months={months}/>}
+
                         </form>
 
                     </div>

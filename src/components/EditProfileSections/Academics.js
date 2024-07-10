@@ -13,7 +13,7 @@ function formatDate(inputDate) {
 const Academics = ({ profileData, setProfileData }) => {
   return (
     <div
-                                    className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 lg:w-[75%] lg:min-w-[580px] ">
+                                    className="rounded-lg px-10 pb-10 mb-[100px] grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 lg:w-[75%] lg:min-w-[580px] ">
                                     <ComboBox name={'College Name'} value={profileData.college_name}
                                               isRequired={true} disp='college_name'
                                               setValue={setProfileData}

@@ -5,7 +5,7 @@ import { CirclePlus, X } from 'lucide-react';
 
 const Internships = ({ profileData, setProfileData, months }) => {
     return (
-        <div className="rounded-lg px-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
+        <div className="rounded-lg p-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
         {profileData.internships.map((x, index) => {
             return (
                 <div

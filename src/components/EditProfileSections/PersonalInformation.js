@@ -59,7 +59,7 @@ const PersonalInformation = ({userId, profileData, setProfileData}) => {
         return (<></>)
     } else {
         return (
-            <div className="rounded-lg p-10 mb-6 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-6 lg:w-[75%] ">
+            <div className="rounded-lg px-10 pb-10 mb-6 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-6 lg:w-[75%] ">
                 <div className="col-span-full">
                     <div className="mt-2 -ml-2 flex items-center gap-x-3">
                         <img src={pfp ? (pfp) : ('/media/images/300-1.jpg')} alt='profile'

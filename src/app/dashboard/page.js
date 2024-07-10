@@ -166,9 +166,9 @@ const Dashboard = () => {
                                 src={pfp?(pfp):('/media/images/300-1.jpg')} // Replace with actual image source
                                 alt="Profile"
                                 className="h-28 w-28 object-cover rounded-full absolute border-4 border-white"
-                                style={{zIndex: 1, top: '-15%', left: '9%'}}
+                                style={{zIndex: 1, top: '-27%', left: '9%'}}
                             />
-                            <div className="w-full mt-16 mb-4 text-left">
+                            <div className="w-full mt-6 mb-4 text-left">
                                 <h2 className="text-lg  font-semibold">{profile.first_name} {profile.last_name}</h2>
                                 <p className="text-sm ">{profile.degree} - {profile.branch} | {calculateYearOfStudy(profile.course_started)}</p>
                                 <p className="text-sm ">CGPA : {profile.cgpa} | Personality: INTJ</p>
@@ -196,7 +196,7 @@ const Dashboard = () => {
                           </div>
                           {profileSections.map((section, index) => (
                             <div key={index}
-                                 onClick={() => handleSectionClick(section.step)}
+                                 onClick={() => handleSectionClick(index)}
                                  className="flex cursor-pointer justify-between items-left mb-2 border-b border-dotted border-gray-300 pb-1">
                               <p>{section.title}</p>
                               {section.filled ? (
