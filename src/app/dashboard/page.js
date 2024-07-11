@@ -97,6 +97,20 @@ const Dashboard = () => {
                         }, ...prev.slice(8)]))
                         q += 1
                     }
+                    if (res.data.certificates.length > 0) {
+                        setProfileSections((prev) => ([...prev.slice(0, 8), {
+                            title: 'Certificates',
+                            filled: true
+                        }, ...prev.slice(9)]))
+                        q += 1
+                    }
+                    if (res.data.awards.length > 0) {
+                        setProfileSections((prev) => ([...prev.slice(0, 9), {
+                            title: 'Awards & Distinctions',
+                            filled: true
+                        }, ...prev.slice(10)]))
+                        q += 1
+                    }
 
                 })
             })

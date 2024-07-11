@@ -98,6 +98,18 @@ const EditProfile = ({userId}) => {
             description: null,
             summary: null
         }],
+        certificates: [{
+            name: null,
+            issuance_date: null,
+            provider_name: null,
+            platform: null
+        }],
+        awards: [{
+            name: null,
+            issuance_date: null,
+            provider_name: null,
+            platform: null
+        }],
         career_path: []
     });
 
@@ -162,7 +174,19 @@ const EditProfile = ({userId}) => {
                             end_date: null,
                             description: null,
                             summary: null
-                        }]) : (res.data.extra_curriculars)
+                        }]) : (res.data.extra_curriculars),
+                        certificates: (res.data.certificates.length === 0) ? ([{
+                            name: null,
+                            issuance_date: null,
+                            provider_name: null,
+                            platform: null
+                        }]) : (res.data.certificates),
+                        awards: (res.data.awards.length === 0) ? ([{
+                            name: null,
+                            issuance_date: null,
+                            provider_name: null,
+                            platform: null
+                        }]) : (res.data.awards),
 
                     }))
                 })
@@ -255,11 +279,15 @@ const EditProfile = ({userId}) => {
                 volunteers: profileData.volunteers,
                 extra_curriculars: profileData.extra_curriculars,
                 college_name: profileData.college_name,
+                certificates: profileData.certificates,
+                awards: profileData.awards,
                 career_path: profileData.career_path
             }).then((res) => console.log(res));
         } catch (err) {
             alert(err.response.data);
         }
+        // console.log(profileData)
+
     };
 
     const CareerJobs = {
@@ -325,7 +353,6 @@ const EditProfile = ({userId}) => {
                     <div className="w-3/4 px-8 pt-8">
 
                         <form className=" divide-y divide-gray-200">
-                            {console.log("Rendering step:", currentStep)}
                             <div className="flex justify-end">
                                 <button type="button" onClick={handleSubmit}
                                         className="py-2 px-4 bg-green-600 text-white rounded-md">
@@ -354,10 +381,10 @@ const EditProfile = ({userId}) => {
                                 <ExtraCurricularActivities profileData={profileData} setProfileData={setProfileData}
                                                            months={months}/>}
                             {currentStep === 8 &&
-                                <Certificates profileData={profileData} setProfileData={setProfileData}
+                                <Certificates userId={userId} profileData={profileData} setProfileData={setProfileData}
                                               months={months}/>}
                             {currentStep === 9 &&
-                                <AwardsDistinctions profileData={profileData} setProfileData={setProfileData}
+                                <AwardsDistinctions userId={userId} profileData={profileData} setProfileData={setProfileData}
                                                     months={months}/>}
 
                         </form>
