@@ -25,7 +25,7 @@ export default function MainLayout({ children, showHeader = true }) {
             <MobileHeader onToggleMobileSidebar={toggleMobileSidebar} />
           </div>
         </>}
-        <main className={`flex-1 ${showHeader ? 'border-t-8 border-white dark:border-black' : ''}`}>
+        <main className={`flex-1 ${showHeader ? 'border-t border-[#E2E2EA] dark:border-black' : ''}`}>
           {children}
         </main>
       </div>

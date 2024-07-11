@@ -18,6 +18,7 @@ module.exports = {
         lato: ['Lato', 'sans-serif'],
         poppins: ['Poppins', 'sans-serif'],
         roboto: ['Roboto', 'sans-serif'],
+        arboria: ['Arboria-Medium'],
       },
       fontSize: {
         tiny: '0.7rem',
