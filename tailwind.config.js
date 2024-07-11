@@ -19,6 +19,7 @@ module.exports = {
         poppins: ['Poppins', 'sans-serif'],
         roboto: ['Roboto', 'sans-serif'],
         arboria: ['Arboria-Medium'],
+        litsans: ['LitSans', 'sans-serif'],
       },
       fontSize: {
         tiny: '0.7rem',

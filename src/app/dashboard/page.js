@@ -142,7 +142,7 @@ const Dashboard = () => {
         else if (studyYear % 10 === 2 && studyYear % 100 !== 12) suffix = 'nd';
         else if (studyYear % 10 === 3 && studyYear % 100 !== 13) suffix = 'rd';
 
-        return `${studyYear}${suffix} Year`;
+        return `${studyYear}${suffix}`;
     }
 
     const handleSectionClick = (step) => {
@@ -161,69 +161,75 @@ const Dashboard = () => {
         return (<></>)
     } else {
         return (
-            <div className="w-full min-h-screen p-6 bg-gray-100 flex flex-col">
-                {/* Header */}
-                <div className="w-full py-14 bg-blue-600 text-white shadow-md mb-6 relative">
-                    <h1 className="text-[2.5rem] pl-12 text-center font-extrabold font-lato">CHAYAN - YOUR PLACEMENT
-                        COACH</h1>
+            <div className="w-full min-h-screen p-10 bg-gray-100 flex gap-6">
 
+                {/* Left Profile container */}
+                <div className="w-1/5 h-fit p-4 relative bg-white rounded-lg shadow-md flex flex-col items-center border border-[#C4C4CD]" style={{ zIndex: 1, top: '21%' }}>
+                    <div className="absolute top-0 right-0 px-4 py-2 text-xs rounded-tr-lg rounded-bl-lg bg-red-600 text-white">Complete Profile</div>
+                    <img
+                        src={pfp?(pfp):('/media/images/300-1.jpg')} // Replace with actual image source
+                        alt="Profile"
+                        className="h-28 w-28 object-cover rounded-full border-4 border-white mt-6"
+                        style={{zIndex: 1, top: '-27%', left: '9%'}}
+                    />
+                    <div className="px-3 mb-4 w-full text-xs text-center">
+                        <p className="mb-1 text-right font-light text-gray-700">{parseInt(profileSections.filter(section => section.filled).length * 100 / profileSections.length)}% Complete</p>
+                        <div className="w-full bg-[#FFF8E7] h-1 rounded-full">
+                          <div className="bg-[#FDDD8C] h-1 rounded-full"
+                               style={{ width: `${profileSections.filter(section => section.filled).length * 100 / profileSections.length}%` }}></div>
+                        </div>
+                    </div>
+                    <div className="mx-auto mb-4 text-center">
+                        <h2 className="text-lg font-semibold">{profile.first_name} {profile.last_name}</h2>
+                        <p className="text-md text-gray-600">Web Developer</p>
+                    </div>                    
+                    <div className="w-full p-5 mx-4 mt-2 mb-4 bg-[#ECF5FF] rounded-lg flex flex-wrap gap-x-10">
+                        <div className="flex flex-col my-2">
+                            <p className="text-xs text-gray-400">Branch</p>
+                            <p className="text-sm text-gray-600 font-medium">{profile.degree} - {profile.branch}</p>
+                        </div>
+                        <div className="flex flex-col my-2">
+                            <p className="text-xs text-gray-400">Year</p>
+                            <p className="text-sm text-gray-600 font-medium">{calculateYearOfStudy(profile.course_started)}</p>
+                        </div>
+                        <div className="flex flex-col my-2">
+                            <p className="text-xs text-gray-400">CGPA</p>
+                            <p className="text-sm text-gray-600 font-medium">{profile.cgpa}</p>
+                        </div>
+                        <div className="flex flex-col my-2">
+                            <p className="text-xs text-gray-400">Personality</p>
+                            <p className="text-sm text-gray-600 font-medium">INTJ</p>
+                        </div>
+                        <div className="flex flex-col my-2">
+                            <p className="text-xs text-gray-400">College</p>
+                            <p className="text-sm text-gray-600 font-medium">{profile.college_name}</p>
+                        </div>
+                    </div>
+                    <div className="w-full px-4 flex flex-wrap gap-x-4 mb-4 text-center">
+                        <p className="text-black font-medium text-sm mb-2">Incomplete Sections</p>
+                        {profileSections.map((section, index) => (
+                          !section.filled && (
+                            <div
+                              key={index}
+                              onClick={() => handleSectionClick(index)}
+                              className="flex cursor-pointer justify-between items-center mb-2 pb-1 text-xs"
+                            >
+                              <p className="text-white bg-red-600 px-4 py-2 rounded-tr-lg rounded-bl-lg">{section.title}</p>
+                            </div>
+                          )
+                        ))}
+                    </div>
                 </div>
 
-
-                <div className="flex flex-1">
-                    {/* Left container */}
-                    <div className="w-1/5 pr-8">
-                        {/* Profile Card */}
-                        <div className=" p-4 w-60 bg-white rounded-lg shadow-md flex flex-col items-center absolute border-2 border-blue-600" style={{ zIndex: 1, top: '21%' }}>
-
-                            <img
-                                src={pfp?(pfp):('/media/images/300-1.jpg')} // Replace with actual image source
-                                alt="Profile"
-                                className="h-28 w-28 object-cover rounded-full absolute border-4 border-white"
-                                style={{zIndex: 1, top: '-27%', left: '9%'}}
-                            />
-                            <div className="w-full mt-6 mb-4 text-left">
-                                <h2 className="text-lg  font-semibold">{profile.first_name} {profile.last_name}</h2>
-                                <p className="text-sm ">{profile.degree} - {profile.branch} | {calculateYearOfStudy(profile.course_started)}</p>
-                                <p className="text-sm ">CGPA : {profile.cgpa} | Personality: INTJ</p>
-                                <p className="text-sm ">{profile.college_name}</p>
-                            </div>
-                            <div className="w-full" style={{marginTop: '-10px',}}>
-                                <h2 className="text-lg font-semibold mt-1 text-left">Career Objectives</h2>
-                                <ul className="list-disc list-inside text-sm">
-                                    {profile.career_path.map((path)=>{
-                                        return(<li className=" ">{path}</li>)
-                                    })}
-                                </ul>
-                            </div>
-                        </div>
-
-                        {/* Profile Completion Section */}
-                        <div className="p-6 pt-4 w-60 mt-40 bg-white rounded-lg shadow-md mb-4 border-2 border-blue-600 text-sm" style={{ width: '' }}>
+                {/* Profile Completion Section */}
+                {/* <div className="p-6 pt-4 w-60 mt-40 bg-white rounded-lg shadow-md mb-4 border-2 border-blue-600 text-sm" style={{ width: '' }}>
                           <h2 className="text-lg font-semibold mb-2">My CHAYAN Profile</h2>
-                          <div className="mb-4 text-sm">
-                            <p className="mb-2">Profile Completion: {parseInt(profileSections.filter(section => section.filled).length * 100 / profileSections.length)}%</p>
-                            <div className="w-full bg-gray-200 h-2 rounded-full">
-                              <div className="bg-gradient-to-r from-green-400 to-blue-500 h-2 rounded-full"
-                                   style={{ width: `${profileSections.filter(section => section.filled).length * 100 / profileSections.length}%` }}></div>
-                            </div>
-                          </div>
-                          {profileSections.map((section, index) => (
-                            <div key={index}
-                                 onClick={() => handleSectionClick(index)}
-                                 className="flex cursor-pointer justify-between items-left mb-2 border-b border-dotted border-gray-300 pb-1">
-                              <p>{section.title}</p>
-                              {section.filled ? (
-                                <CircleCheck className="h-4 w-4 rounded-full text-green-600 bg-green-100 mt-1" />
-                              ) : (
-                                <CircleStop className="h-4 w-4 rounded-full text-red-600 bg-red-100 mt-1" />
-                              )}
-                            </div>
-                          ))}
-                        </div>
+                          
+                          
+                </div> */}
 
-                        {/* Settings and Logout Buttons */}
-                        <div
+                {/* Settings and Logout Buttons */}
+                {/* <div
                             className="p-3 bg-white rounded-lg shadow-md flex justify-between items-center border-2 border-blue-600">
                             <Link href={'/editprofile'} className="flex items-center cursor-pointer">
                                 <Settings/>
@@ -232,100 +238,97 @@ const Dashboard = () => {
                             <div className="flex items-center">
                                 <span onClick={handlelogout} className="text-blue-500 cursor-pointer">Logout</span>
                             </div>
-                        </div>
+                </div> */}
 
-                    </div>
 
-                    {/* Right container */}
-                    <div className="w-full h-fit" style={{marginTop: '-6px', marginLeft: '-8px'}}>
-                        {/* Top section */}
-                        <div className="w-full" style={{marginBottom: '-.8rem'}}>
-                            <div className="grid grid-cols-4 gap-8">
-                                <div
-                                    className={`relative overflow-hidden p-6 rounded-2xl shadow-md cursor-pointer ${selectedSection === 'exploreOpportunities' ? 'border-2 border-blue-500 hover:shadow-xl' : 'border-2 border-gray-300 hover:shadow-xl'}`}
-                                    onClick={() => setSelectedSection('exploreOpportunities')}
-                                    style={{
-                                        marginBottom: '2rem',
-                                        backgroundImage: selectedSection === 'exploreOpportunities' ? 'radial-gradient(closest-side, #2563EB, #00008B)' : 'radial-gradient(closest-side, #E5E7EB, #A9A9A9)'
-                                    }}
-                                >
-                                    <h2 className={`text-2xl text-center font-semibold ${selectedSection === 'exploreOpportunities' ? 'text-white' : 'text-black opacity-50'}`}>
-                                        Explore Opportunities
-                                    </h2>
-                                    {/*<p className={`text-base text-center ${selectedSection === 'exploreOpportunities' ? 'text-white' : 'text-black opacity-50'}`}>*/}
-                                    {/*    Liked: 10 | Applied: 3*/}
-                                    {/*</p>*/}
-                                    {selectedSection === 'exploreOpportunities' &&
-                                        <div className="absolute bottom-0 left-0 right-0 mx-auto w-0 h-0" style={{
-                                            borderBottom: '10px solid transparent',
-                                            borderTop: '10px solid white'
-                                        }}></div>}
-                                </div>
-                                <div
-                                    className={`relative overflow-hidden p-6 rounded-2xl shadow-md cursor-pointer ${selectedSection === 'learningGap' ? 'border-2 border-blue-500 hover:shadow-xl' : 'border-2 border-gray-300 hover:shadow-xl'}`}
-                                    onClick={() => setSelectedSection('learningGap')}
-                                    style={{
-                                        marginBottom: '2rem',
-                                        backgroundImage: selectedSection === 'learningGap' ? 'radial-gradient(closest-side, #2563EB, #00008B)' : 'radial-gradient(closest-side, #E5E7EB, #A9A9A9)'
-                                    }}
-                                >
-                                    <h2 className={`text-2xl text-center font-semibold ${selectedSection === 'learningGap' ? 'text-white' : 'text-black opacity-50'}`}>
-                                        Skill Gap and Learning Path
-                                    </h2>
-                                    {selectedSection === 'learningGap' &&
-                                        <div className="absolute bottom-0 left-0 right-0 mx-auto w-0 h-0" style={{
-                                            borderBottom: '10px solid transparent',
-                                            borderTop: '10px solid white'
-                                        }}></div>}
-                                </div>
-                                <div
-                                    className={`relative overflow-hidden p-6 rounded-2xl shadow-md cursor-pointer ${selectedSection === 'buildResume' ? 'border-2 border-blue-500 hover:shadow-xl' : 'border-2 border-gray-300 hover:shadow-xl'}`}
-                                    onClick={() => setSelectedSection('buildResume')}
-                                    style={{
-                                        marginBottom: '2rem',
-                                        backgroundImage: selectedSection === 'buildResume' ? 'radial-gradient(closest-side, #2563EB, #00008B)' : 'radial-gradient(closest-side, #E5E7EB, #A9A9A9)'
-                                    }}
-                                >
-                                    <h2 className={`text-2xl text-center font-semibold ${selectedSection === 'buildResume' ? 'text-white' : 'text-black opacity-50'}`}>
-                                        Build/ Customize Resume
-                                    </h2>
-                                    <p className={`text-base text-center ${selectedSection === 'buildResume' ? 'text-white' : 'text-black opacity-50'}`}>
-                                        Download
-                                    </p>
-                                    {selectedSection === 'buildResume' &&
-                                        <div className="absolute bottom-0 left-0 right-0 mx-auto w-0 h-0" style={{
-                                            borderBottom: '10px solid transparent',
-                                            borderTop: '10px solid white'
-                                        }}></div>}
-                                </div>
-                                <div
-                                    className={`relative overflow-hidden p-6 rounded-2xl shadow-md cursor-pointer ${selectedSection === 'mockInterviews' ? 'border-2 border-blue-500 hover:shadow-xl' : 'border-2 border-gray-300 hover:shadow-xl'}`}
-                                    onClick={() => setSelectedSection('mockInterviews')}
-                                    style={{
-                                        marginBottom: '2rem',
-                                        backgroundImage: selectedSection === 'mockInterviews' ? 'radial-gradient(closest-side, #2563EB, #00008B)' : 'radial-gradient(closest-side, #E5E7EB, #A9A9A9)'
-                                    }}
-                                >
-                                    <h2 className={`text-2xl text-center pl-2 font-semibold ${selectedSection === 'mockInterviews' ? 'text-white' : 'text-black opacity-50'}`}>
-                                        AI - Mock Interviews
-                                    </h2>
-                                    {/*<p className={`text-base text-center ${selectedSection === 'mockInterviews' ? 'text-white' : 'text-black opacity-50'}`}>*/}
-                                    {/*    2/6 interviews practiced*/}
-                                    {/*</p>*/}
-                                    {selectedSection === 'mockInterviews' &&
-                                        <div className="absolute bottom-0 left-0 right-0 mx-auto w-0 h-0" style={{
-                                            borderBottom: '10px solid transparent',
-                                            borderTop: '10px solid white'
-                                        }}></div>}
-                                </div>
+                {/* Right container */}
+                <div className="w-4/5 h-fit">
+                    {/* Top section */}
+                    <div className="w-full" style={{marginBottom: '-.8rem'}}>
+                        <div className="grid grid-cols-4 gap-8">
+                            <div
+                                className={`relative overflow-hidden p-6 rounded-2xl shadow-md cursor-pointer ${selectedSection === 'exploreOpportunities' ? 'border-2 border-blue-500 hover:shadow-xl' : 'border-2 border-gray-300 hover:shadow-xl'}`}
+                                onClick={() => setSelectedSection('exploreOpportunities')}
+                                style={{
+                                    marginBottom: '2rem',
+                                    backgroundImage: selectedSection === 'exploreOpportunities' ? 'radial-gradient(closest-side, #2563EB, #00008B)' : 'radial-gradient(closest-side, #E5E7EB, #A9A9A9)'
+                                }}
+                            >
+                                <h2 className={`text-2xl text-center font-semibold ${selectedSection === 'exploreOpportunities' ? 'text-white' : 'text-black opacity-50'}`}>
+                                    Explore Opportunities
+                                </h2>
+                                {/*<p className={`text-base text-center ${selectedSection === 'exploreOpportunities' ? 'text-white' : 'text-black opacity-50'}`}>*/}
+                                {/*    Liked: 10 | Applied: 3*/}
+                                {/*</p>*/}
+                                {selectedSection === 'exploreOpportunities' &&
+                                    <div className="absolute bottom-0 left-0 right-0 mx-auto w-0 h-0" style={{
+                                        borderBottom: '10px solid transparent',
+                                        borderTop: '10px solid white'
+                                    }}></div>}
+                            </div>
+                            <div
+                                className={`relative overflow-hidden p-6 rounded-2xl shadow-md cursor-pointer ${selectedSection === 'learningGap' ? 'border-2 border-blue-500 hover:shadow-xl' : 'border-2 border-gray-300 hover:shadow-xl'}`}
+                                onClick={() => setSelectedSection('learningGap')}
+                                style={{
+                                    marginBottom: '2rem',
+                                    backgroundImage: selectedSection === 'learningGap' ? 'radial-gradient(closest-side, #2563EB, #00008B)' : 'radial-gradient(closest-side, #E5E7EB, #A9A9A9)'
+                                }}
+                            >
+                                <h2 className={`text-2xl text-center font-semibold ${selectedSection === 'learningGap' ? 'text-white' : 'text-black opacity-50'}`}>
+                                    Skill Gap and Learning Path
+                                </h2>
+                                {selectedSection === 'learningGap' &&
+                                    <div className="absolute bottom-0 left-0 right-0 mx-auto w-0 h-0" style={{
+                                        borderBottom: '10px solid transparent',
+                                        borderTop: '10px solid white'
+                                    }}></div>}
+                            </div>
+                            <div
+                                className={`relative overflow-hidden p-6 rounded-2xl shadow-md cursor-pointer ${selectedSection === 'buildResume' ? 'border-2 border-blue-500 hover:shadow-xl' : 'border-2 border-gray-300 hover:shadow-xl'}`}
+                                onClick={() => setSelectedSection('buildResume')}
+                                style={{
+                                    marginBottom: '2rem',
+                                    backgroundImage: selectedSection === 'buildResume' ? 'radial-gradient(closest-side, #2563EB, #00008B)' : 'radial-gradient(closest-side, #E5E7EB, #A9A9A9)'
+                                }}
+                            >
+                                <h2 className={`text-2xl text-center font-semibold ${selectedSection === 'buildResume' ? 'text-white' : 'text-black opacity-50'}`}>
+                                    Build/ Customize Resume
+                                </h2>
+                                <p className={`text-base text-center ${selectedSection === 'buildResume' ? 'text-white' : 'text-black opacity-50'}`}>
+                                    Download
+                                </p>
+                                {selectedSection === 'buildResume' &&
+                                    <div className="absolute bottom-0 left-0 right-0 mx-auto w-0 h-0" style={{
+                                        borderBottom: '10px solid transparent',
+                                        borderTop: '10px solid white'
+                                    }}></div>}
+                            </div>
+                            <div
+                                className={`relative overflow-hidden p-6 rounded-2xl shadow-md cursor-pointer ${selectedSection === 'mockInterviews' ? 'border-2 border-blue-500 hover:shadow-xl' : 'border-2 border-gray-300 hover:shadow-xl'}`}
+                                onClick={() => setSelectedSection('mockInterviews')}
+                                style={{
+                                    marginBottom: '2rem',
+                                    backgroundImage: selectedSection === 'mockInterviews' ? 'radial-gradient(closest-side, #2563EB, #00008B)' : 'radial-gradient(closest-side, #E5E7EB, #A9A9A9)'
+                                }}
+                            >
+                                <h2 className={`text-2xl text-center pl-2 font-semibold ${selectedSection === 'mockInterviews' ? 'text-white' : 'text-black opacity-50'}`}>
+                                    AI - Mock Interviews
+                                </h2>
+                                {/*<p className={`text-base text-center ${selectedSection === 'mockInterviews' ? 'text-white' : 'text-black opacity-50'}`}>*/}
+                                {/*    2/6 interviews practiced*/}
+                                {/*</p>*/}
+                                {selectedSection === 'mockInterviews' &&
+                                    <div className="absolute bottom-0 left-0 right-0 mx-auto w-0 h-0" style={{
+                                        borderBottom: '10px solid transparent',
+                                        borderTop: '10px solid white'
+                                    }}></div>}
                             </div>
                         </div>
-                        {selectedSection === 'exploreOpportunities' && <OpportunitiesView/>}
-                        {selectedSection === 'learningGap' && <LearningPathView/>}
-                        {selectedSection === 'buildResume' && <ResumeBuilderView/>}
-                        {selectedSection === 'mockInterviews' && <MockInterviewsView/>}
                     </div>
-
+                    {selectedSection === 'exploreOpportunities' && <OpportunitiesView/>}
+                    {selectedSection === 'learningGap' && <LearningPathView/>}
+                    {selectedSection === 'buildResume' && <ResumeBuilderView/>}
+                    {selectedSection === 'mockInterviews' && <MockInterviewsView/>}
                 </div>
             </div>
         );
