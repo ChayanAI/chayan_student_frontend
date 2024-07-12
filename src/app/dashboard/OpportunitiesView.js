@@ -12,6 +12,7 @@ const OpportunitiesView = () => {
     const [applications, setApplications] = useState(20);
     const [skillRatings, setSkillRatings] = useState({mustHave: [], goodToHave: []});
     const [appliedJobs, setAppliedJobs] = useState(new Set()); // Track applied jobs
+    const [applicationList, setApplicationList] = useState([])
     const [company, setCompany] = useState(''); // Store the company name
     const [loader, setLoader] = useState(false)
     const [ratingData, setRatingData] = useState({})
@@ -42,6 +43,9 @@ const OpportunitiesView = () => {
                             })
                         })
                     })
+                })
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/applications/getbyId`, {user_id: res.data.id}).then((res) => {
+                    setApplicationList(res.data)
                 })
             })
             await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofiles`).then((res) => {
@@ -187,8 +191,29 @@ const OpportunitiesView = () => {
     };
 
 
-    function toggleapply() {
+    async function toggleapply(job_id) {
+        try {
+            if (applicationList.filter((item) => item.job_id === job_id)?.length === 0) {
 
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/applications/apply`, {
+                    job_id: job_id,
+                    student_id: userId
+                })
+            } else {
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/applications/withdraw`, {
+                    job_id: job_id,
+                    student_id: userId
+                })
+            }
+
+        } catch (err) {
+            alert(err.response.data)
+        }
+
+
+        await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/applications/getbyId`, {user_id: userId}).then((res) => {
+            setApplicationList(res.data)
+        })
     }
 
     if (!loader) {
@@ -217,12 +242,12 @@ const OpportunitiesView = () => {
                                         <h3 className={`text-lg font-semibold ${selectedJob && selectedJob.id === job.id ? ("text-[#007fff]") : ("")}`}>{job.title}</h3>
                                         <div className="flex gap-1 text-xs">
                                             <div className="text-[#696974]">
-                                            {(recruiterProfiles.find((item)=>item.user_id===job.recruiter_id))?.company_name}
-                                        </div>
-                                        <div className="mt-[-1px] text-[#696974]">|</div>
-                                        <div className="text-[#696974]">
-                                            {(recruiterProfiles.find((item)=>item.user_id===job.recruiter_id))?.office_address}
-                                        </div>
+                                                {(recruiterProfiles.find((item) => item.user_id === job.recruiter_id))?.company_name}
+                                            </div>
+                                            <div className="mt-[-1px] text-[#696974]">|</div>
+                                            <div className="text-[#696974]">
+                                                {(recruiterProfiles.find((item) => item.user_id === job.recruiter_id))?.office_address}
+                                            </div>
                                         </div>
 
                                     </div>
@@ -493,9 +518,9 @@ const OpportunitiesView = () => {
                                     </div>
 
                                     <button
-                                        onClick={toggleapply}
+                                        onClick={() => toggleapply(selectedJob.id)}
                                         className="bg-blue-600 hover:bg-blue-800 text-white py-2 px-6 rounded transition-transform duration-300 ">
-                                        Apply
+                                        {applicationList.filter((item) => item.job_id === selectedJob.id)?.length === 0 ? ("Apply") : ("Applied")}
                                     </button>
 
                                 </div>
