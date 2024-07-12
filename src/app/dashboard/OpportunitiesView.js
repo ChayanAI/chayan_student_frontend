@@ -166,16 +166,16 @@ const OpportunitiesView = () => {
         console.log(ratingData)
         console.log('Selected rating:', name, roundedrating);
         await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getrating`, {user_id: userId}).then((res) => {
+            // console.log(res.data)
+            res.data.map(async (item) => {
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getskillname`, {skill_id: item.skill_id}).then((res) => {
                     // console.log(res.data)
-                    res.data.map(async (item) => {
-                        await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentprofile/getskillname`, {skill_id: item.skill_id}).then((res) => {
-                            // console.log(res.data)
-                            setRatingData((prev) => {
-                                return ({...prev, [res.data.name]: item.rating})
-                            })
-                        })
+                    setRatingData((prev) => {
+                        return ({...prev, [res.data.name]: item.rating})
                     })
                 })
+            })
+        })
 
         // Here you can send the rating to your backend
     };
@@ -194,31 +194,36 @@ const OpportunitiesView = () => {
                         <div
                             key={job.id}
                             onClick={() => handleJobClick(job)}
-                            className={`p-2 mb-4 bg-white rounded-lg shadow-md cursor-pointer transition-all duration-300 border-2 ${selectedJob && selectedJob.id === job.id ? 'border-[#007fff] border-opacity-[40%] bg-[#007fff] bg-opacity-[5%]' : 'border-transparent'} hover:shadow-lg`}
+                            className={`p-2 mb-4 rounded-lg shadow-md cursor-pointer transition-all duration-300 border-2 ${selectedJob && selectedJob.id === job.id ? 'border-[#007fff] border-opacity-[40%] bg-[#007fff] bg-opacity-[5%]' : 'border-transparent bg-[#CDCDCD] bg-opacity-[18%]'} hover:shadow-lg`}
                         >
-                            <div className="flex items-center mb-2">
-                                <img
-                                    src={job.companyLogo || '/media/images/amazon_PNG21.png'}
-                                    alt={job.company_name}
-                                    className="h-12 w-12 mr-3" style={{marginTop: '-5rem'}}
-                                />
-                                <div>
-                                    <h3 className="text-lg font-semibold">{job.title}</h3>
-                                    <p className="text-sm text-gray-600 mb-1">CTC - {job.salary}</p>
-                                    <p className="text-sm text-gray-600 mb-1">Last Date
-                                        - {new Date(job.last_date).toLocaleDateString()}</p>
-                                    <p className="text-sm text-gray-600 mb-1">Branch - {job.branch_required}</p>
-                                    <p className="text-sm text-gray-600 mb-1">CGPA - {job.cgpa_required} and above</p>
+                            <div className="flex flex-col items-center justify-start mb-2 pb-[50px]">
+                                <div className="flex items-center justify-between">
+                                    <img
+                                        src={job.companyLogo || '/media/images/amazon_PNG21.png'}
+                                        alt={job.company_name}
+                                        className="h-12 w-12 mr-3"
+                                    />
+                                    <h3 className={`text-lg font-semibold ${selectedJob && selectedJob.id === job.id ? ("text-[#007fff]") : ("")}`}>{job.title}</h3>
+                                </div>
+                                <div className="w-full text-left ml-[40px] ">
+
+
+                                    <p className="text-[14px] text-gray-600 mb-1">CTC: {job.salary}</p>
+                                    <p className="text-[14px] text-gray-600 mb-1">Last
+                                        Date: {new Date(job.last_date).toLocaleDateString()}</p>
+                                    <p className="text-[14px] text-gray-600 mb-1">Branch: {job.branch_required}</p>
+                                    <p className="text-[14px] text-gray-600 mb-1">CGPA: {job.cgpa_required} and
+                                        above</p>
                                 </div>
                             </div>
                             <div className="flex items-center justify-between mt-2">
-                                <div className="flex flex-col items-center cursor-pointer" onClick={() => {
-                                    handleLike(job.id)
-                                }}>
-                                <span
-                                    className={`text-lg select-none ${likedJobs.has(job.id) ? 'text-blue-500' : 'text-green-500'}`}>{likedJobs.has(job.id) ? 'Liked' : 'Like'}</span>
-                                    {/*<span className={`text-sm ${likedJobs.has(job.id) ? 'text-blue-500' : 'text-gray-600'}`}>{likes[job.id] || 0} {likedJobs.has(job.id) ? ' Students Liked' : 'Students Liked'}</span>*/}
-                                </div>
+                                {/*<div className="flex flex-col items-center cursor-pointer" onClick={() => {*/}
+                                {/*    handleLike(job.id)*/}
+                                {/*}}>*/}
+                                {/*<span*/}
+                                {/*    className={`text-lg select-none ${likedJobs.has(job.id) ? 'text-blue-500' : 'text-green-500'}`}>{likedJobs.has(job.id) ? 'Liked' : 'Like'}</span>*/}
+                                {/*    /!*<span className={`text-sm ${likedJobs.has(job.id) ? 'text-blue-500' : 'text-gray-600'}`}>{likes[job.id] || 0} {likedJobs.has(job.id) ? ' Students Liked' : 'Students Liked'}</span>*!/*/}
+                                {/*</div>*/}
                                 {/*<div className="flex flex-col items-center cursor-pointer" onClick={() => handleApply(job.id)}>*/}
                                 {/*    <span className={`text-lg ${appliedJobs.has(job.id) ? 'text-blue-500' : 'text-green-500'}`}>{appliedJobs.has(job.id) ? 'Applied' : 'Apply'}</span>*/}
                                 {/*    <span className={`text-sm ${appliedJobs.has(job.id) ? 'text-blue-500' : 'text-gray-600'}`}>{applications} {appliedJobs.has(job.id) ? 'Students Applied' : 'Students Applied'}</span>*/}
@@ -259,43 +264,43 @@ const OpportunitiesView = () => {
                                     <p className="text-gray-800 text-sm mb-2">{selectedJob.department || Department} |
                                         Location - {company.office_address || 'N/A'}</p>
                                     <div
-                                        className="grid grid-cols-3 gap-1 text-sm text-gray-800 border border-gray-300">
+                                        className="grid grid-cols-3 gap-1 text-sm text-gray-800 ">
                                         {/* Header Row */}
-                                        <div className="col-span-1 bg-blue-600 text-white text-center p-2">
+                                        <div className="col-span-1 rounded-l-[8px] bg-blue-600 text-white text-center p-2">
                                             <strong></strong>
                                         </div>
                                         <div className="col-span-1 bg-blue-600 text-white text-center p-2"><strong>Must
                                             Have</strong></div>
-                                        <div className="col-span-1 bg-blue-600 text-white text-center p-2"><strong>Good
+                                        <div className="col-span-1 rounded-r-[8px] bg-blue-600 text-white text-center p-2"><strong>Good
                                             to
                                             Have</strong></div>
 
                                         {/* Row 1 */}
-                                        <div className="p-2   bg-gray-300 border-gray-300">CGPA/Pct</div>
+                                        <div className="p-2 rounded-l-[8px]  bg-[#D1D5DB] border-gray-300">CGPA/Pct</div>
                                         <div
-                                            className="p-2  bg-gray-300 border-gray-300">{selectedJob.cgpa_required || 'None'}</div>
+                                            className="p-2 bg-[#D1D5DB] border-gray-300">{selectedJob.cgpa_required || 'None'}</div>
                                         <div
-                                            className="p-2   bg-gray-300 border-gray-300">{selectedJob.cgpa_preferred || 'None'}</div>
+                                            className="p-2 rounded-r-[8px]  bg-[#D1D5DB] border-gray-300">{selectedJob.cgpa_preferred || 'None'}</div>
 
                                         {/* Row 2 */}
-                                        <div className="p-2  border-gray-300">Branch</div>
+                                        <div className="p-2 rounded-l-[8px] bg-[#F1F1F1] border-gray-300">Branch</div>
                                         <div
-                                            className="p-2  border-gray-300">{selectedJob.branch_required || 'None'}</div>
-                                        <div className="p-2  border-gray-300">N/A</div>
+                                            className="p-2 bg-[#F1F1F1] border-gray-300">{selectedJob.branch_required || 'None'}</div>
+                                        <div className="p-2 rounded-r-[8px] bg-[#F1F1F1] border-gray-300">N/A</div>
 
                                         {/* Row 3 */}
-                                        <div className="p-2  bg-gray-300 border-gray-300">Certification</div>
+                                        <div className="p-2 rounded-l-[8px] bg-[#D1D5DB] border-gray-300">Certification</div>
                                         <div
-                                            className="p-2  bg-gray-300 border-gray-300">{selectedJob.certification_required || 'None'}</div>
+                                            className="p-2 bg-[#D1D5DB] border-gray-300">{selectedJob.certification_required || 'None'}</div>
                                         <div
-                                            className="p-2  bg-gray-300 border-gray-300">{selectedJob.certification_preferred || 'None'}</div>
+                                            className="p-2 rounded-r-[8px] bg-[#D1D5DB] border-gray-300">{selectedJob.certification_preferred || 'None'}</div>
 
                                         {/* Row 4 */}
-                                        <div className="p-2  border-gray-300">Skills</div>
+                                        <div className="p-2 rounded-l-[8px] bg-[#F1F1F1] border-gray-300">Skills</div>
                                         <div
-                                            className="p-2  border-gray-300">{selectedJob.skills_required || 'None'}</div>
+                                            className="p-2  bg-[#F1F1F1] border-gray-300">{selectedJob.skills_required || 'None'}</div>
                                         <div
-                                            className="p-2  border-gray-300">{selectedJob.skills_preferred || 'None'}</div>
+                                            className="p-2 rounded-r-[8px] bg-[#F1F1F1] border-gray-300">{selectedJob.skills_preferred || 'None'}</div>
                                     </div>
                                 </div>
 
@@ -340,7 +345,9 @@ const OpportunitiesView = () => {
                                                     <td className="px-3 py-3 whitespace-normal text-sm font-medium text-gray-900 w-32 break-words">{skill.skill}</td>
                                                     <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
 
-                                                            <StarRating name={skill.skill} setRating={setRating} rating={ratingData[skill.skill]} onRatingChange={handleRatingChange}/>
+                                                        <StarRating name={skill.skill} setRating={setRating}
+                                                                    rating={ratingData[skill.skill]}
+                                                                    onRatingChange={handleRatingChange}/>
 
                                                     </td>
                                                     <td className="px-6 py-2 whitespace-nowrap text-sm text-red-500">Pending</td>
@@ -377,7 +384,9 @@ const OpportunitiesView = () => {
                                                     <td className="px-3 py-3 whitespace-normal text-sm font-medium text-gray-900 w-32 break-words">{skill.skill}</td>
                                                     <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
 
-                                                            <StarRating  name={skill.skill} setRating={setRating} rating={ratingData[skill.skill]} onRatingChange={handleRatingChange}/>
+                                                        <StarRating name={skill.skill} setRating={setRating}
+                                                                    rating={ratingData[skill.skill]}
+                                                                    onRatingChange={handleRatingChange}/>
 
 
                                                     </td>
@@ -396,11 +405,20 @@ const OpportunitiesView = () => {
                                 )}
 
                                 {/* Apply Button */}
-                                <div className="flex justify-center mt-4 mb-4" style={{marginTop: '-4px'}}>
+                                <div className="flex justify-center mt-4 mb-4 gap-7" style={{marginTop: '-4px'}}>
+                                    <div className="flex flex-col items-center cursor-pointer" onClick={() => {
+                                        handleLike(selectedJob.id)
+                                    }}>
+                                <span
+                                    className={` py-2 px-6 rounded transition-transform duration-300 ${likedJobs.has(selectedJob.id) ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'}`}>{likedJobs.has(selectedJob.id) ? 'Liked' : 'Like'}</span>
+                                        {/*<span className={`text-sm ${likedJobs.has(job.id) ? 'text-blue-500' : 'text-gray-600'}`}>{likes[job.id] || 0} {likedJobs.has(job.id) ? ' Students Liked' : 'Students Liked'}</span>*/}
+                                    </div>
+
                                     <button
-                                        className="bg-blue-600 hover:bg-blue-800 text-white py-3 px-6 rounded transition-transform duration-300 hover:scale-105 ">
+                                        className="bg-blue-600 hover:bg-blue-800 text-white py-2 px-6 rounded transition-transform duration-300 ">
                                         Apply
                                     </button>
+
                                 </div>
                             </div>
                         </>
