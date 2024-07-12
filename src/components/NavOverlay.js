@@ -1,13 +1,24 @@
 "use client"
 import React, { useState } from 'react';
 import { Briefcase, FileText, Moon } from 'lucide-react';
+import Link from 'next/link'
+import axios from "axios";
+import {useRouter} from "next/navigation";
 
 const NavOverlay = ({ darkMode, setDarkMode }) => {
+    const router = useRouter()
 
   const handleCheckboxChange = () => {
     setDarkMode(!darkMode);
     document.documentElement.classList.toggle('dark', !darkMode);
+
   }
+  const handlelogout = async () => {
+        await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentauth/clear`).then(() => {
+            router.push('/login')
+        })
+
+    }
 
   return (
     <div className="absolute top-20 right-16 w-72 bg-white shadow-lg rounded-lg p-4 text-[#92929D]">
@@ -43,10 +54,12 @@ const NavOverlay = ({ darkMode, setDarkMode }) => {
         </label>
       </div>
       <hr className='my-2 text-[#F4F4F4]' />
+        <Link href={'/editprofile'}>
       <div className="flex items-center px-4 py-2 cursor-pointer font-medium">
         <span>Account Settings</span>
       </div>
-      <div className="flex items-center px-4 py-2 text-red-500 cursor-pointer font-medium">
+        </Link>
+      <div onClick={handlelogout} className="flex items-center px-4 py-2 text-red-500 cursor-pointer font-medium">
         <span>Log Out</span>
       </div>
     </div>
