@@ -124,10 +124,18 @@ const EditProfile = ({userId}) => {
     const [ratingData, setRatingData] = useState({})
     const [selectedCareer, setselectedCareer] = useState();
     const [isDisabled, setIsDisabled] = useState(false);
+    const [pfp, setPfp] = useState('/media/images/300-1.jpg')
 
     useEffect(() => {
         (async () => {
             try {
+                await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/pfp/getpfpbyId`, {userId})
+                .then((x) => {
+                    for (let y = 0; y < x.data[0].length; y++) {
+                        setPfp("https://storage.googleapis.com/chayan-profile-picture/" + x.data[0][y].id)
+                        // console.log("https://storage.googleapis.com/chayan-profile-picture/" + x.data[0][y].id)
+                    }
+                });
 
                 await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, {user_id: userId}).then((res) => {
                     setProfileData((prev) => ({...prev, ...res.data}));
@@ -354,7 +362,7 @@ const EditProfile = ({userId}) => {
                 <div className="w-full flex justify-between px-8 lg:px-16 dark:bg-[#1b1b21] items-center">
                     <div className="w-2/3 flex flex-col gap-6 -mt-24">
                         <div className="relative w-fit">
-                            <img src={('/media/images/300-1.jpg')} alt='profile'
+                            <img src={pfp} alt='profile'
                                 className='h-28 w-28 object-cover ml-2 border-2 border-white rounded-[50%]'/>
                             <div className="absolute p-[0.3rem] bg-white hover:bg-gray-100 text-gray-400 rounded-full bottom-1 right-1 cursor-pointer"><Pencil size={14} /></div>
                         </div>
@@ -362,6 +370,7 @@ const EditProfile = ({userId}) => {
                     </div>
                     <div className="flex gap-4 justify-end">
                         <button type="button"
+                                onClick={()=>router.push('/dashboard')}
                                 className="py-2 px-4 bg-gray-200 text-gray-500 rounded-lg h-fit">
                             Cancel
                         </button>
