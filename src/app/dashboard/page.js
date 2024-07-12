@@ -32,6 +32,7 @@ const Dashboard = () => {
       { title: 'Certificates', filled: false, step: 8 },
       { title: 'Awards & Distinctions', filled: false, step: 9 },
     ]);   
+    const hasIncompleteSections = profileSections.some(section => !section.filled);
     const [exp, setExp] = useState()
     const [selectedSection, setSelectedSection] = useState('exploreOpportunities');
     const [loader, setLoader] = useState(false)
@@ -206,7 +207,7 @@ const Dashboard = () => {
                         </div>
                     </div>
                     <div className="w-full px-4 flex flex-wrap gap-x-4 text-center">
-                        <p className="text-black font-medium text-sm mb-2">Incomplete Sections</p><br />
+                        {hasIncompleteSections && <p className="text-black font-medium text-sm mb-2">Incomplete Sections</p>}<br />
                         {profileSections.map((section, index) => (
                           !section.filled && (
                             <div
