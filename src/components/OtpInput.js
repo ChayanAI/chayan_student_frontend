@@ -15,9 +15,6 @@ const OtpInput = ({ numDigits, onSubmit }) => {
         inputRefs.current[index + 1].focus();
       } else {
         inputRefs.current[index].blur();
-        if (newOtp.every(digit => digit !== '')) {
-          onSubmit(newOtp.join(''));
-        }
       }
     }
   };
@@ -51,23 +48,37 @@ const OtpInput = ({ numDigits, onSubmit }) => {
     e.target.select();
   };
 
+  const handleSubmit = () => {
+    if (otp.every(digit => digit !== '')) {
+      onSubmit(otp.join(''));
+    }
+  };
+
   return (
-    <div className="flex space-x-2">
-      {Array.from({ length: numDigits }, (_, index) => (
-        <input
-          key={index}
-          type="text"
-          maxLength="1"
-          className="border border-gray-400 w-8 h-8 text-center text-sm px-0"
-          value={otp[index]}
-          onChange={(e) => handleChange(e, index)}
-          onKeyDown={(e) => handleKeyDown(e, index)}
-          onFocus={handleFocus}
-          ref={(el) => inputRefs.current[index] = el}
-        />
-      ))}
+    <div className="flex gap-4 items-end">
+      <div className="flex space-x-2 mb-[2px]">
+        {Array.from({ length: numDigits }, (_, index) => (
+          <input
+            key={index}
+            type="text"
+            maxLength="1"
+            className="bg-blue-200 border-0 rounded-xl w-10 h-10 text-center text-sm px-0"
+            value={otp[index]}
+            onChange={(e) => handleChange(e, index)}
+            onKeyDown={(e) => handleKeyDown(e, index)}
+            onFocus={handleFocus}
+            ref={(el) => inputRefs.current[index] = el}
+          />
+        ))}
+      </div>
+      <button
+        onClick={handleSubmit}
+        className="mb-[9px] rounded-md px-3 py-1 bg-blue-600 text-blue-50 text-xs"
+      >
+        Validate
+      </button>
     </div>
   );
 };
 
-export default OtpInput
+export default OtpInput;

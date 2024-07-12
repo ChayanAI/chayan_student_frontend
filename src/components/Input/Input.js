@@ -45,10 +45,10 @@ const Input = ({
 
   return (
     <div className={`sm:col-span-${col}`}>
-      <label htmlFor={stringify(name)} className="block text-sm font-medium leading-6 text-gray-900 dark:text-[#dcdcdc]">
+      <label htmlFor={stringify(name)} className="block text-xs font-medium ml-1 leading-6 text-gray-400 dark:text-[#dcdcdc]">
         {name} {isRequired && <span className="text-red-700">*</span>}
       </label>
-      <div className="mt-2">
+      <div className="my-1">
         {variant === 'input' && (
           <input
             {...props}
@@ -62,7 +62,7 @@ const Input = ({
             autoComplete={stringify(name)}
             readOnly={readOnly}
             required={isRequired}
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset dark:bg-[#d0cfd1] ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-lg border-0 px-4 py-1.5 text-gray-900 bg-gray-200 shadow-sm dark:bg-[#d0cfd1] placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6"
           />
         )}
         {variant === 'select' && (
@@ -74,7 +74,7 @@ const Input = ({
             onChange={handleChange}
             autoComplete={stringify(name)}
             required={isRequired}
-            className="block w-full rounded-md border-0 dark:bg-[#d0cfd1] py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:max-w-xs sm:text-sm sm:leading-6"
+            className="block w-full rounded-lg border-0 dark:bg-[#d0cfd1] px-4 py-1.5 text-gray-900 bg-gray-200 shadow-sm focus:ring-2 focus:ring-inset focus:ring-gray-300 sm:max-w-xs sm:text-sm sm:leading-6"
           >
             {options && options.map((option, idx) => (
               <option key={idx} value={option}>
@@ -93,7 +93,7 @@ const Input = ({
             onChange={handleChange}
             readOnly={readOnly}
             required={isRequired}
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-lg border-0 px-4 py-1.5 text-gray-900 bg-gray-200 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6"
           />
         )}
         {variant === 'combobox' && (
@@ -123,7 +123,7 @@ const Input = ({
           >
             <div className="relative">
               <ComboboxInput
-                className="w-full rounded-md border-0 dark:bg-[#d0cfd1] py-1.5 pl-4 pr-12 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                className="w-full rounded-lg border-0 dark:bg-[#d0cfd1] px-4 py-1.5 pl-4 pr-12 text-gray-900 bg-gray-200 shadow-sm  focus:ring-2 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6"
                 onChange={(event) => setQuery(event.target.value)}
                 displayValue={(option) => option || ''}
                 {...props}
@@ -132,13 +132,13 @@ const Input = ({
                 <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
               </ComboboxButton>
               {filteredOptions.length > 0 && (
-                <ComboboxOptions className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                <ComboboxOptions className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-gray-100 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                   {filteredOptions.map((option, idx) => (
                     <ComboboxOption
                       key={idx}
                       value={option}
                       className={({ active }) =>
-                        classNames('relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-indigo-600 text-white' : 'text-gray-900')
+                        classNames('relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-gray-300 text-gray-500' : 'text-gray-600')
                       }
                     >
                       {({ active, selected }) => (
@@ -147,7 +147,7 @@ const Input = ({
                             <span className={`ml-3 truncate', ${selected && 'font-semibold'}`}>{option}</span>
                           </div>
                           {selected && (
-                            <span className={classNames('absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-white' : 'text-indigo-600')}>
+                            <span className={classNames('absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-gray-500' : 'text-gray-600')}>
                               <CheckIcon className="h-5 w-5" aria-hidden="true" />
                             </span>
                           )}

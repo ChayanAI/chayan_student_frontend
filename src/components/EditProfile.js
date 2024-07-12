@@ -7,9 +7,9 @@ import {Text, Select, Block, ComboBox} from './Input';
 import OtpInput from './OtpInput';
 import SkillRating from './SkillRating';
 import StarRating from './StarRating';
-import {ChevronLeft, CircleCheckBig, CirclePlus, X} from 'lucide-react';
+import {ArrowLeft, CircleCheckBig, CirclePlus, X, Pencil} from 'lucide-react';
 import axios from "axios";
-import VerticalNav from './VerticalNav';
+import EditProfileNav from './EditProfileNav';
 import {PhotoIcon, UserCircleIcon} from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import PersonalInformation from './EditProfileSections/PersonalInformation';
@@ -123,6 +123,7 @@ const EditProfile = ({userId}) => {
 
     const [ratingData, setRatingData] = useState({})
     const [selectedCareer, setselectedCareer] = useState();
+    const [isDisabled, setIsDisabled] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -340,56 +341,63 @@ const EditProfile = ({userId}) => {
         return (<></>);
     } else {
         return (
-            <div className="flex flex-col w-full gap-4 bg-gray-100 dark:bg-[#101117] dark:text-[#f8f8f8]">
-                <div className="flex min-h-[calc(100vh-4rem)] gap-6 relative">
-                    <div className="w-1/4 px-8 lg:px-16 dark:bg-[#1b1b21]">
-                        <Link href={'/dashboard'} className="flex -ml-6 gap-2 pt-5 text-gray-500 font-semibold">
-                            <ChevronLeft/>
-                            Dashboard
-                        </Link>
-                        <h1 className="text-lg font-bold pt-8 pb-10">Edit your Profile</h1>
-                        <VerticalNav currentStep={currentStep} setCurrentStep={setCurrentStep}/>
+            <div className="flex flex-col w-full gap-6 px-16 bg-gray-50 dark:bg-[#101117] dark:text-[#f8f8f8]">       
+                <Link href={'/dashboard'} className="flex items-center gap-2 pt-10 pb-2 text-black font-bold text-2xl">
+                    <div className="bg-white rounded-full p-2">
+                        <ArrowLeft size={16}/>
                     </div>
-                    <div className="w-3/4 px-8 pt-8">
+                    Account Settings
+                </Link>
+                <div className="w-full h-[140px]">
+                    <img src="/media/images/EditProfileBG.svg" alt="cover-image" className="w-full h-full object-cover rounded-t-3xl" />
+                </div>
+                <div className="w-full flex justify-between px-8 lg:px-16 dark:bg-[#1b1b21] items-center">
+                    <div className="w-2/3 flex flex-col gap-6 -mt-24">
+                        <div className="relative w-fit">
+                            <img src={('/media/images/300-1.jpg')} alt='profile'
+                                className='h-28 w-28 object-cover ml-2 border-2 border-white rounded-[50%]'/>
+                            <div className="absolute p-[0.3rem] bg-white hover:bg-gray-100 text-gray-400 rounded-full bottom-1 right-1 cursor-pointer"><Pencil size={14} /></div>
+                        </div>
+                        <EditProfileNav classname={'w-full'} currentStep={currentStep} setCurrentStep={setCurrentStep}/>
+                    </div>
+                    <div className="flex gap-4 justify-end">
+                        <button type="button"
+                                className="py-2 px-4 bg-gray-200 text-gray-500 rounded-lg h-fit">
+                            Cancel
+                        </button>
+                        <button type="button" onClick={handleSubmit} disabled={isDisabled}
+                                className={`py-2 px-4 ${isDisabled ? 'bg-gray-400' : 'bg-blue-500'} text-white rounded-lg h-fit`}>
+                            Save
+                        </button>
+                    </div>
+                </div>
+                <div className="w-full px-10 pt-6">
 
-                        <form className=" divide-y divide-gray-200">
-                            <div className="flex justify-end">
-                                <button type="button" onClick={handleSubmit}
-                                        className="py-2 px-4 bg-green-600 text-white rounded-md">
-                                    Submit
-                                </button>
-                            </div>
-                            {currentStep === 0 && <PersonalInformation userId={userId} profileData={profileData}
-                                                                       setProfileData={setProfileData}/>}
-                            {currentStep === 1 &&
-                                <Academics profileData={profileData} setProfileData={setProfileData}/>}
-                            {currentStep === 2 &&
-                                <ProfessionalGoals profileData={profileData} setProfileData={setProfileData}
-                                                   setRatingData={setRatingData}/>}
-                            {currentStep === 3 &&
-                                <SkillsAssessment profileData={profileData} setProfileData={setProfileData}
-                                                  selectedCareer={selectedCareer} setselectedCareer={setselectedCareer}
-                                                  CareerJobs={CareerJobs} ratingData={ratingData}/>}
-                            {currentStep === 4 && <Internships profileData={profileData} setProfileData={setProfileData}
-                                                               months={months}/>}
-                            {currentStep === 5 &&
-                                <Projects profileData={profileData} setProfileData={setProfileData} months={months}/>}
-                            {currentStep === 6 &&
-                                <VolunteerExperiences profileData={profileData} setProfileData={setProfileData}
-                                                      months={months}/>}
-                            {currentStep === 7 &&
-                                <ExtraCurricularActivities profileData={profileData} setProfileData={setProfileData}
+                    <form className="divide-y divide-gray-200">
+                        
+                        {currentStep === 0 && <PersonalInformation userId={userId} profileData={profileData}
+                                                                   setProfileData={setProfileData}/>}
+                        {currentStep === 1 &&
+                            <Academics profileData={profileData} setProfileData={setProfileData}/>}
+                        {currentStep === 2 && <Internships profileData={profileData} setProfileData={setProfileData}
                                                            months={months}/>}
-                            {currentStep === 8 &&
-                                <Certificates userId={userId} profileData={profileData} setProfileData={setProfileData}
-                                              months={months}/>}
-                            {currentStep === 9 &&
-                                <AwardsDistinctions userId={userId} profileData={profileData} setProfileData={setProfileData}
-                                                    months={months}/>}
+                        {currentStep === 3 &&
+                            <Projects profileData={profileData} setProfileData={setProfileData} months={months}/>}
+                        {currentStep === 4 &&
+                            <VolunteerExperiences profileData={profileData} setProfileData={setProfileData}
+                                                  months={months}/>}
+                        {currentStep === 5 &&
+                            <ExtraCurricularActivities profileData={profileData} setProfileData={setProfileData}
+                                                       months={months}/>}
+                        {currentStep === 6 &&
+                            <Certificates userId={userId} profileData={profileData} setProfileData={setProfileData}
+                                          months={months}/>}
+                        {currentStep === 7 &&
+                            <AwardsDistinctions userId={userId} profileData={profileData} setProfileData={setProfileData}
+                                                months={months}/>}
 
-                        </form>
+                    </form>
 
-                    </div>
                 </div>
             </div>
         );
