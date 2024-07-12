@@ -17,10 +17,12 @@ const OpportunitiesView = () => {
     const [ratingData, setRatingData] = useState({})
 
     const [rating, setRating] = useState(0);
+    const [recruiterProfiles, setRecruiterProfiles] = useState([])
     useEffect(() => {
         (async () => {
             await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/auth/verify`).then(async (res) => {
                 setUserId(res.data.id)
+
                 await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/studentjob/getlikesbyId`, {user_id: res.data.id}).then((res) => {
                     let f = []
                     res.data.map((item) => {
@@ -41,6 +43,9 @@ const OpportunitiesView = () => {
                         })
                     })
                 })
+            })
+            await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofiles`).then((res) => {
+                setRecruiterProfiles(res.data)
             })
 
             setLoader(true)
@@ -140,6 +145,7 @@ const OpportunitiesView = () => {
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_IP}/user/getprofilebyId`, {user_id: recruiterId});
             // console.log("li", response.data)
+
             setCompany(response.data || 'Company Name');
         } catch (error) {
             console.error('Error fetching company name:', error);
@@ -181,6 +187,10 @@ const OpportunitiesView = () => {
     };
 
 
+    function toggleapply() {
+
+    }
+
     if (!loader) {
         return (<></>)
     } else {
@@ -196,16 +206,28 @@ const OpportunitiesView = () => {
                             onClick={() => handleJobClick(job)}
                             className={`p-2 mb-4 rounded-lg shadow-md cursor-pointer transition-all duration-300 border-2 ${selectedJob && selectedJob.id === job.id ? 'border-[#007fff] border-opacity-[40%] bg-[#007fff] bg-opacity-[5%]' : 'border-transparent bg-[#CDCDCD] bg-opacity-[18%]'} hover:shadow-lg`}
                         >
-                            <div className="flex flex-col items-center justify-start mb-2 pb-[50px]">
+                            <div className="flex flex-col items-center justify-start mb-1 pb-[30px]">
                                 <div className="flex items-center justify-between">
                                     <img
                                         src={job.companyLogo || '/media/images/amazon_PNG21.png'}
                                         alt={job.company_name}
                                         className="h-12 w-12 mr-3"
                                     />
-                                    <h3 className={`text-lg font-semibold ${selectedJob && selectedJob.id === job.id ? ("text-[#007fff]") : ("")}`}>{job.title}</h3>
+                                    <div className="flex flex-col justify-start">
+                                        <h3 className={`text-lg font-semibold ${selectedJob && selectedJob.id === job.id ? ("text-[#007fff]") : ("")}`}>{job.title}</h3>
+                                        <div className="flex gap-1 text-xs">
+                                            <div className="text-[#696974]">
+                                            {(recruiterProfiles.find((item)=>item.user_id===job.recruiter_id))?.company_name}
+                                        </div>
+                                        <div className="mt-[-1px] text-[#696974]">|</div>
+                                        <div className="text-[#696974]">
+                                            {(recruiterProfiles.find((item)=>item.user_id===job.recruiter_id))?.office_address}
+                                        </div>
+                                        </div>
+
+                                    </div>
                                 </div>
-                                <div className="w-full text-left ml-[40px] ">
+                                <div className="w-full text-left ml-[40px] mt-[20px]">
 
 
                                     <p className="text-[14px] text-gray-600 mb-1">CTC: {job.salary}</p>
@@ -214,6 +236,7 @@ const OpportunitiesView = () => {
                                     <p className="text-[14px] text-gray-600 mb-1">Branch: {job.branch_required}</p>
                                     <p className="text-[14px] text-gray-600 mb-1">CGPA: {job.cgpa_required} and
                                         above</p>
+                                    {/*<p className="text-[14px] text-gray-600 mb-1">{(recruiterProfiles.find((item)=>item.user_id===job.recruiter_id))?.company_name}</p>*/}
                                 </div>
                             </div>
                             <div className="flex items-center justify-between mt-2">
@@ -380,8 +403,10 @@ const OpportunitiesView = () => {
                                 {/* Must Have Skills */}
                                 {skillRatings.mustHave.length > 0 ? (
                                     <>
-                                        <h3 className="text-md pl-2 font-semibold text-[#92929D] mb-2">Must Have Skills</h3>
-                                        <table className="min-w-full divide-y divide-gray-200 mb-6 bg-[#EFEFEF] rounded-[5px]">
+                                        <h3 className="text-md pl-2 font-semibold text-[#92929D] mb-2">Must Have
+                                            Skills</h3>
+                                        <table
+                                            className="min-w-full divide-y divide-gray-200 mb-6 bg-[#EFEFEF] rounded-[5px]">
                                             <thead className="bg-gray-50">
                                             <tr>
                                                 <th className="px-3 py-3 text-left text-xs font-medium  tracking-wider"></th>
@@ -419,8 +444,10 @@ const OpportunitiesView = () => {
                                 {/* Good to Have Skills */}
                                 {skillRatings.goodToHave.length > 0 ? (
                                     <>
-                                        <h3 className="text-md pl-2 font-semibold mb-2 text-[#92929D]">Good to Have Skills</h3>
-                                        <table className="min-w-full divide-y divide-gray-200 mb-6 bg-[#EFEFEF] rounded-[5px]">
+                                        <h3 className="text-md pl-2 font-semibold mb-2 text-[#92929D]">Good to Have
+                                            Skills</h3>
+                                        <table
+                                            className="min-w-full divide-y divide-gray-200 mb-6 bg-[#EFEFEF] rounded-[5px]">
                                             <thead className="bg-gray-50">
                                             <tr>
                                                 <th className="px-3 py-3 text-left text-xs font-medium text-gray-900  tracking-wider"></th>
@@ -466,6 +493,7 @@ const OpportunitiesView = () => {
                                     </div>
 
                                     <button
+                                        onClick={toggleapply}
                                         className="bg-blue-600 hover:bg-blue-800 text-white py-2 px-6 rounded transition-transform duration-300 ">
                                         Apply
                                     </button>
