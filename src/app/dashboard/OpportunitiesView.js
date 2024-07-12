@@ -186,7 +186,7 @@ const OpportunitiesView = () => {
     } else {
         return (
             <div
-                className="p-4 bg-white rounded-lg shadow-md flex transition-transform duration-300 overflow-y-auto border-2 border-blue-500"
+                className="p-4 bg-white rounded-lg shadow-md flex transition-transform duration-300 overflow-y-auto border-2 border-[#C4C4CD]"
                 style={{minHeight: '38rem', height: '39.8rem'}}>
                 {/* Left Column: Job Cards */}
                 <div className="w-1/5 pr-4 overflow-y-auto" style={{height: '100%', width: '27%'}}>
@@ -194,7 +194,7 @@ const OpportunitiesView = () => {
                         <div
                             key={job.id}
                             onClick={() => handleJobClick(job)}
-                            className={`p-2 mb-4 bg-white rounded-lg shadow-md cursor-pointer transition-all duration-300 border-2 ${selectedJob && selectedJob.id === job.id ? 'border-blue-500' : 'border-transparent'} hover:shadow-lg`}
+                            className={`p-2 mb-4 bg-white rounded-lg shadow-md cursor-pointer transition-all duration-300 border-2 ${selectedJob && selectedJob.id === job.id ? 'border-[#007fff] border-opacity-[40%] bg-[#007fff] bg-opacity-[5%]' : 'border-transparent'} hover:shadow-lg`}
                         >
                             <div className="flex items-center mb-2">
                                 <img
