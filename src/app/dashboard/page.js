@@ -147,8 +147,8 @@ const Dashboard = () => {
     }
 
     const handleSectionClick = (step) => {
-        router.push(`/editprofile?step=${step}`);
-        console.log("Current step from URL:", step);
+        router.push(`/editprofile?step=${step-2}`);
+        console.log("Current step from URL:", step-2);
     };
 
     const handlelogout = async () => {
@@ -166,7 +166,7 @@ const Dashboard = () => {
 
                 {/* Left Profile container */}
                 <div className="w-1/5 h-fit p-4 relative bg-white rounded-lg shadow-md flex flex-col items-center border border-[#C4C4CD]" style={{ zIndex: 1, top: '21%' }}>
-                    <div className="absolute top-0 right-0 px-4 py-2 text-xs rounded-tr-lg rounded-bl-lg bg-red-600 text-white">Complete Profile</div>
+                    {hasIncompleteSections&&<div className="absolute top-0 right-0 px-4 py-2 text-xs rounded-tr-lg rounded-bl-lg bg-red-600 text-white">Complete Profile</div>}
                     <img
                         src={pfp?(pfp):('/media/images/300-1.jpg')} // Replace with actual image source
                         alt="Profile"
@@ -183,7 +183,21 @@ const Dashboard = () => {
                     <div className="mx-auto mb-4 text-center">
                         <h2 className="text-lg font-semibold">{profile.first_name} {profile.last_name}</h2>
                         <p className="text-md text-gray-600">Web Developer</p>
-                    </div>                    
+                    </div>
+                     <div className="w-full flex flex-wrap gap-x-[5px] text-center ">
+                        {/*{hasIncompleteSections && <p className="text-black font-medium text-sm mb-2">Incomplete Sections</p>}<br />*/}
+                        {profileSections.map((section, index) => (
+                          !section.filled && (
+                            <div
+                              key={index}
+                              onClick={() => handleSectionClick(index)}
+                              className="flex cursor-pointer justify-between items-center mb-[5px] pb-[2px] text-xs"
+                            >
+                              <p className="text-white bg-red-600 px-[8px] py-[4px] rounded-tr-lg rounded-bl-lg">{section.title}</p>
+                            </div>
+                          )
+                        ))}
+                    </div>
                     <div className="w-full p-5 mx-4 mt-2 mb-4 bg-[#ECF5FF] rounded-lg flex flex-wrap gap-x-10">
                         <div className="flex flex-col my-2">
                             <p className="text-xs text-gray-400">Branch</p>
@@ -206,20 +220,20 @@ const Dashboard = () => {
                             <p className="text-sm text-gray-600 font-medium">{profile.college_name}</p>
                         </div>
                     </div>
-                    <div className="w-full px-4 flex flex-wrap gap-x-4 text-center">
-                        {hasIncompleteSections && <p className="text-black font-medium text-sm mb-2">Incomplete Sections</p>}<br />
-                        {profileSections.map((section, index) => (
-                          !section.filled && (
-                            <div
-                              key={index}
-                              onClick={() => handleSectionClick(index)}
-                              className="flex cursor-pointer justify-between items-center mb-2 pb-1 text-xs"
-                            >
-                              <p className="text-white bg-red-600 px-4 py-2 rounded-tr-lg rounded-bl-lg">{section.title}</p>
-                            </div>
-                          )
-                        ))}
-                    </div>
+                    {/*<div className="w-full px-4 flex flex-wrap gap-x-4 text-center">*/}
+                    {/*    /!*{hasIncompleteSections && <p className="text-black font-medium text-sm mb-2">Incomplete Sections</p>}<br />*!/*/}
+                    {/*    {profileSections.map((section, index) => (*/}
+                    {/*      !section.filled && (*/}
+                    {/*        <div*/}
+                    {/*          key={index}*/}
+                    {/*          onClick={() => handleSectionClick(index)}*/}
+                    {/*          className="flex cursor-pointer justify-between items-center mb-[5px] pb-[2px] text-xs"*/}
+                    {/*        >*/}
+                    {/*          <p className="text-white bg-red-600 px-[8px] py-[4px] rounded-tr-lg rounded-bl-lg">{section.title}</p>*/}
+                    {/*        </div>*/}
+                    {/*      )*/}
+                    {/*    ))}*/}
+                    {/*</div>*/}
                 </div>
 
 
