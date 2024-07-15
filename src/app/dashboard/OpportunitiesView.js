@@ -253,7 +253,7 @@ const OpportunitiesView = () => {
     } else {
         return (
             <div
-                className="p-4 bg-white rounded-lg shadow-md flex transition-transform duration-300 overflow-y-auto border-2 border-[#C4C4CD]"
+                className="p-4 bg-white rounded-lg shadow-md flex transition-transform duration-300 overflow-y-auto border-2 border-blue-500"
                 style={{minHeight: '38rem', height: '39.8rem'}}>
                 {/* Left Column: Job Cards */}
                 <div className="w-1/5 pr-4 overflow-y-auto" style={{height: '100%', width: '27%'}}>
