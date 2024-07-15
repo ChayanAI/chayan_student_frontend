@@ -32,3 +32,7 @@ body {
     text-wrap: balance;
   }
 }
+
+.table-spacing {
+  border-spacing: 0 10px; /* Adjust the value for the desired gap */
+}

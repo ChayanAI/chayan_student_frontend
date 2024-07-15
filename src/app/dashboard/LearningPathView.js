@@ -16,6 +16,15 @@ const LearningPathView = () => {
     const [CareerJobs, setCareerJobs] = useState()
     const [ratingData, setRatingData] = useState({})
 
+    const employabilityScore = 80; // Example score
+    const employabilityTips = [
+        'Include relevant keywords and skills.',
+        'Quantify achievements with numbers.',
+        'Use action verbs to start bullet points.',
+        'Keep formatting clean and consistent.',
+    ];
+    const expectedScore = 95; // Example expected score
+
     useEffect(() => {
         (async () => {
             await axios.get(`${process.env.NEXT_PUBLIC_APP_API_IP}/auth/verify`).then(async (res) => {
@@ -275,9 +284,8 @@ const LearningPathView = () => {
             {selectedView === 'careerPaths' && (
                 <div className="flex p-8 h-full">
                     {/* Left section - Career options */}
-                    <div className="w-1/4 pr-4 overflow-y-auto" style={{maxHeight: '36rem'}}>
-                        <h3 className="text-center text-lg rounded-md border-2 border-blue-500 font-semibold mb-14 p-4">Career
-                            Paths</h3>
+                    <div className="w-1/4 pr-6 overflow-y-auto" style={{maxHeight: '36rem'}}>
+                        
                         {careerPath.map(option => (
                             <CareerOption
                                 key={option}
@@ -292,7 +300,7 @@ const LearningPathView = () => {
                     <div className="w-0 border-r-2 border-dashed h-auto mb-10"></div>
 
                     {/* Right section - Skills mapped to selected career */}
-                    <div className="w-3/4 pl-4 flex flex-col justify-between">
+                    <div className="w-3/4 pl-6 flex flex-col justify-between">
                         <h3 className="text-center text-lg border-2 rounded-md border-blue-500 font-semibold mb-6 p-4">Skills
                             for the Selected Career Path</h3>
                         {selectedCareer && CareerJobs1[selectedCareer] ? (
@@ -367,8 +375,7 @@ const LearningPathView = () => {
                 selectedView === 'opportunities' && (
                     <div className="flex p-8 h-full">
                         {/* Left section - Career options */}
-                        <div className="w-1/4 pr-4 overflow-y-auto" style={{maxHeight: '31rem'}}>
-                            <h3 className="text-center text-lg border-2 rounded-md border-blue-500 font-semibold mb-8 p-4">Opportunities</h3>
+                        <div className="w-1/4 pr-6 overflow-y-auto" style={{maxHeight: '30rem'}}>
                             {likedJobs.map(job => (
                                 <JobCard
                                     key={job.id}
@@ -383,50 +390,38 @@ const LearningPathView = () => {
                         <div className="w-0 border-r-2 border-dashed h-auto mb-10"></div>
 
                         {/* Right section - Skills mapped to selected career */}
-                        <div className="w-3/4 pl-4 flex flex-col justify-between">
-                            <h3 className="text-center text-lg border-2 rounded-md border-blue-500 font-semibold mb-6 p-4">Skills
+                        <div className="w-3/4 pl-6 flex flex-col justify-between">
+                            <h3 className="text-center text-gray-800 rounded-md font-semibold mb-6">Skills
                                 for the Selected Opportunities of your Interest</h3>
-                            {selectedCareer && CareerJobs[selectedCareer] ? (
+                            {selectedCareer && CareerJobs[selectedCareer] ? (<>
                                 <div className="overflow-x-auto h-full">
-                                    <table className="min-w-full bg-white table-auto">
+                                    <table className="table-spacing min-w-full bg-white table-auto">
                                         <thead>
                                         <tr>
                                             <th className="px-4 py-2"></th>
-                                            <th className="px-4 py-2 text-lg text-center">Self Rating</th>
-                                            <th className="px-4 py-2 text-lg text-center">Assessment</th>
-                                            <th className="px-4 py-2 text-lg text-center">Learning Path</th>
+                                            <th className="px-4 py-2 text-sm text-center">Self Rating</th>
+                                            <th className="px-4 py-2 text-sm text-center">Assessment</th>
+                                            <th className="px-4 py-2 text-sm text-center">Learning Path</th>
                                         </tr>
                                         </thead>
-                                        <tbody className="gap-y-16">
+                                        <tbody>
                                         {CareerJobs[selectedCareer].map((skill, index) => (
                                             <tr key={index} className="mb-4">
-                                                <td className="px-4 py-4 text-center">
-                                                    <div className="border font-roboto p-2 rounded-md bg-yellow-400">
+                                                <td className="text-center text-sm text-gray-800 font-medium">
+                                                    <div className="font-roboto p-2 rounded-md">
                                                         {skill}
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-4 text-center">
+                                                <td className="px-3 py-3 text-center rounded-l-full bg-gray-200 border-l-[6px] border-y-[6px] border-l-white border-y-white">
                                                     <StarRating rating={ratingData[skill]}/>
                                                 </td>
-                                                <td className="px-4 py-4 text-center">
-                                                    {/*<div*/}
-                                                    {/*    className={`${skill.assessment.includes('Pending') ? 'text-red-500' : skill.assessment.includes('Average') ? 'text-green-500' : 'text-yellow-500'}`}>*/}
-                                                    {/*    {skill.assessment}*/}
-                                                    {/*</div>*/}
+                                                <td className="px-3 py-3 text-center bg-gray-200 border-y-[6px] border-y-white">
                                                     <div
                                                         className='text-red-500'>
                                                         Pending
                                                     </div>
-                                                    {/*{skill.completedDate && (*/}
-                                                    {/*    <div className="text-gray-500">*/}
-                                                    {/*        Completed on {skill.completedDate}*/}
-                                                    {/*    </div>*/}
-                                                    {/*)}*/}
                                                 </td>
-                                                <td className="px-4 py-4 text-center">
-                                                    {/*{skill.learningPath.map((course, idx) => (*/}
-                                                    {/*    <div key={idx} className="text-blue-500">{course}</div>*/}
-                                                    {/*))}*/}
+                                                <td className="px-3 py-3 text-center rounded-r-full bg-gray-200 border-r-[6px] border-y-[6px] border-r-white border-y-white">
                                                     -
                                                 </td>
                                             </tr>
@@ -435,9 +430,29 @@ const LearningPathView = () => {
 
                                     </table>
                                 </div>
+                                <div className="rounded p-4 mb-4">
+                                    <div className="flex w-full text-center text-sm font-bold mb-3 gap-1">
+                                        <h4 className="text-black">Employability Score</h4>
+                                        <h4 className="text-black">-</h4>
+                                        <h4 className="text-black">{employabilityScore}</h4>
+                                    </div>
+                                    <h4 className="font-semibold text-sm mb-2">Tips</h4>
+                                    <ul className="list-disc list-outside text-xs">
+                                        {employabilityTips.map((tip, index) => (
+                                            <li className='ml-6 pl-1' key={index}>{tip}</li>
+                                        ))}
+                                    </ul>
+                                    <div className="flex w-full text-center text-xs font-medium gap-1 mt-3">
+                                        <h4 className="text-blue-600">Expected Score</h4>
+                                        <h4 className="text-gray-800">-</h4>
+                                        <h4 className="text-blue-600">{expectedScore}</h4>
+                                    </div>
+                                </div>
+                            </>
                             ) : (
                                 <p>Please select a career option to see the mapped skills.</p>
                             )}
+                            
                         </div>
                     </div>
                 )
